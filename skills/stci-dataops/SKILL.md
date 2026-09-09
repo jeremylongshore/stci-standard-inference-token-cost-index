@@ -1,223 +1,143 @@
 ---
 name: stci-dataops
-description: Research and onboard new data sources for STCI, producing source profiles, collector stubs, and validation rules
+description: |
+  Evaluate and onboard LLM pricing sources into STCI with evidence-backed
+  source profiles, schema-valid observations, collector changes, and review
+  receipts. Use when researching a provider or aggregator, assessing a pricing
+  feed, or implementing an STCI collector; trigger with "evaluate this pricing
+  source", "add a provider to STCI", or "review this collector".
+allowed-tools: "Read,Write,Edit,Glob,WebFetch,WebSearch,Bash(python:*),Bash(git status:*),Bash(git diff:*)"
+argument-hint: "[research|profile|implement|review] [provider-or-URL]"
+version: "1.1.0"
+author: "Jeremy Longshore <jeremy@intentsolutions.io>"
+license: "MIT"
+compatibility: "Requires an STCI repository checkout and Python 3.11+; live source evaluation requires network access. Implementation mode may require dependencies already declared by the repository."
+tags: [llm-pricing, data-operations, provenance, collectors, validation]
+model: inherit
+effort: high
 ---
 
-# STCI Data Operations Skill
+# STCI Data Operations
 
-## Purpose
+## Overview
 
-This skill assists with researching, evaluating, and onboarding new data sources for the STCI (Standard Token Cost Index). Given a provider or aggregator, it produces structured outputs ready for implementation.
+Turn a proposed pricing source into a reproducible evidence packet and, when
+requested, a tested STCI collector change. Treat published prices as
+time-sensitive evidence and legal conclusions as a human-review boundary; see
+the [source evaluation rubric](references/source-evaluation.md).
 
-## Capabilities
+## Prerequisites
 
-1. **Source Research**: Analyze a pricing source (provider page, aggregator API) and extract key characteristics
-2. **Legal Assessment**: Review ToS, robots.txt, and rate limits for compliance
-3. **Source Profile**: Generate a complete source profile following the template
-4. **Collector Stub**: Produce a Python collector module for the source
-5. **Validation Rules**: Define source-specific validation and anomaly detection
-
-## Invocation
-
-Use this skill when you need to:
-- Add a new LLM provider to STCI
-- Evaluate an aggregator API for data sourcing
-- Create a source profile for a pricing endpoint
-- Generate collector code for a new source
+- Work from the STCI repository root with Python 3.11 or later.
+- Read the current observation schema, collector base class, methodology, source
+  profile template, and legal-risk register before proposing changes.
+- Use existing dependencies and test fixtures. Ask before installing packages,
+  changing authentication, enabling schedules, deploying, or publishing data.
+- Confirm whether the request is research-only, profile, implementation, or
+  review. Research-only mode must not modify repository files.
 
 ## Workflow
 
-### Step 1: Source Identification
+1. Establish repository truth with `Glob` and `Read`: locate the current schema,
+   collector modules, tests, methodology, source-profile convention, provider
+   IDs, and mappings.
+2. Define the requested source and collection boundary: official provider,
+   aggregator, manual submission, or fixture; public page or API; authentication;
+   expected units; intended refresh cadence.
+3. Research with `WebSearch` and `WebFetch`, preferring the provider's official
+   pricing, API, terms, robots.txt, rate-limit, and changelog pages. Record the exact
+   URL and retrieval time for every claim.
+4. Separate observations from judgments. A reachable endpoint or permissive
+   robots.txt file is not proof that automated collection or redistribution is
+   legally authorized. Mark ambiguous terms `LEGAL REVIEW REQUIRED`.
+5. Reconcile the proposed source tier against the repository's current written
+   methodology and implementation. Report contradictions instead of silently
+   choosing one; in particular, aggregator classification must be consistent
+   across docs, schema usage, and collector code.
+6. Produce the evidence and acceptance matrix in the evaluation reference.
+   Stop in profile mode after presenting it.
+7. In implementation mode, obtain approval for the proposed file set, then use
+   `Write` or `Edit` to add the smallest collector, fixture, profile, and test
+   changes that satisfy the [collector contract](references/collector-contract.md).
+8. Run the narrow test first, then the repository suite. Use fixture or dry-run
+   modes before any live collection. Inspect `git diff` and report all generated
+   or data-bearing files; do not commit, push, enable CI schedules, deploy, or
+   publish unless explicitly requested.
 
-Given a source URL or name, gather:
-- Source type (provider, aggregator, community)
-- API endpoint (if available)
-- Pricing page URL
-- Data format (JSON, HTML, etc.)
+## Approval boundaries
 
-### Step 2: Legal Review
+- **Proceed:** read public documentation; inspect local code and fixtures; draft
+  an evidence packet; run existing local tests.
+- **Ask first:** install dependencies, use credentials, call a metered/private
+  API, write repository files, run a live collection that stores data, or alter
+  source-tier policy.
+- **Explicit separate authorization:** deploy, publish observations, enable a
+  schedule, change cloud/IAM configuration, commit, push, or open a PR.
+- **Never:** scrape around access controls, expose tokens, invent permission from
+  silence, copy restricted content, or label uncertain evidence as verified.
 
-Check and document:
-- [ ] robots.txt allows access to target endpoints
-- [ ] ToS permits automated data access
-- [ ] ToS permits data redistribution
-- [ ] Rate limits and API quotas
-- [ ] Authentication requirements
+## Validation
 
-**Decision Matrix:**
-
-| Condition | Action |
-|-----------|--------|
-| API explicitly public + no ToS restrictions | Proceed to T1/T2 source |
-| API available but ToS unclear | Request legal review before production |
-| Scraping required + ToS prohibits | Do NOT proceed - use alternative |
-| Manual collection only viable | Proceed as T4 source with caveats |
-
-### Step 3: Data Structure Analysis
-
-For API sources:
 ```bash
-# Fetch sample data
-curl -s [API_URL] | head -100
-
-# Analyze structure
-# - Identify model ID field
-# - Identify pricing fields (input, output, per-request)
-# - Identify metadata fields (context window, etc.)
-# - Note rate units (per-token, per-1K, per-1M)
+python -m pytest tests/test_collector.py -v
+python -m pytest tests/ -v --tb=short
+python -m services.collector.pipeline --fixtures --dry-run
+git status --short
+git diff --check
 ```
 
-For HTML sources:
-```bash
-# Check page structure
-# - Identify pricing table elements
-# - Note update indicators (timestamps, version)
-# - Assess scraping complexity
+Validate every candidate observation against `schemas/observation.schema.json`
+and confirm normalization with fixed input/output unit tests. A live endpoint
+response is evidence, not a golden fixture; redact secrets and minimize retained
+payloads according to approved policy.
+
+## Output
+
+Return:
+
+- mode, source identity, retrieval timestamp, and official evidence URLs;
+- auth, rate-limit, automation, and redistribution status, with unknowns clear;
+- unit mapping and required observation fields;
+- source-tier recommendation plus any policy contradiction;
+- proposed or changed files and approval received;
+- tests run, exit results, observation counts, and validation failures;
+- unresolved legal, operational, provenance, or data-quality risks;
+- next human decision, without claiming deployment or publication occurred.
+
+## Error Handling
+
+- **Terms or permissions unclear:** stop before automation and request legal or
+  owner review.
+- **Authentication required:** document the mechanism; never request secrets in
+  chat or place them in code, fixtures, URLs, or logs.
+- **Rate units ambiguous:** retain the raw field and stop normalization until an
+  official definition resolves the unit.
+- **Schema drift:** preserve a minimal redacted sample, report changed fields,
+  and fail closed rather than dropping records silently.
+- **Rate limit or outage:** honor retry guidance; do not retry indefinitely or
+  substitute stale data without the methodology's explicit carry-forward rule.
+- **Cross-source disagreement:** report both values and provenance; do not average
+  or choose a source outside the approved methodology.
+- **Partial write or failed test:** show the diff and failure, preserve evidence,
+  and do not publish.
+
+## Examples
+
+Research-only request:
+
+```text
+Evaluate Provider X's official pricing API for STCI. Produce evidence and a
+source-tier recommendation, but do not edit files or call authenticated APIs.
 ```
 
-### Step 4: Generate Source Profile
+Implementation request:
 
-Output a completed source profile using template:
-`000-docs/009-DR-TMPL-source-profile.md`
-
-Required sections:
-1. Source Identification
-2. Legal & Compliance
-3. Data Availability
-4. Pricing Data Structure
-5. Collection Strategy
-6. Normalization Mapping
-7. Validation Rules
-8. Monitoring & Alerting
-9. Source Acceptance Checklist
-
-### Step 5: Generate Collector Stub
-
-Produce a Python module following this pattern:
-
-```python
-# services/collector/sources/{source_id}.py
-
-from .base import BaseSource
-
-class {SourceName}Source(BaseSource):
-    """
-    {Source description}
-    See: {Source URL}
-    """
-
-    API_URL = "{api_url}"
-
-    @property
-    def source_id(self) -> str:
-        return "{source_id}"
-
-    @property
-    def source_tier(self) -> str:
-        return "{tier}"  # T1, T2, T3, or T4
-
-    def fetch(self, target_date: date) -> List[dict]:
-        # Implementation
-        pass
+```text
+Using the approved source profile, add the provider collector and fixed fixtures.
+Run collector tests and the fixture dry-run; do not deploy or enable schedules.
 ```
 
-### Step 6: Define Validation Rules
+## Resources
 
-Specify source-specific rules:
-
-```yaml
-validation:
-  required_fields:
-    - model_id
-    - input_rate
-    - output_rate
-
-  rate_bounds:
-    input_max: 100.0  # USD per 1M
-    output_max: 500.0
-
-  model_id_pattern: "^[a-z0-9-]+/[a-z0-9.-]+$"
-
-  cross_reference:
-    enabled: true
-    tolerance: 0.10  # 10% tolerance
-    reference_source: "openrouter"
-```
-
-### Step 7: Generate Test Fixtures
-
-Create test data for the source:
-
-```json
-// data/fixtures/{source_id}_sample.json
-[
-  {
-    "observation_id": "obs-2026-01-01-{source_id}-{model}",
-    "provider": "{provider}",
-    ...
-  }
-]
-```
-
-## Output Checklist
-
-After running this skill, you should have:
-
-- [ ] Source profile document (`000-docs/0XX-DR-REFF-{source_id}-profile.md`)
-- [ ] Collector module (`services/collector/sources/{source_id}.py`)
-- [ ] Test fixtures (`data/fixtures/{source_id}_sample.json`)
-- [ ] Validation config update (`data/fixtures/methodology.yaml`)
-- [ ] Beads task for implementation tracking
-
-## Example: Onboarding OpenRouter
-
-### Input
-```
-Source: OpenRouter
-URL: https://openrouter.ai
-API: https://openrouter.ai/api/v1/models
-```
-
-### Research Output
-
-**Legal Assessment:**
-- robots.txt: Allows /api/
-- ToS: Public API, no explicit redistribution restriction found
-- Rate limits: Standard API limits apply
-- Auth: None required for models endpoint
-- Risk: LOW
-
-**Data Structure:**
-```json
-{
-  "data": [
-    {
-      "id": "openai/gpt-4o",
-      "name": "GPT-4o",
-      "pricing": {
-        "prompt": "0.0000025",
-        "completion": "0.00001"
-      }
-    }
-  ]
-}
-```
-
-**Normalization:**
-- `id` → `model_id`
-- `pricing.prompt` × 1M → `input_rate_usd_per_1m`
-- `pricing.completion` × 1M → `output_rate_usd_per_1m`
-
-**Source Tier:** T1 (public API, high confidence)
-
-## Related Documents
-
-- 007-RL-RSRC-data-strategy-research.md
-- 008-PM-RISK-legal-source-risks.md
-- 009-DR-TMPL-source-profile.md
-- 010-DR-SOPS-data-ops-practices.md
-
----
-
-*STCI Data Operations Skill*
-*Version: 1.0.0*
+- [Source evidence and acceptance rubric](references/source-evaluation.md)
+- [Repository-grounded collector contract](references/collector-contract.md)

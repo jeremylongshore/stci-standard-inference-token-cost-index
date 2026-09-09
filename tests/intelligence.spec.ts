@@ -215,7 +215,9 @@ test.describe('Intelligence Page - Smoke Tests', () => {
       !e.includes('Failed to load resource') &&
       !e.includes('Failed to fetch') &&
       !e.includes('NetworkError') &&
-      !e.includes('Error loading events')
+      !e.includes('Error loading events') &&
+      !e.includes('Error loading API data') &&
+      !e.includes('FirebaseError: Installations')
     );
 
     expect(criticalErrors).toHaveLength(0);

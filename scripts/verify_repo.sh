@@ -22,12 +22,12 @@ pass() {
 
 fail() {
     echo -e "${RED}✗${NC} $1"
-    ((ERRORS++))
+    ERRORS=$((ERRORS + 1))
 }
 
 warn() {
     echo -e "${YELLOW}⚠${NC} $1"
-    ((WARNINGS++))
+    WARNINGS=$((WARNINGS + 1))
 }
 
 # Get script directory and project root
@@ -71,10 +71,10 @@ VALID_COUNT=0
 for file in 000-docs/*; do
     if [ -f "$file" ]; then
         filename=$(basename "$file")
-        ((DOC_COUNT++))
+        DOC_COUNT=$((DOC_COUNT + 1))
 
         if [[ "$filename" =~ $NNN_PATTERN ]] || [[ "$filename" =~ $CANONICAL_PATTERN ]] || [[ "$filename" == "000-INDEX.md" ]]; then
-            ((VALID_COUNT++))
+            VALID_COUNT=$((VALID_COUNT + 1))
         else
             warn "Non-standard filename: $filename"
         fi

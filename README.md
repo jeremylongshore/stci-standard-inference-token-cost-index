@@ -1,12 +1,16 @@
 # STCI — Standard Token Cost Index
 
-[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/intent-solutions-io/stci-standard-llm-token-cost-index/releases)
-[![Tests](https://github.com/intent-solutions-io/stci-standard-llm-token-cost-index/actions/workflows/tests.yml/badge.svg)](https://github.com/intent-solutions-io/stci-standard-llm-token-cost-index/actions/workflows/tests.yml)
+[![Release](https://img.shields.io/github/v/release/jeremylongshore/stci-standard-inference-token-cost-index)](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/releases)
+[![Tests](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/actions/workflows/tests.yml/badge.svg)](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U5S225PTME)
 
 **A public, vendor-neutral price index for LLM tokens.**
+
+> **Project status:** The scheduled daily pipeline is intentionally disabled and
+> published index data is frozen at 2026-03-06 while the maintainer decides
+> whether to revive or archive STCI. See [issue #8](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/issues/8).
 
 STCI provides a transparent, reproducible reference rate for large language model token pricing, analogous to market indices like LIBOR or VIX. It aggregates published pricing from major model providers and aggregators, normalizes the data into a canonical schema, and computes daily reference rates with full provenance.
 
@@ -191,12 +195,26 @@ Default weighting for MVP:
 
 ---
 
+## Agent Skill
+
+The public `stci-dataops` skill evaluates and onboards pricing sources with
+evidence, legal-review boundaries, schema validation, and deterministic tests:
+
+```bash
+npx skills add jeremylongshore/stci-standard-inference-token-cost-index \
+  --skill stci-dataops
+```
+
+Research-only mode does not modify the repository. Collector implementation,
+live collection, deployment, publication, and schedule changes have separate
+approval boundaries.
+
 ## Quickstart
 
 ```bash
 # Clone the repository
-git clone https://github.com/intent-solutions-io/stci-standard-llm-token-cost-index.git
-cd stci-standard-llm-token-cost-index
+git clone https://github.com/jeremylongshore/stci-standard-inference-token-cost-index.git
+cd stci-standard-inference-token-cost-index
 
 # Create virtual environment
 python -m venv venv
@@ -248,31 +266,13 @@ STCI is designed as a **reference rate product**. Trust is the moat:
 
 ---
 
-## Roadmap
+## Current status and roadmap
 
-### v0.1.0 (Current)
-- [x] Schema definitions (observation, daily index)
-- [x] OpenRouter collector pipeline
-- [x] Indexer with STCI-ALL, STCI-FRONTIER, STCI-EFFICIENT, STCI-OPEN
-- [x] Read-only API server
-- [x] Firebase Hosting + Functions deployment
-- [x] GitHub Actions CI/CD
-- [x] Comprehensive test suite
-
-### v0.2.0
-- [ ] Additional T1/T2 collectors (direct provider APIs)
-- [ ] Historical backfill tooling
-- [ ] Rate change alerts
-
-### v0.3.0
-- [ ] Dashboard UI
-- [ ] Public API with authentication
-- [ ] Webhook notifications
-
-### Future
-- [ ] Usage-weighted indices
-- [ ] Enterprise data feeds
-- [ ] Multi-currency support
+The repository contains the observation schemas, OpenRouter collector,
+deterministic indexer, read-only API, Firebase surface, CI, and regression tests.
+The next product decision is whether to resume daily collection or archive the
+project; that decision and any follow-on work are tracked in Beads and
+[issue #8](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/issues/8), not in a duplicate Markdown checklist.
 
 ---
 
@@ -293,7 +293,7 @@ MIT License. See [LICENSE](./LICENSE).
 
 ## Contact
 
-- Repository: [github.com/intent-solutions-io/stci-standard-llm-token-cost-index](https://github.com/intent-solutions-io/stci-standard-llm-token-cost-index)
+- Repository: [github.com/jeremylongshore/stci-standard-inference-token-cost-index](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index)
 - Issues: Use GitHub Issues or Beads (`bd create`)
 
 ---
