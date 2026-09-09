@@ -5,6 +5,25 @@ All notable changes to STCI (Standard Token Cost Index) will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- Rebuilt the public `stci-dataops` skill around evidence provenance,
+  legal-review boundaries, the actual collector contract, explicit approvals,
+  schema validation, and deterministic tests.
+- Corrected public repository links and documented the intentionally paused
+  daily pipeline.
+- Refreshed locked development dependencies to clear all reported npm audit
+  findings without changing production dependencies.
+
+### Fixed
+
+- Repair repository verification under `set -e` so counters no longer terminate
+  the script on its first document or warning.
+- Make pull-request browser and Lighthouse checks deterministic by testing the
+  checked-out static site instead of the intentionally offline production domain.
+
 ## [0.2.0] - 2026-01-04
 
 ### Added
@@ -90,5 +109,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *STCI — Making LLM pricing transparent, reproducible, and trustworthy.*
 
-[0.2.0]: https://github.com/intent-solutions-io/stci-standard-inference-token-cost-index/releases/tag/v0.2.0
-[0.1.0]: https://github.com/intent-solutions-io/stci-standard-inference-token-cost-index/releases/tag/v0.1.0
+[0.2.0]: https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/releases/tag/v0.2.0
+[0.1.0]: https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/releases/tag/v0.1.0

@@ -48,9 +48,13 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests
-        run: npx playwright test
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory public > /tmp/stci-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid"' EXIT
+          npx playwright test
         env:
-          BASE_URL: https://inferencepriceindex.com
+          BASE_URL: http://127.0.0.1:4173
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
@@ -80,7 +84,10 @@ jobs:
 
       - name: Run Lighthouse
         run: |
-          npx lighthouse https://inferencepriceindex.com/intelligence.html \
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory public > /tmp/stci-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid"' EXIT
+          npx lighthouse http://127.0.0.1:4173/intelligence.html \
             --output=json \
             --output-path=./lighthouse-results.json \
             --chrome-flags="--headless --no-sandbox" \
