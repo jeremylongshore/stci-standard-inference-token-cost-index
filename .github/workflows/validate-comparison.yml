@@ -16,7 +16,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install requests pytest pyyaml
+        run: pip install requests 'pytest==9.1.1' pyyaml
 
       - name: Run comparison tests
         run: python -m pytest tests/test_comparison.py -v
