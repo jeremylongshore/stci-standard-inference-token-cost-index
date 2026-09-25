@@ -21,4 +21,4 @@ jsonschema>=4.17.0
 # Development / Testing
 pytest>=7.0.0
 pytest-cov>=4.0.0
-responses>=0.23.0
+responses>=0.26.3
