@@ -12,7 +12,7 @@ google-cloud-storage>=2.10.0
 google-cloud-firestore>=2.16.0
 
 # Validation
-jsonschema>=4.17.0
+jsonschema>=4.26.0
 
 # API (optional - for services/api)
 # fastapi>=0.100.0
