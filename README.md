@@ -1,5 +1,11 @@
 # STCI — Standard Token Cost Index
 
+<!-- intent-select-partner:start -->
+<p><a href="https://intentsolutions.io/"><img src="https://raw.githubusercontent.com/intent-solutions-io/.github/b82af5d3e7951d85e39ea9e65cc24ee8278722a7/assets/brand/claude-select-partner.svg" alt="Intent Solutions: Claude Partner Network Select Services Partner" width="300" height="95" /></a></p>
+
+Intent Solutions is a Claude Partner Network Select Services Partner.
+<!-- intent-select-partner:end -->
+
 [![Release](https://img.shields.io/github/v/release/jeremylongshore/stci-standard-inference-token-cost-index)](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/releases)
 [![Tests](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/actions/workflows/tests.yml/badge.svg)](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
