@@ -6,9 +6,14 @@ test('landing page shows the thesis order and live values', async ({ page }) => 
   await page.goto('/');
   await expect(page.locator('h1')).toHaveText('The benchmark price for AI tokens.');
   const h2 = await page.locator('main h2').allTextContents();
-  expect(h2[0]).toContain('benchmark price');
-  expect(h2[4]).toContain('numbers');
-  await expect(page.locator('.card .value').first()).toContainText('$');
+  expect(h2[0]).toBe('Tokens need a benchmark');
+  expect(h2).toContain('Where it came from');
+  expect(h2.indexOf('Where STCI is today')).toBeLessThan(h2.indexOf('Today\u2019s index'));
+  await expect(page.locator('.tape-value').first()).toContainText('$');
+  await expect(page.locator('.wordmark-name')).toHaveText('Standardized Token Cost Index');
+  for (const slug of ['privacy', 'terms', 'acceptable-use', 'data-retention']) {
+    await expect(page.locator(`footer a[href="/${slug}"]`)).toHaveCount(1);
+  }
   await expect(page.locator('link[rel=canonical]')).toHaveAttribute('href', 'https://inferencepriceindex.com/');
   expect(errors).toEqual([]);
 });
