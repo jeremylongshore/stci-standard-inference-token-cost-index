@@ -82,12 +82,17 @@ class IndexingPipeline:
 
         # Step 2: Compute indices
         print("[2/3] Computing indices...")
-        result = self.indexer.compute(observations, target_date)
+        spread = self._load_spread(target_date)
+        if spread is None:
+            print("      No spread file for this date; liquidity-screened baskets are skipped")
+        result = self.indexer.compute(observations, target_date, spread)
 
         for idx_name, idx_data in result.get("indices", {}).items():
             model_count = idx_data.get("model_count", 0)
             blended = idx_data.get("blended_rate", 0)
             print(f"      {idx_name}: ${blended:.2f}/1M ({model_count} models)")
+            if idx_data.get("constituents_missing"):
+                print(f"        constituents missing: {', '.join(idx_data['constituents_missing'])}")
 
         # Step 3: Store index
         print("[3/3] Storing index...")
@@ -104,6 +109,14 @@ class IndexingPipeline:
         print(f"Output:            {output_path}")
 
         return result, output_path
+
+    def _load_spread(self, target_date: date) -> Optional[dict]:
+        """Load that day's neocloud spread document, if one was collected."""
+        path = self.data_dir / "spread" / f"{target_date.isoformat()}.json"
+        if not path.exists():
+            return None
+        with open(path) as f:
+            return json.load(f)
 
     def _load_observations(self, target_date: date) -> List[dict]:
         """Load observations from JSONL file."""

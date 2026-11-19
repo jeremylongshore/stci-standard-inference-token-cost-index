@@ -177,6 +177,18 @@ Revisit this decision when:
 3. Community requests for open data reach critical mass
 4. Business model requires data monetization
 
+## Amendment 2026-11-19
+
+The repository had committed 64 days of normalized observations (2026-01-02 to
+2026-03-06) against this decision. From 2026-11-19 new observation files are
+git-ignored and stay on the collecting host and in its backups; the committed
+history is left as is, since removing it would rewrite public history. What is
+published: daily indices, the neocloud spread (aggregated per-model endpoint
+statistics, not the endpoint list) and the methodology. The verification hash
+in each daily output lets anyone holding the observations reproduce the value;
+observations are available on request. OpenRouter's terms remain unreviewed for
+redistribution, which is the reason this stays conservative.
+
 ---
 
 *STCI — Standard Token Cost Index*

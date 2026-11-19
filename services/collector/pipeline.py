@@ -114,6 +114,8 @@ class CollectionPipeline:
         print("[2/4] Normalizing observations...")
         observations = source.fetch(target_date)
         print(f"      Normalized {len(observations)} observations")
+        for reason, ids in getattr(source, "last_exclusions", {}).items():
+            print(f"      Excluded ({reason}): {len(ids)}")
 
         # Step 3: Validate observations
         print("[3/4] Validating observations...")

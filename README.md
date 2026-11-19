@@ -14,9 +14,11 @@ Intent Solutions is a Claude Partner Network Select Services Partner.
 
 **A public, vendor-neutral price index for LLM tokens.**
 
-> **Project status:** The scheduled daily pipeline is intentionally disabled and
-> published index data is frozen at 2026-03-06 while the maintainer decides
-> whether to revive or archive STCI. See [issue #8](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/issues/8).
+> **Project status:** Revived 2026-11-19 under methodology 2.0.0
+> ([000-docs/020](000-docs/020-DR-STND-stci-methodology-2-0-0.md)). The published
+> series covers 2026-01-02 to 2026-03-06 (methodology 1.0.0), stops while the
+> pipeline was switched off, and resumes 2026-11-19. Values across that boundary
+> are not comparable: the baskets changed.
 
 STCI provides a transparent, reproducible reference rate for large language model token pricing, analogous to market indices like LIBOR or VIX. It aggregates published pricing from major model providers and aggregators, normalizes the data into a canonical schema, and computes daily reference rates with full provenance.
 
@@ -48,10 +50,11 @@ Every pricing data point is captured as a **canonical observation** with:
 
 ### 2. Daily Reference Rates
 STCI computes a **daily index value** (and sub-indices) using a transparent methodology:
-- **STCI-ALL**: Weighted average across all tracked models
-- **STCI-FRONTIER**: Frontier-class models only (GPT-4o, Claude 3.5, Gemini 1.5 Pro, etc.)
-- **STCI-EFFICIENT**: High-efficiency models (GPT-4o-mini, Claude 3.5 Haiku, Gemini Flash, etc.)
-- **STCI-OPEN**: Open-weight models (Llama, Mistral, Mixtral, etc.)
+- **STCI-ALL**: Equal-weighted average across every eligible model
+- **STCI-FRONTIER**: Each lab's most capable generally available model, cited to the provider's own description
+- **STCI-EFFICIENT**: Each lab's small, fast, cost-efficient tier
+- **STCI-OPEN**: Open-weight models with published weights, sold by at least 10 provider endpoints that day
+- **Neocloud spread** (not an index): what the same open-weight model costs across the providers selling it. Min, median and max, the max/min ratio, and the serving precision of the cheapest endpoint
 
 Each sub-index has:
 - Defined basket composition

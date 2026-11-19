@@ -6,7 +6,7 @@ import json
 from abc import ABC, abstractmethod
 from datetime import date, datetime, timezone
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, List, Optional, Tuple
 
 # Requests import is optional - graceful fallback if not installed
 try:
@@ -58,6 +58,7 @@ class OpenRouterSource(BaseSource):
 
     def __init__(self, api_url: Optional[str] = None):
         self.api_url = api_url or self.API_URL
+        self.last_exclusions: Dict[str, List[str]] = {}
 
     @property
     def source_id(self) -> str:
@@ -83,34 +84,59 @@ class OpenRouterSource(BaseSource):
         response = requests.get(self.api_url, timeout=30)
         response.raise_for_status()
 
-        data = response.json()
-        models = data.get("data", [])
-
-        observations = []
         collected_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+        return self.normalize(response.json().get("data", []), target_date, collected_at)
+
+    def normalize(self, models: List[dict], target_date: date, collected_at: str) -> List[dict]:
+        """
+        Turn OpenRouter catalog entries into observations (methodology 2.0.0).
+
+        Listings that are not a separately priced model are excluded, each with
+        a reason recorded in ``self.last_exclusions``:
+
+        - ``alias``: ``~provider/...-latest`` IDs, which point at another listing
+        - ``router``: negative sentinel prices (routers priced at -1/token)
+        - ``free``: ``:free`` variants and listings priced at zero
+        - ``batch``: ``:batch`` variants; their rates are attached to the base
+          model as ``batch_rate_input``/``batch_rate_output`` instead
+        - ``unpriced``: missing or non-numeric prompt/completion prices
+
+        Without these rules 92 half-price batch duplicates and 14 free
+        listings (2026-11-19) would drag the equal-weighted indices down.
+        """
+        observations: Dict[str, dict] = {}
+        batch_rates: Dict[str, Tuple[float, float]] = {}
+        excluded: Dict[str, List[str]] = {}
+
+        def exclude(reason: str, model_id: str) -> None:
+            excluded.setdefault(reason, []).append(model_id)
 
         for model in models:
+            model_id = model.get("id", "")
             pricing = model.get("pricing") or {}
 
-            # Skip models without pricing
-            prompt_rate = pricing.get("prompt")
-            completion_rate = pricing.get("completion")
-
-            if prompt_rate is None or completion_rate is None:
-                continue
-
-            # Convert from $/token to $/1M tokens
             try:
-                input_rate = float(prompt_rate) * 1_000_000
-                output_rate = float(completion_rate) * 1_000_000
-            except (ValueError, TypeError):
+                input_rate = float(pricing["prompt"]) * 1_000_000
+                output_rate = float(pricing["completion"]) * 1_000_000
+            except (KeyError, ValueError, TypeError):
+                exclude("unpriced", model_id)
                 continue
 
-            # Skip free models (rate = 0)
-            if input_rate == 0 and output_rate == 0:
+            if model_id.startswith("~"):
+                exclude("alias", model_id)
+                continue
+            if input_rate < 0 or output_rate < 0:
+                exclude("router", model_id)
+                continue
+            base_id, _, variant = model_id.partition(":")
+            if variant == "free" or (input_rate == 0 and output_rate == 0):
+                exclude("free", model_id)
+                continue
+            if variant == "batch":
+                batch_rates[base_id] = (input_rate, output_rate)
+                exclude("batch", model_id)
                 continue
 
-            model_id = model.get("id", "")
             provider = model_id.split("/")[0] if "/" in model_id else "unknown"
 
             obs = {
@@ -133,10 +159,30 @@ class OpenRouterSource(BaseSource):
             # Add optional fields if available
             if context_length := model.get("context_length"):
                 obs["context_window"] = context_length
+            cache_read = _per_million(pricing.get("input_cache_read"))
+            if cache_read is not None and cache_read > 0:
+                obs["cached_rate_input"] = round(cache_read, 6)
+            if model.get("hugging_face_id"):
+                obs["open_weights"] = True
+                obs["hugging_face_id"] = model["hugging_face_id"]
 
-            observations.append(obs)
+            observations[model_id] = obs
 
-        return observations
+        for base_id, (batch_in, batch_out) in batch_rates.items():
+            if base_id in observations:
+                observations[base_id]["batch_rate_input"] = round(batch_in, 6)
+                observations[base_id]["batch_rate_output"] = round(batch_out, 6)
+
+        self.last_exclusions = {reason: sorted(ids) for reason, ids in sorted(excluded.items())}
+        return list(observations.values())
+
+
+def _per_million(value) -> Optional[float]:
+    """Convert an OpenRouter $/token string to $/1M tokens, or None."""
+    try:
+        return float(value) * 1_000_000
+    except (TypeError, ValueError):
+        return None
 
 
 class FixtureSource(BaseSource):

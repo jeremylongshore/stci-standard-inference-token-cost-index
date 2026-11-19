@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Methodology 2.0.0** (`000-docs/020`): listing eligibility is now a rule
+  (alias, `:free`, `:batch`, router and unpriced listings are excluded with a
+  recorded reason; batch rates attach to the base model), FRONTIER and
+  EFFICIENT constituents are rebuilt on the November 2026 market with each
+  entry cited to the provider's own description, STCI-OPEN is rule-based
+  (published weights plus at least 10 priced provider endpoints), and every
+  daily output reports `constituents_missing`. Methodology 1.0.0 is archived
+  as `data/fixtures/methodology-1.0.0.yaml` and still governs 2026-01-02 to
+  2026-03-06.
+- Observations gain `cached_rate_input`, `open_weights` and
+  `hugging_face_id`. New observation files are no longer committed (ADR 014,
+  amended); indices and the spread are.
+- The collection resumed on 2026-11-19 after the gap from 2026-03-07.
+
+### Added
+
+- **Neocloud spread** (`services/collector/spread.py`, `data/spread/{date}.json`):
+  per open-weight model, the blended price across every provider endpoint
+  selling it, with min/p25/median/p75/max, the max/min and p75/p25 ratios,
+  the serving-precision mix and the cheapest endpoint. The verification hash
+  binds the endpoint counts whenever a basket used them.
+
 - Rebuilt the public `stci-dataops` skill around evidence provenance,
   legal-review boundaries, the actual collector contract, explicit approvals,
   schema validation, and deterministic tests.
