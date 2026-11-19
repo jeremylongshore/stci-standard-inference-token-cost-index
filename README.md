@@ -56,7 +56,7 @@ STCI publishes this as the **neocloud spread**, alongside the index.
 |---|---|---|
 | 1 | Listed prices from one aggregator, reproducible, hash-verified | **live** |
 | 2 | Grade and spread across providers | **live** |
-| 3 | Reported-price panel (gateways, enterprises) | next; [say hello](mailto:jeremy@intentsolutions.io) if you run one |
+| 3 | Reported-price panel (gateways, enterprises) | next; [say hello](mailto:support@intentsolutions.io) if you run one |
 | 4 | Forwards and contracts that settle against the index | later |
 
 ### How it started
