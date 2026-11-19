@@ -59,8 +59,14 @@ exec > >(tee -a "$LOG") 2>&1
 log() { printf '[%s] %s\n' "$(date -u +%FT%TZ)" "$*"; }
 
 notify() { # <title> <body> <priority>
+  # The shim's default audit log and the alert floor's default state dir are
+  # root-owned on the VPS; this job keeps both under its own state directory
+  # so every event (audit-only ones included) leaves a record it can write.
   if [ -x "$NOTIFY" ]; then
-    "$NOTIFY" "$1" "$2" "$JOB" "$3" || log "notify.sh returned $? (event spooled/degraded by the alert floor)"
+    local rc=0
+    NOTIFY_SHIM_LOG="$LOGDIR/notify-shim.log" AF_STATE_DIR="$STATE/af" \
+      "$NOTIFY" "$1" "$2" "$JOB" "$3" || rc=$?
+    log "notify.sh rc=$rc ($3): $1 — $(tail -1 "$LOGDIR/notify-shim.log" 2>/dev/null | sed 's/.*| //')"
   else
     log "notify.sh absent at $NOTIFY — event not dispatched: $1 — $2"
   fi
