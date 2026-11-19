@@ -1,0 +1,102 @@
+# STCI Methodology Configuration
+# Version: 1.0.0
+# See: 000-docs/004-DR-STND-stci-methodology.md
+
+methodology_version: "1.0.0"
+
+# Blended rate computation
+# Assumes output_ratio : 1 output:input token ratio
+output_ratio: 3.0
+
+# Carry-forward rules for missing data
+carry_forward_max_days: 7
+
+# Minimum basket coverage to publish index
+# If fewer than this fraction of expected models have data, don't publish
+min_basket_coverage: 0.5
+
+# Decimal places for precision
+decimal_places:
+  rates: 6        # Internal computation
+  weights: 8      # Weight calculation
+  output: 2       # Published values
+
+# Index definitions
+indices:
+  STCI-ALL:
+    description: "All eligible models"
+    weighting: equal
+    filter: null  # No filter - all models
+
+  STCI-FRONTIER:
+    description: "Frontier-class flagship models"
+    weighting: equal
+    filter:
+      tier: frontier
+    models:
+      - openai/gpt-4o
+      - openai/o3
+      - openai/gpt-5
+      - anthropic/claude-sonnet-4
+      - anthropic/claude-opus-4.5
+      - google/gemini-2.5-pro
+      - google/gemini-3-pro-preview
+      - mistralai/mistral-large
+      - mistralai/mistral-large-2512
+
+  STCI-EFFICIENT:
+    description: "High-efficiency cost-optimized models"
+    weighting: equal
+    filter:
+      tier: efficient
+    models:
+      - openai/gpt-4o-mini
+      - openai/gpt-4.1-mini
+      - openai/o3-mini
+      - anthropic/claude-3.5-haiku
+      - anthropic/claude-haiku-4.5
+      - google/gemini-2.5-flash
+      - google/gemini-2.5-flash-lite
+      - mistralai/mistral-small-3.1-24b-instruct
+      - mistralai/ministral-8b
+
+  STCI-OPEN:
+    description: "Open-weight models"
+    weighting: equal
+    filter:
+      tier: open
+    models:
+      - meta-llama/llama-3.1-405b-instruct
+      - meta-llama/llama-3.3-70b-instruct
+      - meta-llama/llama-4-maverick
+      - mistralai/mixtral-8x22b-instruct
+      - qwen/qwen-2.5-72b-instruct
+      - qwen/qwen3-235b-a22b
+      - deepseek/deepseek-r1
+
+# Weighting configuration
+weighting:
+  # MVP uses equal weighting
+  type: equal
+  # Future: usage-weighted
+  # type: usage
+  # source: market_share_data.json
+
+# Rebalancing schedule
+rebalancing:
+  schedule: monthly
+  day: 1  # First day of month
+  announcement_days: 7  # Announce changes 7 days prior
+
+# Outlier handling (for future implementation)
+outlier_detection:
+  enabled: false
+  method: trimmed_mean
+  trim_percent: 0.25  # Remove top/bottom 25%
+
+# Validation thresholds
+validation:
+  max_input_rate: 100.0     # Flag if input > $100/1M
+  max_output_rate: 500.0    # Flag if output > $500/1M
+  max_daily_change: 0.50    # Flag if >50% change from previous day
+  cross_source_tolerance: 0.10  # Flag if >10% difference between sources

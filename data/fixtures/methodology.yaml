@@ -1,8 +1,9 @@
 # STCI Methodology Configuration
-# Version: 1.0.0
+# Version: 2.0.0 (2026-11-19). Version 1.0.0 is archived as methodology-1.0.0.yaml
+# and remains the rulebook for dates up to 2026-03-06.
 # See: 000-docs/004-DR-STND-stci-methodology.md
 
-methodology_version: "1.0.0"
+methodology_version: "2.0.0"
 
 # Blended rate computation
 # Assumes output_ratio : 1 output:input token ratio
@@ -21,58 +22,69 @@ decimal_places:
   weights: 8      # Weight calculation
   output: 2       # Published values
 
+# Eligibility (2.0.0). The collector excludes these listings and the indexer
+# re-applies the same rules, so older observation files cannot leak them in:
+#   - alias IDs ("~provider/...-latest") point at another listing
+#   - variant IDs ("model:free", "model:batch") are not separate models;
+#     batch rates are attached to the base model as batch_rate_input/output
+#   - negative prices are router sentinels, not prices
+eligibility:
+  exclude_alias_prefix: "~"
+  exclude_variant_separator: ":"
+  exclude_negative_prices: true
+
+# Constituents (2.0.0) were reviewed on 2026-11-19 from each provider's own
+# model description on OpenRouter, quoted next to each entry. One model per
+# lab and tier. "-pro" listings that are the same model served in a higher
+# reasoning mode are not separate constituents. Review monthly (see
+# rebalancing); constituents_missing in the daily output flags a delisting.
+constituents_reviewed: "2026-11-19"
+
 # Index definitions
 indices:
   STCI-ALL:
     description: "All eligible models"
     weighting: equal
-    filter: null  # No filter - all models
+    filter: null  # No filter - all eligible models
 
   STCI-FRONTIER:
-    description: "Frontier-class flagship models"
+    description: "Each lab's most capable generally available model"
     weighting: equal
-    filter:
-      tier: frontier
     models:
-      - openai/gpt-4o
-      - openai/o3
-      - openai/gpt-5
-      - anthropic/claude-sonnet-4
-      - anthropic/claude-opus-4.5
-      - google/gemini-2.5-pro
-      - google/gemini-3-pro-preview
-      - mistralai/mistral-large
-      - mistralai/mistral-large-2512
+      - openai/gpt-6.2-astra            # "the flagship model in the GPT-6.2 series"
+      - anthropic/claude-fable-5.2      # "Anthropic's most capable model"
+      - google/gemini-4-argon           # "Google's flagship reasoning model"
+      - x-ai/grok-4.7                   # "SpaceXAI's flagship model"
+      - meta/muse-wonder                # "a frontier reasoning model from Meta"
+      - mistralai/mistral-large-4-0     # "a frontier multimodal ... model from Mistral AI"
+      - qwen/qwen4-max                  # "the flagship model in Alibaba's Qwen4 series"
+      - moonshotai/kimi-k3.1-pro        # "Moonshot AI's flagship open-weight ... model"
+      - deepseek/deepseek-v4-pro-0813   # "the GA release of DeepSeek V4 Pro" (DeepSeek's top tier)
 
   STCI-EFFICIENT:
-    description: "High-efficiency cost-optimized models"
+    description: "Each lab's small, fast, cost-efficient tier"
     weighting: equal
-    filter:
-      tier: efficient
     models:
-      - openai/gpt-4o-mini
-      - openai/gpt-4.1-mini
-      - openai/o3-mini
-      - anthropic/claude-3.5-haiku
-      - anthropic/claude-haiku-4.5
-      - google/gemini-2.5-flash
-      - google/gemini-2.5-flash-lite
-      - mistralai/mistral-small-3.1-24b-instruct
-      - mistralai/ministral-8b
+      - openai/gpt-6-luna                   # "the fast, cost-efficient model in OpenAI's GPT-6 series"
+      - anthropic/claude-haiku-5.5          # "Anthropic's small, fast model for high-volume, cost-sensitive work"
+      - google/gemini-4-hydrogen            # "the high-efficiency workhorse model of the Gemini 4 family"
+      - meta/muse-ember                     # "the smallest and most efficient model from Meta"
+      - mistralai/mistral-small-2603        # Mistral Small family
+      - qwen/qwen3.8-flash                  # Qwen Flash tier
+      - deepseek/deepseek-v4.1-flash-1017   # DeepSeek V4.1 Flash, current API snapshot
+      - z-ai/glm-5.3-flash                  # "suited for efficient coding and long-horizon agent tasks"
+      - minimax/minimax-m3.1-flash          # MiniMax Flash tier
 
   STCI-OPEN:
-    description: "Open-weight models"
+    description: "Liquid open-weight models: published weights, sold by at least 10 provider endpoints"
     weighting: equal
+    # Rule-based, no hand-picked list: an observation qualifies when the
+    # source lists published weights AND that day's spread file
+    # (data/spread/{date}.json) shows at least min_endpoints priced provider
+    # endpoints. Without a spread file the index is not published.
     filter:
-      tier: open
-    models:
-      - meta-llama/llama-3.1-405b-instruct
-      - meta-llama/llama-3.3-70b-instruct
-      - meta-llama/llama-4-maverick
-      - mistralai/mixtral-8x22b-instruct
-      - qwen/qwen-2.5-72b-instruct
-      - qwen/qwen3-235b-a22b
-      - deepseek/deepseek-r1
+      open_weights: true
+      min_endpoints: 10
 
 # Weighting configuration
 weighting:

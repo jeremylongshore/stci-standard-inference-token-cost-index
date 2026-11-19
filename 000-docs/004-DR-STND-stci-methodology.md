@@ -6,7 +6,7 @@
 **Status:** DRAFT
 **Owner:** STCI Project Team
 **Created:** 2026-01-01
-**Methodology Version:** 1.0.0
+**Methodology Version:** 1.0.0 (governs 2026-01-02 to 2026-03-06; superseded from 2026-11-19 by `020-DR-STND-stci-methodology-2-0-0.md`)
 
 ---
 

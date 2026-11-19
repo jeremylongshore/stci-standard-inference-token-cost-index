@@ -71,4 +71,6 @@ def test_public_readme_uses_current_repository_and_status():
     assert "jeremylongshore/stci-standard-inference-token-cost-index" in readme
     assert "intent-solutions-io/stci-standard-llm-token-cost-index" not in readme
     assert "https://inferencepriceindex.com" in readme
+    assert "Revived 2026-11-19 under methodology 2.0.0" in readme
+    assert "not comparable" in readme
     assert "npx skills add" in readme

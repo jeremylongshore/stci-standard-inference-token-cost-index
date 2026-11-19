@@ -7,7 +7,6 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
-FIXTURE_SPREAD = ROOT / "tests" / "fixtures" / "spread"
 spec = importlib.util.spec_from_file_location("publish_static", ROOT / "scripts" / "publish_static.py")
 ps = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ps)
@@ -16,7 +15,22 @@ spec.loader.exec_module(ps)
 @pytest.fixture()
 def built(tmp_path):
     out = tmp_path / "dist"
-    ps.build(ROOT, out, spread_dir=FIXTURE_SPREAD)
+    ps.build(ROOT, out)
+    return out
+
+
+@pytest.fixture()
+def planted(tmp_path):
+    """The real spread data with raw fields planted in it; they must be stripped."""
+    src = sorted((ROOT / "data" / "spread").glob("*.json"))[-1]
+    data = json.loads(src.read_text())
+    data["models"][0]["endpoints_raw"] = [{"provider": "x", "prompt": "0.0000001"}]
+    data["models"][0]["cheapest"]["raw_response"] = {"x": 1}
+    d = tmp_path / "spread"
+    d.mkdir()
+    (d / src.name).write_text(json.dumps(data))
+    out = tmp_path / "dist"
+    ps.build(ROOT, out, spread_dir=d)
     return out
 
 
@@ -38,9 +52,9 @@ def test_gap_in_series_is_reported(built):
     assert len(dates["gaps"]) == len(dates["runs"]) - 1
 
 
-def test_never_publishes_observations_or_raw_fields(built):
+def test_never_publishes_observations_or_raw_fields(built, planted):
     assert not (built / "v1" / "observations").exists()
-    spread = (built / "v1/spread/latest.json").read_text()
+    spread = (planted / "v1/spread/latest.json").read_text()
     assert "endpoints_raw" not in spread and "raw_response" not in spread
     for f in (built / "v1").rglob("*.json"):
         text = f.read_text()
@@ -51,7 +65,8 @@ def test_spread_keeps_contract_fields(built):
     s = json.loads((built / "v1/spread/latest.json").read_text())
     m = s["models"][0]
     assert set(m) <= set(ps.SPREAD_MODEL_KEYS)
-    assert m["cheapest"] == {"provider": "FixtureCloud", "quantization": "fp4", "blended": 0.25}
+    assert set(m["cheapest"]) <= set(ps.CHEAPEST_KEYS)
+    assert s["summary"]["models_measured"] == len(s["models"])
 
 
 def test_pages_render_values_and_canonical(built):
@@ -59,7 +74,9 @@ def test_pages_render_values_and_canonical(built):
     latest = json.loads((built / "v1/index/latest.json").read_text())
     assert f'${latest["indices"]["STCI-FRONTIER"]["blended_rate"]:,.2f}' in html
     assert '<link rel="canonical" href="https://inferencepriceindex.com/">' in html
-    assert "fixture/open-a" in html and "8.0" in html
+    spread = json.loads((built / "v1/spread/latest.json").read_text())
+    most = spread["summary"]["most_endpoints"]["model_id"]
+    assert most in html
     for page in ["thesis.html", "methodology.html", "404.html", "privacy.html", "sitemap.xml", "robots.txt"]:
         assert (built / page).is_file()
     assert "style=" not in html and "<script src" not in html

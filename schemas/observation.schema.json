@@ -135,6 +135,15 @@
     "verified_by": {
       "type": "string",
       "description": "Verifier identifier"
+    },
+    "open_weights": {
+      "type": "boolean",
+      "description": "True when the weights are published (the source lists a Hugging Face ID). Methodology 2.0.0."
+    },
+    "hugging_face_id": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Hugging Face repository of the published weights, as listed by the source"
     }
   },
   "additionalProperties": false
