@@ -1,10 +1,17 @@
 name: CI
 
+# Site gates. Job names are the merge-guard floor; keep them.
+# Playwright and Lighthouse run on ubuntu-24.04: Playwright cannot install
+# Chromium on ubuntu-latest (26.04) yet.
+
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
   validate:
@@ -12,21 +19,18 @@ jobs:
     runs-on: ubuntu-24.04  # Playwright 1.57 cannot install Chromium on ubuntu-latest (26.04)
     steps:
       - uses: actions/checkout@v7
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
+      - uses: actions/setup-python@v6
         with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Validate pricing events
-        run: npm run validate
-
-      - name: Generate JSON-LD
-        run: npm run generate:jsonld
+          python-version: '3.12'
+      - run: pip install 'pyyaml>=6.0'
+      - name: Build the site and /v1 JSON from committed data
+        run: python scripts/publish_static.py --out dist
+      - name: Check every published JSON file parses and no observations leak
+        run: |
+          set -euo pipefail
+          find dist/v1 -name '*.json' -print0 | xargs -0 -n1 python -m json.tool >/dev/null
+          test ! -e dist/v1/observations
+          test -s dist/index.html
 
   test:
     name: Playwright Tests
@@ -34,37 +38,24 @@ jobs:
     needs: validate
     steps:
       - uses: actions/checkout@v7
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
+      - uses: actions/setup-python@v6
         with:
-          node-version: '20'
+          python-version: '3.12'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
           cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
-
+      - run: pip install 'pyyaml>=6.0' && python scripts/publish_static.py --out dist
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
       - name: Run Playwright tests
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 --directory public > /tmp/stci-preview.log 2>&1 &
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory dist > /tmp/stci-preview.log 2>&1 &
           preview_pid=$!
           trap 'kill "$preview_pid"' EXIT
           npx playwright test
         env:
           BASE_URL: http://127.0.0.1:4173
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v7
-        if: failure()
-        with:
-          name: playwright-report
-          path: |
-            playwright-report/
-            test-results/
-          retention-days: 7
 
   lighthouse:
     name: Lighthouse Audit
@@ -72,71 +63,29 @@ jobs:
     needs: validate
     steps:
       - uses: actions/checkout@v7
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
+      - uses: actions/setup-python@v6
         with:
-          node-version: '20'
+          python-version: '3.12'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
           cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run Lighthouse
+      - run: pip install 'pyyaml>=6.0' && python scripts/publish_static.py --out dist
+      - run: npm ci
+      - name: Run Lighthouse on the landing page
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 --directory public > /tmp/stci-preview.log 2>&1 &
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory dist > /tmp/stci-preview.log 2>&1 &
           preview_pid=$!
           trap 'kill "$preview_pid"' EXIT
-          npx lighthouse http://127.0.0.1:4173/intelligence.html \
-            --output=json \
-            --output-path=./lighthouse-results.json \
-            --chrome-flags="--headless --no-sandbox" \
-            --only-categories=performance,accessibility,best-practices,seo
-
-      - name: Check Lighthouse scores
+          npx lighthouse http://127.0.0.1:4173/index.html --output=json --output-path=./lighthouse-results.json \
+            --chrome-flags="--headless --no-sandbox" --only-categories=performance,accessibility,best-practices,seo
+      - name: Check scores (accessibility >= 95)
         run: |
           node -e "
-          const results = require('./lighthouse-results.json');
-          const scores = {
-            performance: Math.round(results.categories.performance.score * 100),
-            accessibility: Math.round(results.categories.accessibility.score * 100),
-            'best-practices': Math.round(results.categories['best-practices'].score * 100),
-            seo: Math.round(results.categories.seo.score * 100)
-          };
-
-          console.log('Lighthouse Scores:');
-          console.log('  Performance:', scores.performance);
-          console.log('  Accessibility:', scores.accessibility);
-          console.log('  Best Practices:', scores['best-practices']);
-          console.log('  SEO:', scores.seo);
-
-          // Hard thresholds (fail CI if not met)
-          const hardThresholds = { accessibility: 90, 'best-practices': 90, seo: 90 };
-          // Soft threshold (warn only - CI network latency causes high variance)
-          const softThreshold = { performance: 70 };
-          let failed = false;
-
-          for (const [key, threshold] of Object.entries(hardThresholds)) {
-            if (scores[key] < threshold) {
-              console.error('FAIL: ' + key + ' score ' + scores[key] + ' is below threshold ' + threshold);
-              failed = true;
-            }
-          }
-
-          // Performance is advisory only due to CI network variability
-          if (scores.performance < softThreshold.performance) {
-            console.warn('WARN: performance score ' + scores.performance + ' is below advisory threshold ' + softThreshold.performance);
-            console.warn('(Performance varies due to CI network latency - local scores are typically 95+)');
-          }
-
-          if (failed) process.exit(1);
-          console.log('All required thresholds met!');
-          "
-
-      - name: Upload Lighthouse report
-        uses: actions/upload-artifact@v7
-        if: always()
-        with:
-          name: lighthouse-report
-          path: lighthouse-results.json
-          retention-days: 7
+          const r = require('./lighthouse-results.json');
+          const s = k => Math.round(r.categories[k].score * 100);
+          const hard = { accessibility: 95, 'best-practices': 90, seo: 90 };
+          let bad = false;
+          for (const [k, t] of Object.entries(hard)) { console.log(k, s(k)); if (s(k) < t) { console.error('FAIL ' + k); bad = true; } }
+          console.log('performance (advisory)', s('performance'));
+          if (bad) process.exit(1);"

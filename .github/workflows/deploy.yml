@@ -1,0 +1,52 @@
+name: Deploy site to VPS
+
+# Push to main -> build gate (publish_static.py + tests) -> repo-scoped
+# vps-deploy runner on the Buzz host -> command-restricted SSH to the
+# intentsolutions VPS -> /usr/local/sbin/deploy-stci (resets /srv/stci to the
+# pushed commit, runs publish_static.py, rsyncs dist/) -> Caddy file_server
+# -> smoke on the published JSON. Source of the VPS side: intent-os
+# ops/deploy/stci/ (D90).
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  id-token: write   # the reusable workflow's job declares it; unused with join-tailnet false
+
+concurrency:
+  group: deploy-vps-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: pre-deploy build gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - run: python -m pytest tests/test_publish_static.py -q
+      - run: python scripts/publish_static.py --out dist
+
+  deploy:
+    needs: test
+    uses: jeremylongshore/.github/.github/workflows/vps-deploy.yml@4e259b9e7df411e126b5adbc66ed39665a9231b8
+    with:
+      runs-on: '["self-hosted","linux","vps-deploy"]'
+      join-tailnet: false
+      variant: static
+      srv-path: /srv/stci
+      health-check-url: https://inferencepriceindex.com/v1/index/latest.json
+      vps-tailnet-ip: 100.88.144.55
+      vps-public-ip: 167.86.106.29
+      vps-host: intentsolutions
+      vps-user: intentsolutions
+      smoke-validation: '.indices["STCI-ALL"].blended_rate > 0'
+    secrets:
+      VPS_DEPLOY_KEY: ${{ secrets.VPS_DEPLOY_KEY }}
+      VPS_HOST_KEY: ${{ secrets.VPS_HOST_KEY }}
