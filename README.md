@@ -1,18 +1,14 @@
 # STCI — Standard Token Cost Index
 
-<!-- intent-select-partner:start -->
-<p><a href="https://intentsolutions.io/"><img src="https://raw.githubusercontent.com/intent-solutions-io/.github/b82af5d3e7951d85e39ea9e65cc24ee8278722a7/assets/brand/claude-select-partner.svg" alt="Intent Solutions: Claude Partner Network Select Services Partner" width="300" height="95" /></a></p>
-
-Intent Solutions is a Claude Partner Network Select Services Partner.
-<!-- intent-select-partner:end -->
-
 [![Release](https://img.shields.io/github/v/release/jeremylongshore/stci-standard-inference-token-cost-index)](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/releases)
 [![Tests](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/actions/workflows/tests.yml/badge.svg)](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U5S225PTME)
 
-**A public, vendor-neutral price index for LLM tokens.**
+**The benchmark price for AI tokens.** Open, reproducible, run by nobody who sells them.
+
+Site: [inferencepriceindex.com](https://inferencepriceindex.com)
 
 > **Project status:** Revived 2026-11-19 under methodology 2.0.0
 > ([000-docs/020](000-docs/020-DR-STND-stci-methodology-2-0-0.md)). The published
@@ -20,75 +16,74 @@ Intent Solutions is a Claude Partner Network Select Services Partner.
 > pipeline was switched off, and resumes 2026-11-19. Values across that boundary
 > are not comparable: the baskets changed.
 
-STCI provides a transparent, reproducible reference rate for large language model token pricing, analogous to market indices like LIBOR or VIX. It aggregates published pricing from major model providers and aggregators, normalizes the data into a canonical schema, and computes daily reference rates with full provenance.
-
 ---
 
-## The Problem
+## The idea
 
-Token pricing in the LLM ecosystem is fragmented:
+Tokens are becoming a commodity. Every commodity market that works has a benchmark
+price that nobody selling the commodity controls: Brent and WTI for crude, the
+Baltic Dry Index for shipping. Tokens have none. Prices are set unilaterally, change
+without notice, and are increasingly subsidized or resold by intermediaries, so nobody
+can tell a fair price from a subsidy, budget a year ahead, or hedge a contract.
 
-- **Dozens of providers**: OpenAI, Anthropic, Google, AWS Bedrock, Azure OpenAI, Cohere, Mistral, Fireworks, Together, Replicate, Groq, and growing
-- **No standard format**: Pricing is published as $/1K tokens, $/1M tokens, per-minute, per-character, or blended rates
-- **No historical record**: Prices change without notice; there's no "price tape" to track over time
-- **No neutral benchmark**: Users can't easily answer "what's the market rate for frontier-class models today?"
+STCI is built on the Baltic Exchange model. A benchmark needs four things:
 
-Enterprises, researchers, and developers need a **trusted, auditable source of truth** for LLM token pricing—for cost estimation, budgeting, contract negotiation, and market analysis.
+1. **Routes**: standard units to price. Model tiers today; cost per standard task later.
+2. **A panel**: gateways and large consumers reporting what they actually paid,
+   anonymized and volume-weighted.
+3. **A public rulebook**: the methodology, every constituent, every exclusion, in writing.
+4. **An audit trail**: a verification hash on every value, so a third party can
+   recompute it, and administration independent of any seller.
 
----
+### Not every token is the same token
 
-## What STCI Provides
+Crude has grades. Tokens have serving precision, context length and uptime. The same
+open-weight model is sold by dozens of providers at once, and the price is not the
+only thing that differs. On 2026-11-19 DeepSeek V4.1 Flash was sold by 41 providers
+through 50 endpoints at $0.12 to $1.95 per million blended tokens, a 16× spread; the
+cheapest served it at fp4. Across 57 open-weight models the median spread was 2.5×.
+STCI publishes this as the **neocloud spread**, alongside the index.
 
-### 1. Normalized Observations
-Every pricing data point is captured as a **canonical observation** with:
-- Provider and model identifiers
-- Input token rate (USD per 1M tokens)
-- Output token rate (USD per 1M tokens)
-- Effective date and timestamp
-- Source URL and provenance metadata
-- Collection method and confidence level
+### Where STCI is on that ladder
 
-### 2. Daily Reference Rates
-STCI computes a **daily index value** (and sub-indices) using a transparent methodology:
-- **STCI-ALL**: Equal-weighted average across every eligible model
-- **STCI-FRONTIER**: Each lab's most capable generally available model, cited to the provider's own description
-- **STCI-EFFICIENT**: Each lab's small, fast, cost-efficient tier
-- **STCI-OPEN**: Open-weight models with published weights, sold by at least 10 provider endpoints that day
-- **Neocloud spread** (not an index): what the same open-weight model costs across the providers selling it. Min, median and max, the max/min ratio, and the serving precision of the cheapest endpoint
+| Rung | What | Status |
+|---|---|---|
+| 1 | Listed prices from one aggregator, reproducible, hash-verified | **live** |
+| 2 | Grade and spread across providers | **live** |
+| 3 | Reported-price panel (gateways, enterprises) | next; [say hello](mailto:jeremy@intentsolutions.io) if you run one |
+| 4 | Forwards and contracts that settle against the index | later |
 
-Each sub-index has:
-- Defined basket composition
-- Transparent weighting methodology
-- Documented inclusion/exclusion criteria
-- Rebalancing schedule
+### How it started
 
-### 3. Deterministic Recomputation
-Given a date and the observation set for that date, STCI produces **identical results every time**. This enables:
-- Independent verification by third parties
-- Backtesting and historical analysis
-- Audit compliance for enterprise users
+Started 2026-01-01 and built in one week (v0.1.0 on January 3 through v0.5.0 on
+January 8: collector, indexer, API, site). It ran daily until 2026-03-06, then the
+author got pulled onto other work and switched the pipeline off. Revived 2026-11-19.
 
-### 4. Read-Only API
-A simple API exposes:
-- Latest index values
-- Historical time series
-- Raw observations (with provenance)
-- Methodology documentation
+## The indices
 
----
+Four equal-weighted daily reference rates in USD per 1M tokens, blended at 3:1
+output:input:
 
-## Data Sourcing Tiers
+- **STCI-FRONTIER**: each lab's most capable generally available model, cited to the provider's own description
+- **STCI-EFFICIENT**: each lab's small, fast, cost-efficient tier
+- **STCI-OPEN**: open-weight models with published weights, sold by at least 10 provider endpoints that day
+- **STCI-ALL**: every eligible model
+- **Neocloud spread** (not an index): per open-weight model, min, median and max across the providers selling it, the max/min ratio, and the serving precision of the cheapest endpoint
 
-STCI uses a tiered approach to data quality:
+First reading, 2026-11-19: FRONTIER $12.04, EFFICIENT $1.05, OPEN $2.05 (23 models),
+ALL $6.00 (344 models). Verification hash `3b422aefd8c603c8`.
 
-| Tier | Source Type | Confidence | Example |
-|------|-------------|------------|---------|
-| T1 | Official pricing pages (provider-published) | Highest | openai.com/pricing |
-| T2 | Official APIs returning pricing | High | Bedrock pricing API |
-| T3 | Aggregator pricing (verified) | Medium | OpenRouter, LLMAP.io |
-| T4 | Community-reported (cross-validated) | Lower | User submissions |
+Every value is deterministic: given the date and the observation set, STCI produces
+identical output. Published: indices, the spread, the methodology. Not published: raw
+observations (ADR [014](000-docs/014-AT-ADEC-data-licensing-private.md)); available on request.
 
-MVP focuses on T1 and T2 sources only.
+## Data sources
+
+| Tier | Source type | Today |
+|---|---|---|
+| T1 | Aggregator public API (OpenRouter models + per-provider endpoints) | in use |
+| T2 | Provider-published pricing APIs | scaffolded |
+| T3 | Reported prices from a panel | planned (rung 3) |
 
 ---
 
@@ -177,30 +172,26 @@ Aggregated reference rate for a given date:
 
 ---
 
-## Methodology Overview
+## Methodology (2.0.0)
 
-### Basket Definition
-Each sub-index has a defined basket of models based on:
-- **Capability tier**: Frontier, efficient, open-weight
-- **Market presence**: Minimum usage threshold
-- **Data availability**: Must have T1/T2 pricing
+Full rulebook: [000-docs/020](000-docs/020-DR-STND-stci-methodology-2-0-0.md).
+Config: `data/fixtures/methodology.yaml`.
 
-### Weighting
-Default weighting for MVP:
-- **Equal weight** within capability tiers
-- Future: Usage-weighted based on market share data
-
-### Aggregation
-- **Input rate**: Weighted average of USD/1M input tokens
-- **Output rate**: Weighted average of USD/1M output tokens
-- **Blended rate**: Assumes 3:1 output-to-input ratio (configurable)
-- **Dispersion**: Standard deviation to indicate price spread
-
-### Edge Cases
-- **Missing data**: Carry forward previous day's rate (max 7 days)
-- **Price changes**: Use end-of-day price
-- **Model additions**: Next rebalancing window
-- **Model removals**: Same business day
+- **Eligibility is a rule.** Alias (`~lab/x-latest`), `:free`, `:batch`, router
+  (negative sentinel) and unpriced listings are excluded with the reason logged;
+  batch rates attach to the base model. The indexer re-applies the rules, so an old
+  observation file cannot leak them in.
+- **Constituents are cited.** FRONTIER and EFFICIENT hold one model per lab and
+  tier, each quoting the provider's own description. STCI-OPEN is rule-based.
+- **Weighting:** equal. Usage weighting waits on the reported-price panel.
+- **Aggregation:** mean input and output rate per basket; blended at 3:1; dispersion
+  as standard deviation.
+- **Staleness:** every daily output lists `constituents_missing`; constituents are
+  reviewed on the first of each month.
+- **Hash:** SHA-256 over the sorted eligible observations, methodology version and
+  date, plus the per-model endpoint counts when the liquidity screen ran.
+- **Edge cases:** missing data carries forward at most 7 days; a basket below 50%
+  coverage is not published.
 
 ---
 
@@ -258,7 +249,7 @@ python -m services.api.main
 | `/v1/index/latest` | GET | Latest STCI values |
 | `/v1/index/{date}` | GET | Index for specific date |
 | `/v1/indices` | GET | List all available dates |
-| `/v1/observations/{date}` | GET | Raw observations for date |
+| `/v1/observations/{date}` | GET | Raw observations (local development server only; not published) |
 | `/v1/methodology` | GET | Current methodology config |
 
 ---
@@ -275,13 +266,13 @@ STCI is designed as a **reference rate product**. Trust is the moat:
 
 ---
 
-## Current status and roadmap
+## Status and roadmap
 
-The repository contains the observation schemas, OpenRouter collector,
-deterministic indexer, read-only API, Firebase surface, CI, and regression tests.
-The next product decision is whether to resume daily collection or archive the
-project; that decision and any follow-on work are tracked in Beads and
-[issue #8](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/issues/8), not in a duplicate Markdown checklist.
+Live: collector, neocloud spread, deterministic indexer, read-only API, tests, and the
+site at [inferencepriceindex.com](https://inferencepriceindex.com) (self-hosted).
+Next: nightly runs on our own host with automatic publication, then the reported-price
+panel (methodology 3.x). Tracked in Beads and
+[issue #8](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/issues/8).
 
 ---
 
