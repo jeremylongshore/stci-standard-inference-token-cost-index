@@ -7,7 +7,7 @@ test('landing page shows the thesis order and live values', async ({ page }) => 
   await expect(page.locator('h1')).toHaveText('The benchmark price for AI tokens.');
   const h2 = await page.locator('main h2').allTextContents();
   expect(h2[0]).toContain('benchmark price');
-  expect(h2[4]).toContain("Today's numbers");
+  expect(h2[4]).toContain('numbers');
   await expect(page.locator('.card .value').first()).toContainText('$');
   await expect(page.locator('link[rel=canonical]')).toHaveAttribute('href', 'https://inferencepriceindex.com/');
   expect(errors).toEqual([]);

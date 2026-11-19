@@ -165,6 +165,7 @@ NAV = [("/", "Index"), ("/thesis", "Thesis"), ("/methodology", "Methodology & AP
 
 def page(*, path: str, title: str, description: str, body: str, jsonld: dict | None = None) -> str:
     canonical = SITE + path
+    bar = (ROOT / "vendor" / "estate-bar" / "fragments" / "estate-bar.stci.html").read_text().strip()
     nav = "".join(
         f'<li><a href="{href}"{" aria-current=\"page\"" if href == path else ""}>{label}</a></li>'
         for href, label in NAV
@@ -188,16 +189,19 @@ def page(*, path: str, title: str, description: str, body: str, jsonld: dict | N
 <meta property="og:description" content="{e(description)}">
 <meta property="og:url" content="{canonical}">
 <meta name="twitter:card" content="summary">
-<meta name="theme-color" content="#0a0a0a">
+<meta name="theme-color" content="#f6f6f4">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/estate-bar/estate-bar.css">
 <link rel="stylesheet" href="/styles.css">
 {ld}
 </head>
 <body>
+{bar}
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="wrap header-inner">
-    <a class="logo" href="/"><span class="logo-mark" aria-hidden="true">&#9670;</span> STCI</a>
+    <a class="logo" href="/">STCI<span class="logo-sub">Standard Token Cost Index</span></a>
     <nav aria-label="Primary"><ul class="nav">{nav}</ul></nav>
   </div>
 </header>
@@ -228,11 +232,11 @@ def index_cards(latest: dict) -> str:
         miss = ""
         if missing:
             miss = f'<p class="card-note">{len(missing)} constituent(s) missing today</p>'
-        cards.append(f"""<div class="card">
+        cards.append(f"""<div class="card card-{name.split('-')[1].lower()}">
   <h3>{e(name)}</h3>
-  <p class="value">{usd(body['blended_rate'])}<span class="unit"> per 1M tokens</span></p>
+  <p class="value num">{usd(body['blended_rate'])}<span class="unit"> per 1M tokens</span></p>
   <p class="card-sub">{e(INDEX_BLURB.get(name, ''))}. {body.get('model_count', '?')} models.</p>
-  <p class="card-detail">input {usd(body['input_rate'])} &middot; output {usd(body['output_rate'])}</p>
+  <p class="card-detail">input {usd(body['input_rate'])}, output {usd(body['output_rate'])}</p>
   {miss}
 </div>""")
     return '<div class="cards">' + "".join(cards) + "</div>"
@@ -299,7 +303,7 @@ def coverage(dates: list[str]) -> str:
 
 LADDER = """<ol class="ladder">
 <li><span class="rung now">Now</span> <strong>Listed prices.</strong> Every separately priced model on one aggregator
-(OpenRouter), normalized to $ per million tokens, combined into four indices under a public rulebook. Each day's value
+(OpenRouter), normalized to $ per million tokens, combined into four indices under a public rulebook. Each day’s value
 carries a verification hash that anyone holding the inputs can reproduce.</li>
 <li><span class="rung now">Now</span> <strong>Grades and spread.</strong> For open-weight models, the price of every
 provider endpoint selling the same model, and the precision each one serves.</li>
@@ -313,11 +317,9 @@ buyer fix next year's token cost. This needs the panel and independent administr
 def landing(latest: dict, spread: dict | None, dates: list[str], methodology: dict) -> str:
     d = latest["date"]
     return f"""<section class="hero wrap">
-  <p class="eyebrow">STCI &middot; Standard Token Cost Index</p>
   <h1>The benchmark price for AI tokens.</h1>
-  <p class="lead">Oil has Brent and WTI. Shipping has the Baltic Dry Index. Tokens are becoming a commodity too,
-  and they have no benchmark that the sellers do not control. STCI is a public, reproducible start on one.</p>
-  <p class="hero-links"><a class="btn" href="/thesis">Read the thesis</a> <a class="btn btn-ghost" href="#today">See today's numbers</a></p>
+  <p class="lead">Oil has Brent. Shipping has the Baltic Dry Index. Tokens have no price the sellers don’t set.</p>
+  <p class="hero-links"><a class="btn" href="/thesis">Read the thesis</a> <a class="btn btn-ghost" href="#today">See today’s numbers</a></p>
 </section>
 
 <section class="wrap section" aria-labelledby="why">
@@ -353,13 +355,13 @@ def landing(latest: dict, spread: dict | None, dates: list[str], methodology: di
 </section>
 
 <section class="wrap section" id="today" aria-labelledby="today-h">
-  <h2 id="today-h">5. Today's numbers</h2>
+  <h2 id="today-h">5. Today’s numbers</h2>
   <p>Blended $ per million tokens at {methodology.get('output_ratio', 3):g} output tokens per input token, for
   <strong>{e(long_date(d))}</strong> (methodology {e(latest.get('methodology_version', '?'))}).</p>
   {index_cards(latest)}
   <h3 class="sub">The neocloud spread</h3>
   {spread_table(spread)}
-  <p class="muted small">Source: listed prices on OpenRouter, the model catalog and each model's provider endpoint list.
+  <p class="muted small">Source: listed prices on OpenRouter, the model catalog and each model’s provider endpoint list.
   Listed prices, not prices paid. JSON: <a href="/v1/index/latest.json">/v1/index/latest.json</a>,
   <a href="/v1/spread/latest.json">/v1/spread/latest.json</a>.</p>
 </section>
@@ -368,13 +370,13 @@ def landing(latest: dict, spread: dict | None, dates: list[str], methodology: di
   <h2 id="ask">6. Report what you pay</h2>
   <p>The next rung needs prices paid, not prices listed. If you run an LLM gateway, or your company buys tokens at
   volume, you can make the index real by reporting what you pay, anonymized and aggregated before anything is published.</p>
-  <p><a class="btn" href="mailto:{CONTACT}?subject=STCI%20panel">Email {CONTACT}</a>
+  <p><a class="btn" href="mailto:{CONTACT}?subject=STCI%20panel">Report a price</a>
   <a class="btn btn-ghost" href="{REPO}">The code and data on GitHub</a></p>
 </section>
 
 <section class="wrap section" aria-labelledby="repro">
   <h2 id="repro">7. Methodology and reproducibility</h2>
-  <p>The rulebook is public. Today's value carries verification hash <code>{e(latest.get('verification_hash', ''))}</code>:
+  <p>The rulebook is public. Today’s value carries verification hash <code>{e(latest.get('verification_hash', ''))}</code>:
   SHA-256 over the sorted eligible observations, the methodology version and the date. Anyone holding the inputs can
   recompute it; the observations are available on request.</p>
   <p>Series coverage, labeled as it is:</p>
@@ -386,7 +388,6 @@ def landing(latest: dict, spread: dict | None, dates: list[str], methodology: di
 
 def thesis_page(latest: dict, spread: dict | None) -> str:
     return f"""<article class="wrap prose">
-<p class="eyebrow">Thesis</p>
 <h1>Tokens need a benchmark price</h1>
 <p class="lead">AI tokens are turning into a commodity. Commodities that trade well share one piece of infrastructure:
 a reference price that the sellers do not control. Tokens do not have one yet. This is the case for building it, and
@@ -441,7 +442,7 @@ equally, and its 3:1 output-to-input blend is a stated assumption, not a measure
 <a href="/methodology">methodology</a>, and the panel is the planned remedy for most of them.</p>
 
 <h2>5. The evidence</h2>
-<p>Today's four index values and the full spread table are on the <a href="/#today">front page</a>, and every number is
+<p>Today’s four index values and the full spread table are on the <a href="/#today">front page</a>, and every number is
 in the <a href="/methodology#api">JSON API</a>.</p>
 
 <h2>6. Who it is for</h2>
@@ -464,7 +465,6 @@ def methodology_page(methodology: dict, latest: dict) -> str:
                     f"<td>{basket}</td></tr>")
     v = e(methodology.get("methodology_version", "?"))
     return f"""<article class="wrap prose">
-<p class="eyebrow">Methodology &amp; API</p>
 <h1>The rulebook</h1>
 <p>Current methodology: <strong>{v}</strong>. The full text and the machine-readable rules are in the
 <a href="{REPO}/tree/main/000-docs">repository</a>; the rules as published here are at
@@ -476,7 +476,7 @@ def methodology_page(methodology: dict, latest: dict) -> str:
 <li><strong>Eligibility.</strong> Only separately priced models count. Aliases, free listings, batch variants and routers are excluded by rule.</li>
 <li><strong>Weighting.</strong> Equal. Volume weighting needs reported volumes, which needs the panel.</li>
 <li><strong>Publication.</strong> Indices and derived spread metrics only. Raw source responses and individual observations are not published.</li>
-<li><strong>Verification.</strong> Each day's value carries a hash over the sorted eligible observations, the methodology
+<li><strong>Verification.</strong> Each day’s value carries a hash over the sorted eligible observations, the methodology
 version and the date. Today: <code>{e(latest.get('verification_hash', ''))}</code>.</li>
 </ul>
 <h2>Baskets</h2>
@@ -530,6 +530,10 @@ def build(root: Path, out: Path, data_dir: Path | None = None, spread_dir: Path 
     pub = root / "public"
     if pub.is_dir():
         shutil.copytree(pub, out, dirs_exist_ok=True)
+    bar_src = root / "vendor" / "estate-bar"
+    (out / "estate-bar").mkdir()
+    shutil.copy2(bar_src / "estate-bar.css", out / "estate-bar" / "estate-bar.css")
+    shutil.copytree(bar_src / "fonts", out / "estate-bar" / "fonts")
 
     clean = {d: clean_index(raw) for d, raw in indices.items()}
     dates = sorted(clean)
