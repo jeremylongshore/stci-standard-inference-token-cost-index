@@ -45,11 +45,28 @@ def test_writes_every_api_file(built):
         assert (built / "v1" / "index" / f"{d}.json").is_file()
 
 
-def test_gap_in_series_is_reported(built):
+def test_only_public_dates_are_published(built):
     dates = json.loads((built / "v1/indices.json").read_text())
-    if len(dates["runs"]) > 1:
-        assert dates["gaps"] and all(g["status"] == "not collected" for g in dates["gaps"])
-    assert len(dates["gaps"]) == len(dates["runs"]) - 1
+    assert dates["first"] >= ps.PUBLIC_START
+    assert all(d >= ps.PUBLIC_START for d in dates["dates"])
+    for f in (built / "v1" / "index").glob("20*.json"):
+        assert f.stem >= ps.PUBLIC_START
+    assert not (built / "v1" / "index" / "2026-03-06.json").exists()
+
+
+def test_site_copy_rules(built):
+    for f in built.glob("*.html"):
+        text = f.read_text()
+        assert "jeremy@" not in text, f.name
+        assert "Standard Token Cost Index" not in text, f.name
+        if f.stem not in ("privacy", "terms", "acceptable-use", "data-retention"):
+            for banned in ("1.0.0", "2.0.0", "not comparable", "series gap"):
+                assert banned not in text, (f.name, banned)
+    home = (built / "index.html").read_text()
+    for slug in ("privacy", "terms", "acceptable-use", "data-retention"):
+        assert f'href="/{slug}"' in home
+        assert "intentsolutions.io LLC" in (built / f"{slug}.html").read_text()
+    assert "support@intentsolutions.io" in home and "Where it came from" in home
 
 
 def test_never_publishes_observations_or_raw_fields(built, planted):
@@ -77,7 +94,8 @@ def test_pages_render_values_and_canonical(built):
     spread = json.loads((built / "v1/spread/latest.json").read_text())
     most = spread["summary"]["most_endpoints"]["model_id"]
     assert most in html
-    for page in ["thesis.html", "methodology.html", "404.html", "privacy.html", "sitemap.xml", "robots.txt"]:
+    for page in ["thesis.html", "methodology.html", "404.html", "privacy.html", "terms.html",
+                 "acceptable-use.html", "data-retention.html", "sitemap.xml", "robots.txt"]:
         assert (built / page).is_file()
     assert "style=" not in html and "<script src" not in html
 
@@ -85,14 +103,14 @@ def test_pages_render_values_and_canonical(built):
 def test_missing_spread_still_builds(tmp_path):
     ps.build(ROOT, tmp_path / "d", spread_dir=tmp_path / "none")
     assert not (tmp_path / "d/v1/spread/latest.json").exists()
-    assert "No spread file" in (tmp_path / "d/index.html").read_text()
+    assert "spread table publishes" in (tmp_path / "d/index.html").read_text()
 
 
 def test_mismatched_date_is_refused(tmp_path):
     data = tmp_path / "data"
     shutil.copytree(ROOT / "data" / "fixtures", data / "fixtures")
     (data / "indices").mkdir()
-    (data / "indices" / "2026-01-02.json").write_text(json.dumps(
-        {"date": "2026-01-03", "indices": {"STCI-ALL": {"blended_rate": 1}}}))
+    (data / "indices" / "2026-11-20.json").write_text(json.dumps(
+        {"date": "2026-11-21", "indices": {"STCI-ALL": {"blended_rate": 1}}}))
     with pytest.raises(ps.PublishError):
         ps.build(ROOT, tmp_path / "out", data_dir=data)
