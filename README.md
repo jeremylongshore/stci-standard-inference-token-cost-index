@@ -14,9 +14,12 @@ Intent Solutions is a Claude Partner Network Select Services Partner.
 
 **A public, vendor-neutral price index for LLM tokens.**
 
-> **Project status:** The scheduled daily pipeline is intentionally disabled and
-> published index data is frozen at 2026-03-06 while the maintainer decides
-> whether to revive or archive STCI. See [issue #8](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/issues/8).
+> **Project status:** Revived 2026-11-19 under methodology 2.0.0 and live at
+> **https://inferencepriceindex.com** (static JSON API under `/v1/`, also on
+> `https://stci.intentsolutions.io/v1/`). The published series covers 2026-01-02 to
+> 2026-03-06, then resumes 2026-11-19; the gap was not collected and is not back-filled.
+> The site is built by `scripts/publish_static.py` and deployed to the Intent Solutions VPS on
+> every push to `main`.
 
 STCI provides a transparent, reproducible reference rate for large language model token pricing, analogous to market indices like LIBOR or VIX. It aggregates published pricing from major model providers and aggregators, normalizes the data into a canonical schema, and computes daily reference rates with full provenance.
 
