@@ -70,5 +70,5 @@ def test_public_readme_uses_current_repository_and_status():
     readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
     assert "jeremylongshore/stci-standard-inference-token-cost-index" in readme
     assert "intent-solutions-io/stci-standard-llm-token-cost-index" not in readme
-    assert "scheduled daily pipeline is intentionally disabled" in readme
+    assert "https://inferencepriceindex.com" in readme
     assert "npx skills add" in readme
