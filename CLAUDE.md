@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-STCI (Standard Token Cost Index) is a vendor-neutral price index for LLM tokens. It collects pricing data from model providers, normalizes it to a canonical schema, and computes daily reference rates with full provenance.
+STCI (Standardized Token Cost Index) is a vendor-neutral price index for LLM tokens. It collects pricing data from model providers, normalizes it to a canonical schema, and computes daily reference rates with full provenance.
 
 ## Development Commands
 
