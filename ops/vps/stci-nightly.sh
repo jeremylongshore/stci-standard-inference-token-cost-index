@@ -28,7 +28,10 @@
 # Overrides (for re-runs and drills; see 000-docs/021-OD-RUNB-nightly-refresh.md):
 #   STCI_NIGHTLY_DATE=YYYY-MM-DD   compute that date instead of today (UTC)
 #   STCI_NIGHTLY_FORCE=1           recompute even if the date is already published
-#   HTTPS_PROXY=http://127.0.0.1:9 planted-fault drill: OpenRouter unreachable
+#   STCI_NIGHTLY_FAULT_PROXY=http://127.0.0.1:9
+#                                  planted-fault drill: routes ONLY the three pipeline
+#                                  steps through a dead proxy (OpenRouter unreachable);
+#                                  git, pip and the alert path are untouched
 
 set -uo pipefail
 
@@ -46,6 +49,7 @@ REMOTE="${STCI_NIGHTLY_REMOTE:-git@github-stci-nightly:jeremylongshore/stci-stan
 SSH_KEY="${STCI_NIGHTLY_SSH_KEY:-$HOME/.ssh/stci_nightly_ed25519}"
 DATE="${STCI_NIGHTLY_DATE:-$(date -u +%F)}"
 FORCE="${STCI_NIGHTLY_FORCE:-0}"
+FAULT_PROXY="${STCI_NIGHTLY_FAULT_PROXY:-}"
 AUTHOR_NAME="STCI nightly"
 AUTHOR_EMAIL="support@intentsolutions.io"
 
@@ -140,12 +144,18 @@ if [ "$(cat "$STATE/requirements.sha256" 2>/dev/null || true)" != "$REQ_HASH" ];
 fi
 
 # ── 4. The three pipeline steps ───────────────────────────────────────────────
+# A drill proxy applies to these three commands only, never to git or notify.sh.
+PIPE=("$PY")
+if [ -n "$FAULT_PROXY" ]; then
+  log "DRILL: pipeline steps routed through $FAULT_PROXY"
+  PIPE=(env "HTTPS_PROXY=$FAULT_PROXY" "HTTP_PROXY=$FAULT_PROXY" "$PY")
+fi
 log "step 1/3 collector"
-"$PY" -m services.collector.pipeline --date "$DATE" || fail "collector failed for $DATE (OpenRouter unreachable or no valid observations)"
+"${PIPE[@]}" -m services.collector.pipeline --date "$DATE" || fail "collector failed for $DATE (OpenRouter unreachable or no valid observations)"
 log "step 2/3 spread"
-"$PY" -m services.collector.spread --date "$DATE" || fail "spread failed for $DATE"
+"${PIPE[@]}" -m services.collector.spread --date "$DATE" || fail "spread failed for $DATE"
 log "step 3/3 indexer"
-"$PY" -m services.indexer.pipeline --date "$DATE" || fail "indexer failed for $DATE"
+"${PIPE[@]}" -m services.indexer.pipeline --date "$DATE" || fail "indexer failed for $DATE"
 
 # ── 5. Verify the output before anything is committed ─────────────────────────
 [ -s "$INDEX_REL" ] || fail "$INDEX_REL missing or empty after the indexer ran"

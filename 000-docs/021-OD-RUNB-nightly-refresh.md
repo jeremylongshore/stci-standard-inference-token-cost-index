@@ -71,11 +71,13 @@ listings under that date. Use `FORCE` for a same-day repair, not for backfilling
 ## Planted-fault drill
 
 ```bash
-HTTPS_PROXY=http://127.0.0.1:9 STCI_NIGHTLY_FORCE=1 /usr/local/sbin/stci-nightly.sh; echo rc=$?
+STCI_NIGHTLY_FAULT_PROXY=http://127.0.0.1:9 STCI_NIGHTLY_FORCE=1 /usr/local/sbin/stci-nightly.sh; echo rc=$?
 ```
 
-Expected: the collector cannot reach OpenRouter, the run exits 1, nothing is committed, and
-one high event reaches Buzz `sys-automation` (`buzz messages get sys-automation`).
+The dead proxy applies only to the three pipeline steps (a bare `HTTPS_PROXY` would also
+blind the alert floor's own delivery). Expected: the collector cannot reach OpenRouter, the
+run exits 1, `.ok` is not written, nothing is committed, and one high event reaches Buzz
+`sys-automation` (`buzz messages get sys-automation`).
 
 ## Updating the script or units
 
