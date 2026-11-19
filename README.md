@@ -16,11 +16,7 @@ Intent Solutions is a Claude Partner Network Select Services Partner.
 
 Site: [inferencepriceindex.com](https://inferencepriceindex.com)
 
-> **Project status:** Revived 2026-11-19 under methodology 2.0.0
-> ([000-docs/020](000-docs/020-DR-STND-stci-methodology-2-0-0.md)). The published
-> series covers 2026-01-02 to 2026-03-06 (methodology 1.0.0), stops while the
-> pipeline was switched off, and resumes 2026-11-19. Values across that boundary
-> are not comparable: the baskets changed.
+> **Status:** live. The index publishes daily from 2026-11-19.
 
 ---
 
@@ -171,16 +167,16 @@ Aggregated reference rate for a given date:
       "model_count": 8
     }
   },
-  "methodology_version": "1.0.0",
+  "methodology_version": "2.0.0",
   "computed_at": "2026-01-01T23:59:00Z"
 }
 ```
 
 ---
 
-## Methodology (2.0.0)
+## Methodology
 
-Full rulebook: [000-docs/020](000-docs/020-DR-STND-stci-methodology-2-0-0.md).
+Full rulebook: [000-docs/020](000-docs/020-DR-STND-stci-methodology-2-0-0.md). Earlier drafts and data from January 2026 are kept in the repository as an archive and are not part of the published series.
 Config: `data/fixtures/methodology.yaml`.
 
 - **Eligibility is a rule.** Alias (`~lab/x-latest`), `:free`, `:batch`, router
