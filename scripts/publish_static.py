@@ -167,7 +167,7 @@ def page(*, path: str, title: str, description: str, body: str, jsonld: dict | N
     canonical = SITE + path
     bar = (ROOT / "vendor" / "estate-bar" / "fragments" / "estate-bar.stci.html").read_text().strip()
     nav = "".join(
-        f'<li><a href="{href}"{" aria-current=\"page\"" if href == path else ""}>{label}</a></li>'
+        '<li><a href="{}"{}>{}</a></li>'.format(href, ' aria-current="page"' if href == path else "", label)
         for href, label in NAV
     )
     ld = ""
