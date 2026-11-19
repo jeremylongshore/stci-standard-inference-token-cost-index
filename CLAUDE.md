@@ -28,6 +28,10 @@ python -m services.collector.pipeline --fixtures         # Use fixture data
 python -m services.collector.pipeline --date 2026-01-01  # Specific date
 python -m services.collector.pipeline --dry-run          # No file writes
 
+# Neocloud spread (per open-weight model, price across provider endpoints;
+# needed before indexing, STCI-OPEN is screened on it)
+python -m services.collector.spread --date 2026-11-19    # writes data/spread/{date}.json
+
 # Indexing pipeline (compute indices)
 python -m services.indexer.pipeline                      # Today's index
 python -m services.indexer.pipeline --date 2026-01-01    # Specific date
@@ -94,9 +98,14 @@ OpenRouter API → raw/{date}.json → observations/{date}.jsonl → indices/{da
 - `blended_rate`: Assumes 3:1 output:input ratio (configurable in methodology.yaml)
 - `verification_hash`: SHA256 for deterministic verification
 
-**Methodology** (`data/fixtures/methodology.yaml`):
-- Defines index baskets, weighting, and thresholds
-- Equal weighting for MVP, usage-weighted planned
+**Methodology** (`data/fixtures/methodology.yaml`, version 2.0.0 since 2026-11-19; spec `000-docs/020`):
+- Listing eligibility rules (alias, `:free`, `:batch`, router listings excluded; the collector logs each reason and the indexer re-applies the rules)
+- FRONTIER/EFFICIENT constituents cited to provider descriptions; STCI-OPEN is rule-based (open weights + ≥10 priced endpoints from that day's spread file)
+- Equal weighting; usage weighting waits on a reported-price panel
+- Daily output carries `constituents_missing` per explicit basket; review constituents monthly
+- `methodology-1.0.0.yaml` is the archived rulebook for 2026-01-02 to 2026-03-06
+
+**Publication rule** (ADR 014): indices and `data/spread` are committed; new `data/observations/*.jsonl` are git-ignored and stay private.
 
 ## Testing
 

@@ -1,0 +1,1278 @@
+{
+  "date": "2026-11-19",
+  "methodology_version": "2.0.0",
+  "blend": {
+    "output_ratio": 3.0
+  },
+  "source": "OpenRouter /api/v1/models/{id}/endpoints",
+  "summary": {
+    "models_measured": 57,
+    "fetch_errors": 0,
+    "median_max_min_ratio": 2.53,
+    "median_p75_p25_ratio": 1.31,
+    "widest": {
+      "model_id": "deepseek/deepseek-v4.1-flash",
+      "max_min_ratio": 34.82,
+      "endpoints": 39
+    },
+    "most_endpoints": {
+      "model_id": "deepseek/deepseek-v4.1-flash-1017",
+      "endpoints": 50,
+      "providers": 41,
+      "max_min_ratio": 16.08
+    }
+  },
+  "models": [
+    {
+      "model_id": "deepseek/deepseek-v4.1-flash-1017",
+      "endpoints": 50,
+      "providers": 41,
+      "min_blended": 0.1212,
+      "p25_blended": 0.3904,
+      "median_blended": 0.55,
+      "p75_blended": 0.8912,
+      "max_blended": 1.95,
+      "max_min_ratio": 16.08,
+      "p75_p25_ratio": 2.28,
+      "quantization_mix": {
+        "fp4": 6,
+        "fp8": 23,
+        "mxfp4": 2,
+        "unknown": 19
+      },
+      "cheapest": {
+        "provider": "Ambient",
+        "quantization": "fp4",
+        "blended": 0.1212
+      }
+    },
+    {
+      "model_id": "z-ai/glm-5.3",
+      "endpoints": 49,
+      "providers": 37,
+      "min_blended": 1.0675,
+      "p25_blended": 2.4375,
+      "median_blended": 3.4125,
+      "p75_blended": 3.65,
+      "max_blended": 5.475,
+      "max_min_ratio": 5.13,
+      "p75_p25_ratio": 1.5,
+      "quantization_mix": {
+        "fp4": 18,
+        "fp8": 12,
+        "nvfp4": 4,
+        "unknown": 15
+      },
+      "cheapest": {
+        "provider": "Wafer",
+        "quantization": "fp4",
+        "blended": 1.0675
+      }
+    },
+    {
+      "model_id": "z-ai/glm-5.3-flash",
+      "endpoints": 42,
+      "providers": 36,
+      "min_blended": 0.0688,
+      "p25_blended": 0.2554,
+      "median_blended": 0.4075,
+      "p75_blended": 0.4125,
+      "max_blended": 0.6188,
+      "max_min_ratio": 9.0,
+      "p75_p25_ratio": 1.61,
+      "quantization_mix": {
+        "fp4": 13,
+        "fp8": 12,
+        "nvfp4": 6,
+        "unknown": 11
+      },
+      "cheapest": {
+        "provider": "Relace",
+        "quantization": "fp4",
+        "blended": 0.0688
+      }
+    },
+    {
+      "model_id": "deepseek/deepseek-v4.1-flash",
+      "endpoints": 39,
+      "providers": 30,
+      "min_blended": 0.28,
+      "p25_blended": 0.4939,
+      "median_blended": 0.6825,
+      "p75_blended": 0.975,
+      "max_blended": 9.75,
+      "max_min_ratio": 34.82,
+      "p75_p25_ratio": 1.97,
+      "quantization_mix": {
+        "fp4": 2,
+        "fp8": 21,
+        "mxfp4": 2,
+        "unknown": 14
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.28
+      }
+    },
+    {
+      "model_id": "z-ai/glm-5.2",
+      "endpoints": 33,
+      "providers": 23,
+      "min_blended": 1.1925,
+      "p25_blended": 1.97,
+      "median_blended": 3.65,
+      "p75_blended": 4.015,
+      "max_blended": 6.4725,
+      "max_min_ratio": 5.43,
+      "p75_p25_ratio": 2.04,
+      "quantization_mix": {
+        "fp4": 10,
+        "fp8": 17,
+        "unknown": 6
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp4",
+        "blended": 1.1925
+      }
+    },
+    {
+      "model_id": "deepseek/deepseek-v4-flash-0731",
+      "endpoints": 30,
+      "providers": 24,
+      "min_blended": 0.12,
+      "p25_blended": 0.2275,
+      "median_blended": 0.2625,
+      "p75_blended": 0.8387,
+      "max_blended": 1.1,
+      "max_min_ratio": 9.17,
+      "p75_p25_ratio": 3.69,
+      "quantization_mix": {
+        "fp32": 1,
+        "fp4": 6,
+        "fp8": 15,
+        "nvfp4": 2,
+        "unknown": 6
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.12
+      }
+    },
+    {
+      "model_id": "moonshotai/kimi-k3",
+      "endpoints": 29,
+      "providers": 20,
+      "min_blended": 7.269,
+      "p25_blended": 11.3625,
+      "median_blended": 12.0,
+      "p75_blended": 12.5213,
+      "max_blended": 18.0,
+      "max_min_ratio": 2.48,
+      "p75_p25_ratio": 1.1,
+      "quantization_mix": {
+        "fp4": 11,
+        "fp8": 1,
+        "mxfp4": 6,
+        "unknown": 11
+      },
+      "cheapest": {
+        "provider": "Wafer",
+        "quantization": "mxfp4",
+        "blended": 7.269
+      }
+    },
+    {
+      "model_id": "moonshotai/kimi-k3.1-pro",
+      "endpoints": 27,
+      "providers": 20,
+      "min_blended": 4.8,
+      "p25_blended": 7.3181,
+      "median_blended": 8.0,
+      "p75_blended": 8.0,
+      "max_blended": 17.6,
+      "max_min_ratio": 3.67,
+      "p75_p25_ratio": 1.09,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp4": 6,
+        "fp8": 1,
+        "mxfp4": 11,
+        "unknown": 8
+      },
+      "cheapest": {
+        "provider": "Decart",
+        "quantization": "mxfp4",
+        "blended": 4.8
+      }
+    },
+    {
+      "model_id": "deepseek/deepseek-v4-pro-0813",
+      "endpoints": 26,
+      "providers": 20,
+      "min_blended": 1.65,
+      "p25_blended": 2.5163,
+      "median_blended": 3.3,
+      "p75_blended": 3.3,
+      "max_blended": 6.025,
+      "max_min_ratio": 3.65,
+      "p75_p25_ratio": 1.31,
+      "quantization_mix": {
+        "fp4": 4,
+        "fp8": 12,
+        "mxfp4": 2,
+        "unknown": 8
+      },
+      "cheapest": {
+        "provider": "DeepSeek",
+        "quantization": "unknown",
+        "blended": 1.65
+      }
+    },
+    {
+      "model_id": "openai/gpt-oss-120b",
+      "endpoints": 24,
+      "providers": 21,
+      "min_blended": 0.12,
+      "p25_blended": 0.1869,
+      "median_blended": 0.4,
+      "p75_blended": 0.4875,
+      "max_blended": 0.7475,
+      "max_min_ratio": 6.23,
+      "p75_p25_ratio": 2.61,
+      "quantization_mix": {
+        "bf16": 3,
+        "fp16": 1,
+        "fp4": 10,
+        "fp8": 2,
+        "int4": 1,
+        "unknown": 7
+      },
+      "cheapest": {
+        "provider": "Near AI",
+        "quantization": "fp4",
+        "blended": 0.12
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.8-27b",
+      "endpoints": 24,
+      "providers": 24,
+      "min_blended": 0.8312,
+      "p25_blended": 1.4241,
+      "median_blended": 1.81,
+      "p75_blended": 2.2722,
+      "max_blended": 2.5125,
+      "max_min_ratio": 3.02,
+      "p75_p25_ratio": 1.6,
+      "quantization_mix": {
+        "fp16": 1,
+        "fp4": 3,
+        "fp8": 14,
+        "unknown": 6
+      },
+      "cheapest": {
+        "provider": "StreamLake",
+        "quantization": "unknown",
+        "blended": 0.8312
+      }
+    },
+    {
+      "model_id": "google/gemma-4-31b-it",
+      "endpoints": 18,
+      "providers": 15,
+      "min_blended": 0.16,
+      "p25_blended": 0.2816,
+      "median_blended": 0.335,
+      "p75_blended": 0.3997,
+      "max_blended": 0.9575,
+      "max_min_ratio": 5.98,
+      "p75_p25_ratio": 1.42,
+      "quantization_mix": {
+        "bf16": 2,
+        "fp4": 6,
+        "fp8": 6,
+        "unknown": 4
+      },
+      "cheapest": {
+        "provider": "Modal",
+        "quantization": "unknown",
+        "blended": 0.16
+      }
+    },
+    {
+      "model_id": "moonshotai/kimi-k2.6",
+      "endpoints": 17,
+      "providers": 15,
+      "min_blended": 1.4475,
+      "p25_blended": 2.72,
+      "median_blended": 2.8125,
+      "p75_blended": 3.2375,
+      "max_blended": 4.2188,
+      "max_min_ratio": 2.91,
+      "p75_p25_ratio": 1.19,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp4": 5,
+        "fp8": 2,
+        "int4": 5,
+        "unknown": 4
+      },
+      "cheapest": {
+        "provider": "Chutes",
+        "quantization": "int4",
+        "blended": 1.4475
+      }
+    },
+    {
+      "model_id": "deepseek/deepseek-v4-flash",
+      "endpoints": 15,
+      "providers": 13,
+      "min_blended": 0.126,
+      "p25_blended": 0.1584,
+      "median_blended": 0.2363,
+      "p75_blended": 0.245,
+      "max_blended": 0.4725,
+      "max_min_ratio": 3.75,
+      "p75_p25_ratio": 1.55,
+      "quantization_mix": {
+        "fp4": 2,
+        "fp8": 9,
+        "mxfp4": 1,
+        "unknown": 3
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.126
+      }
+    },
+    {
+      "model_id": "deepseek/deepseek-v4-pro",
+      "endpoints": 15,
+      "providers": 12,
+      "min_blended": 1.35,
+      "p25_blended": 1.7474,
+      "median_blended": 2.275,
+      "p75_blended": 2.9216,
+      "max_blended": 3.4125,
+      "max_min_ratio": 2.53,
+      "p75_p25_ratio": 1.67,
+      "quantization_mix": {
+        "fp4": 2,
+        "fp8": 10,
+        "unknown": 3
+      },
+      "cheapest": {
+        "provider": "Relace",
+        "quantization": "fp4",
+        "blended": 1.35
+      }
+    },
+    {
+      "model_id": "google/gemma-4-26b-a4b-it",
+      "endpoints": 15,
+      "providers": 15,
+      "min_blended": 0.1225,
+      "p25_blended": 0.2334,
+      "median_blended": 0.25,
+      "p75_blended": 0.3325,
+      "max_blended": 0.4875,
+      "max_min_ratio": 3.98,
+      "p75_p25_ratio": 1.42,
+      "quantization_mix": {
+        "bf16": 8,
+        "fp4": 1,
+        "fp8": 2,
+        "unknown": 4
+      },
+      "cheapest": {
+        "provider": "Darkbloom",
+        "quantization": "unknown",
+        "blended": 0.1225
+      }
+    },
+    {
+      "model_id": "minimax/minimax-m3.1-flash",
+      "endpoints": 15,
+      "providers": 14,
+      "min_blended": 0.4125,
+      "p25_blended": 0.4875,
+      "median_blended": 0.4875,
+      "p75_blended": 0.4875,
+      "max_blended": 0.4875,
+      "max_min_ratio": 1.18,
+      "p75_p25_ratio": 1.0,
+      "quantization_mix": {
+        "fp4": 5,
+        "fp8": 3,
+        "nvfp4": 2,
+        "unknown": 5
+      },
+      "cheapest": {
+        "provider": "Makora",
+        "quantization": "fp4",
+        "blended": 0.4125
+      }
+    },
+    {
+      "model_id": "openai/gpt-oss-20b",
+      "endpoints": 12,
+      "providers": 10,
+      "min_blended": 0.072,
+      "p25_blended": 0.1013,
+      "median_blended": 0.1163,
+      "p75_blended": 0.1338,
+      "max_blended": 0.2437,
+      "max_min_ratio": 3.39,
+      "p75_p25_ratio": 1.32,
+      "quantization_mix": {
+        "bf16": 3,
+        "fp4": 4,
+        "fp8": 2,
+        "unknown": 3
+      },
+      "cheapest": {
+        "provider": "AkashML",
+        "quantization": "fp4",
+        "blended": 0.072
+      }
+    },
+    {
+      "model_id": "moonshotai/kimi-k2.7-code",
+      "endpoints": 11,
+      "providers": 10,
+      "min_blended": 2.4,
+      "p25_blended": 2.7938,
+      "median_blended": 3.108,
+      "p75_blended": 3.2375,
+      "max_blended": 6.475,
+      "max_min_ratio": 2.7,
+      "p75_p25_ratio": 1.16,
+      "quantization_mix": {
+        "fp8": 3,
+        "int4": 4,
+        "unknown": 4
+      },
+      "cheapest": {
+        "provider": "CoreWeave",
+        "quantization": "int4",
+        "blended": 2.4
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.6-35b-a3b",
+      "endpoints": 11,
+      "providers": 9,
+      "min_blended": 0.5375,
+      "p25_blended": 0.6963,
+      "median_blended": 0.7282,
+      "p75_blended": 0.8875,
+      "max_blended": 1.41,
+      "max_min_ratio": 2.62,
+      "p75_p25_ratio": 1.27,
+      "quantization_mix": {
+        "fp4": 1,
+        "fp8": 10
+      },
+      "cheapest": {
+        "provider": "Darkbloom",
+        "quantization": "fp4",
+        "blended": 0.5375
+      }
+    },
+    {
+      "model_id": "z-ai/glm-5.1",
+      "endpoints": 11,
+      "providers": 11,
+      "min_blended": 2.4,
+      "p25_blended": 3.1938,
+      "median_blended": 3.645,
+      "p75_blended": 3.65,
+      "max_blended": 3.6537,
+      "max_min_ratio": 1.52,
+      "p75_p25_ratio": 1.14,
+      "quantization_mix": {
+        "fp8": 10,
+        "unknown": 1
+      },
+      "cheapest": {
+        "provider": "Chutes",
+        "quantization": "fp8",
+        "blended": 2.4
+      }
+    },
+    {
+      "model_id": "nvidia/nemotron-3.5-super-vl",
+      "endpoints": 10,
+      "providers": 10,
+      "min_blended": 0.2775,
+      "p25_blended": 0.3956,
+      "median_blended": 0.4125,
+      "p75_blended": 0.425,
+      "max_blended": 1.52,
+      "max_min_ratio": 5.48,
+      "p75_p25_ratio": 1.07,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp4": 4,
+        "nvfp4": 4,
+        "unknown": 1
+      },
+      "cheapest": {
+        "provider": "Darkbloom",
+        "quantization": "nvfp4",
+        "blended": 0.2775
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.5-397b-a17b",
+      "endpoints": 10,
+      "providers": 8,
+      "min_blended": 1.8525,
+      "p25_blended": 2.4625,
+      "median_blended": 2.8375,
+      "p75_blended": 2.85,
+      "max_blended": 3.5625,
+      "max_min_ratio": 1.92,
+      "p75_p25_ratio": 1.16,
+      "quantization_mix": {
+        "fp8": 6,
+        "unknown": 4
+      },
+      "cheapest": {
+        "provider": "Alibaba",
+        "quantization": "unknown",
+        "blended": 1.8525
+      }
+    },
+    {
+      "model_id": "minimax/minimax-m3",
+      "endpoints": 9,
+      "providers": 7,
+      "min_blended": 0.716,
+      "p25_blended": 0.78,
+      "median_blended": 0.975,
+      "p75_blended": 0.975,
+      "max_blended": 1.7875,
+      "max_min_ratio": 2.5,
+      "p75_p25_ratio": 1.25,
+      "quantization_mix": {
+        "fp4": 1,
+        "fp8": 7,
+        "unknown": 1
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.716
+      }
+    },
+    {
+      "model_id": "z-ai/glm-5",
+      "endpoints": 9,
+      "providers": 8,
+      "min_blended": 1.59,
+      "p25_blended": 1.855,
+      "median_blended": 2.65,
+      "p75_blended": 2.65,
+      "max_blended": 3.3,
+      "max_min_ratio": 2.08,
+      "p75_p25_ratio": 1.43,
+      "quantization_mix": {
+        "fp8": 7,
+        "unknown": 2
+      },
+      "cheapest": {
+        "provider": "GMICloud",
+        "quantization": "fp8",
+        "blended": 1.59
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.5-35b-a3b",
+      "endpoints": 8,
+      "providers": 7,
+      "min_blended": 0.5787,
+      "p25_blended": 0.7458,
+      "median_blended": 0.7875,
+      "p75_blended": 1.1133,
+      "max_blended": 1.41,
+      "max_min_ratio": 2.44,
+      "p75_p25_ratio": 1.49,
+      "quantization_mix": {
+        "fp4": 1,
+        "fp8": 5,
+        "unknown": 2
+      },
+      "cheapest": {
+        "provider": "Darkbloom",
+        "quantization": "fp4",
+        "blended": 0.5787
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.5-9b",
+      "endpoints": 8,
+      "providers": 6,
+      "min_blended": 0.11,
+      "p25_blended": 0.1325,
+      "median_blended": 0.1719,
+      "p75_blended": 0.2169,
+      "max_blended": 0.23,
+      "max_min_ratio": 2.09,
+      "p75_p25_ratio": 1.64,
+      "quantization_mix": {
+        "bf16": 5,
+        "fp4": 1,
+        "fp8": 1,
+        "unknown": 1
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "bf16",
+        "blended": 0.11
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.6-27b",
+      "endpoints": 8,
+      "providers": 6,
+      "min_blended": 1.5625,
+      "p25_blended": 2.0991,
+      "median_blended": 2.4775,
+      "p75_blended": 2.8191,
+      "max_blended": 4.65,
+      "max_min_ratio": 2.98,
+      "p75_p25_ratio": 1.34,
+      "quantization_mix": {
+        "fp8": 6,
+        "unknown": 2
+      },
+      "cheapest": {
+        "provider": "Chutes",
+        "quantization": "fp8",
+        "blended": 1.5625
+      }
+    },
+    {
+      "model_id": "xiaomi/mimo-v2.6-flash",
+      "endpoints": 7,
+      "providers": 7,
+      "min_blended": 0.196,
+      "p25_blended": 0.24,
+      "median_blended": 0.245,
+      "p75_blended": 0.2756,
+      "max_blended": 0.35,
+      "max_min_ratio": 1.79,
+      "p75_p25_ratio": 1.15,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp4": 1,
+        "fp8": 5
+      },
+      "cheapest": {
+        "provider": "GMICloud",
+        "quantization": "bf16",
+        "blended": 0.196
+      }
+    },
+    {
+      "model_id": "deepseek/deepseek-v3.2",
+      "endpoints": 6,
+      "providers": 6,
+      "min_blended": 0.2844,
+      "p25_blended": 0.35,
+      "median_blended": 0.3675,
+      "p75_blended": 0.5948,
+      "max_blended": 0.795,
+      "max_min_ratio": 2.8,
+      "p75_p25_ratio": 1.7,
+      "quantization_mix": {
+        "fp4": 1,
+        "fp8": 4,
+        "unknown": 1
+      },
+      "cheapest": {
+        "provider": "GMICloud",
+        "quantization": "fp8",
+        "blended": 0.2844
+      }
+    },
+    {
+      "model_id": "google/gemma-3-27b-it",
+      "endpoints": 6,
+      "providers": 4,
+      "min_blended": 0.112,
+      "p25_blended": 0.1575,
+      "median_blended": 0.23,
+      "p75_blended": 0.2744,
+      "max_blended": 0.3575,
+      "max_min_ratio": 3.19,
+      "p75_p25_ratio": 1.74,
+      "quantization_mix": {
+        "fp8": 6
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.112
+      }
+    },
+    {
+      "model_id": "meta-llama/llama-3.3-70b-instruct",
+      "endpoints": 6,
+      "providers": 6,
+      "min_blended": 0.265,
+      "p25_blended": 0.4325,
+      "median_blended": 0.575,
+      "p75_blended": 0.7325,
+      "max_blended": 1.763,
+      "max_min_ratio": 6.65,
+      "p75_p25_ratio": 1.69,
+      "quantization_mix": {
+        "fp16": 1,
+        "fp8": 4,
+        "unknown": 1
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.265
+      }
+    },
+    {
+      "model_id": "mistralai/mistral-nemo",
+      "endpoints": 6,
+      "providers": 5,
+      "min_blended": 0.0203,
+      "p25_blended": 0.0246,
+      "median_blended": 0.0284,
+      "p75_blended": 0.0299,
+      "max_blended": 0.15,
+      "max_min_ratio": 7.37,
+      "p75_p25_ratio": 1.22,
+      "quantization_mix": {
+        "fp16": 1,
+        "fp8": 4,
+        "unknown": 1
+      },
+      "cheapest": {
+        "provider": "Io Net",
+        "quantization": "fp16",
+        "blended": 0.0203
+      }
+    },
+    {
+      "model_id": "nvidia/nemotron-3-ultra-550b-a55b",
+      "endpoints": 6,
+      "providers": 4,
+      "min_blended": 1.42,
+      "p25_blended": 1.775,
+      "median_blended": 1.8625,
+      "p75_blended": 2.3625,
+      "max_blended": 2.6625,
+      "max_min_ratio": 1.87,
+      "p75_p25_ratio": 1.33,
+      "quantization_mix": {
+        "fp4": 4,
+        "fp8": 1,
+        "unknown": 1
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp4",
+        "blended": 1.42
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.5-27b",
+      "endpoints": 6,
+      "providers": 6,
+      "min_blended": 1.2188,
+      "p25_blended": 1.4125,
+      "median_blended": 1.625,
+      "p75_blended": 1.8281,
+      "max_blended": 2.015,
+      "max_min_ratio": 1.65,
+      "p75_p25_ratio": 1.29,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp8": 4,
+        "unknown": 1
+      },
+      "cheapest": {
+        "provider": "Alibaba",
+        "quantization": "unknown",
+        "blended": 1.2188
+      }
+    },
+    {
+      "model_id": "tencent/hy4-preview",
+      "endpoints": 6,
+      "providers": 6,
+      "min_blended": 2.0842,
+      "p25_blended": 2.0842,
+      "median_blended": 2.0842,
+      "p75_blended": 2.0842,
+      "max_blended": 2.6053,
+      "max_min_ratio": 1.25,
+      "p75_p25_ratio": 1.0,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp4": 2,
+        "fp8": 3
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp4",
+        "blended": 2.0842
+      }
+    },
+    {
+      "model_id": "thinkingmachines/inkling-2-small",
+      "endpoints": 6,
+      "providers": 6,
+      "min_blended": 0.4125,
+      "p25_blended": 0.7941,
+      "median_blended": 0.825,
+      "p75_blended": 0.825,
+      "max_blended": 0.825,
+      "max_min_ratio": 2.0,
+      "p75_p25_ratio": 1.04,
+      "quantization_mix": {
+        "fp4": 3,
+        "nvfp4": 1,
+        "unknown": 2
+      },
+      "cheapest": {
+        "provider": "PrimeIntellect",
+        "quantization": "fp4",
+        "blended": 0.4125
+      }
+    },
+    {
+      "model_id": "z-ai/glm-4.7",
+      "endpoints": 6,
+      "providers": 5,
+      "min_blended": 1.13,
+      "p25_blended": 1.4461,
+      "median_blended": 1.6735,
+      "p75_blended": 1.8,
+      "max_blended": 2.05,
+      "max_min_ratio": 1.81,
+      "p75_p25_ratio": 1.24,
+      "quantization_mix": {
+        "fp4": 5,
+        "fp8": 1
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp4",
+        "blended": 1.13
+      }
+    },
+    {
+      "model_id": "deepseek/deepseek-v4-flash-vision-exp",
+      "endpoints": 5,
+      "providers": 3,
+      "min_blended": 0.4312,
+      "p25_blended": 0.539,
+      "median_blended": 0.8085,
+      "p75_blended": 1.1,
+      "max_blended": 1.1,
+      "max_min_ratio": 2.55,
+      "p75_p25_ratio": 2.04,
+      "quantization_mix": {
+        "fp8": 5
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.4312
+      }
+    },
+    {
+      "model_id": "meta/muse-spark-open",
+      "endpoints": 5,
+      "providers": 5,
+      "min_blended": 3.5,
+      "p25_blended": 3.5,
+      "median_blended": 3.5,
+      "p75_blended": 3.5,
+      "max_blended": 3.5,
+      "max_min_ratio": 1.0,
+      "p75_p25_ratio": 1.0,
+      "quantization_mix": {
+        "fp4": 2,
+        "unknown": 3
+      },
+      "cheapest": {
+        "provider": "BaseTen",
+        "quantization": "fp4",
+        "blended": 3.5
+      }
+    },
+    {
+      "model_id": "mistralai/mistral-small-3.2-24b-instruct",
+      "endpoints": 5,
+      "providers": 3,
+      "min_blended": 0.135,
+      "p25_blended": 0.1687,
+      "median_blended": 0.2109,
+      "p75_blended": 0.2475,
+      "max_blended": 0.2531,
+      "max_min_ratio": 1.87,
+      "p75_p25_ratio": 1.47,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp8": 4
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.135
+      }
+    },
+    {
+      "model_id": "nvidia/nemotron-3.5-lightning",
+      "endpoints": 5,
+      "providers": 5,
+      "min_blended": 0.0963,
+      "p25_blended": 0.135,
+      "median_blended": 0.1625,
+      "p75_blended": 0.1675,
+      "max_blended": 0.1675,
+      "max_min_ratio": 1.74,
+      "p75_p25_ratio": 1.24,
+      "quantization_mix": {
+        "bf16": 2,
+        "fp4": 1,
+        "int4": 1,
+        "unknown": 1
+      },
+      "cheapest": {
+        "provider": "Darkbloom",
+        "quantization": "int4",
+        "blended": 0.0963
+      }
+    },
+    {
+      "model_id": "qwen/qwen3-235b-a22b-2507",
+      "endpoints": 5,
+      "providers": 3,
+      "min_blended": 0.348,
+      "p25_blended": 0.435,
+      "median_blended": 0.6,
+      "p75_blended": 0.635,
+      "max_blended": 0.6525,
+      "max_min_ratio": 1.88,
+      "p75_p25_ratio": 1.46,
+      "quantization_mix": {
+        "fp8": 5
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.348
+      }
+    },
+    {
+      "model_id": "qwen/qwen3-32b",
+      "endpoints": 5,
+      "providers": 3,
+      "min_blended": 0.184,
+      "p25_blended": 0.23,
+      "median_blended": 0.335,
+      "p75_blended": 0.345,
+      "max_blended": 0.4625,
+      "max_min_ratio": 2.51,
+      "p75_p25_ratio": 1.5,
+      "quantization_mix": {
+        "fp8": 5
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.184
+      }
+    },
+    {
+      "model_id": "reflection/beam-1.0-501b-a23b",
+      "endpoints": 5,
+      "providers": 5,
+      "min_blended": 0.8125,
+      "p25_blended": 0.825,
+      "median_blended": 1.0,
+      "p75_blended": 1.0,
+      "max_blended": 1.0,
+      "max_min_ratio": 1.23,
+      "p75_p25_ratio": 1.21,
+      "quantization_mix": {
+        "fp4": 2,
+        "nvfp4": 1,
+        "unknown": 2
+      },
+      "cheapest": {
+        "provider": "Nebius",
+        "quantization": "fp4",
+        "blended": 0.8125
+      }
+    },
+    {
+      "model_id": "xiaomi/mimo-v2.6-pro",
+      "endpoints": 5,
+      "providers": 5,
+      "min_blended": 0.5709,
+      "p25_blended": 0.684,
+      "median_blended": 0.7612,
+      "p75_blended": 0.7612,
+      "max_blended": 7.0,
+      "max_min_ratio": 12.26,
+      "p75_p25_ratio": 1.11,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp8": 3,
+        "unknown": 1
+      },
+      "cheapest": {
+        "provider": "GMICloud",
+        "quantization": "bf16",
+        "blended": 0.5709
+      }
+    },
+    {
+      "model_id": "z-ai/glm-4.6",
+      "endpoints": 5,
+      "providers": 4,
+      "min_blended": 1.3,
+      "p25_blended": 1.42,
+      "median_blended": 1.625,
+      "p75_blended": 1.7875,
+      "max_blended": 1.8,
+      "max_min_ratio": 1.38,
+      "p75_p25_ratio": 1.26,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp4": 4
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp4",
+        "blended": 1.3
+      }
+    },
+    {
+      "model_id": "google/gemma-3-12b-it",
+      "endpoints": 4,
+      "providers": 2,
+      "min_blended": 0.1,
+      "p25_blended": 0.1187,
+      "median_blended": 0.1562,
+      "p75_blended": 0.2469,
+      "max_blended": 0.425,
+      "max_min_ratio": 4.25,
+      "p75_p25_ratio": 2.08,
+      "quantization_mix": {
+        "bf16": 3,
+        "int4": 1
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "bf16",
+        "blended": 0.1
+      }
+    },
+    {
+      "model_id": "google/gemma-3-4b-it",
+      "endpoints": 4,
+      "providers": 2,
+      "min_blended": 0.0475,
+      "p25_blended": 0.0644,
+      "median_blended": 0.0787,
+      "p75_blended": 0.0984,
+      "max_blended": 0.1312,
+      "max_min_ratio": 2.76,
+      "p75_p25_ratio": 1.53,
+      "quantization_mix": {
+        "bf16": 4
+      },
+      "cheapest": {
+        "provider": "Parasail",
+        "quantization": "bf16",
+        "blended": 0.0475
+      }
+    },
+    {
+      "model_id": "meta-llama/llama-3.1-8b-instruct",
+      "endpoints": 4,
+      "providers": 4,
+      "min_blended": 0.035,
+      "p25_blended": 0.0631,
+      "median_blended": 0.1462,
+      "p75_blended": 0.2283,
+      "max_blended": 0.2533,
+      "max_min_ratio": 7.24,
+      "p75_p25_ratio": 3.62,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp8": 2,
+        "unknown": 1
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.035
+      }
+    },
+    {
+      "model_id": "minimax/minimax-m2.5",
+      "endpoints": 4,
+      "providers": 4,
+      "min_blended": 0.78,
+      "p25_blended": 0.9253,
+      "median_blended": 0.9744,
+      "p75_blended": 0.975,
+      "max_blended": 0.975,
+      "max_min_ratio": 1.25,
+      "p75_p25_ratio": 1.05,
+      "quantization_mix": {
+        "fp8": 2,
+        "unknown": 2
+      },
+      "cheapest": {
+        "provider": "Venice",
+        "quantization": "unknown",
+        "blended": 0.78
+      }
+    },
+    {
+      "model_id": "moonshotai/kimi-k2.5",
+      "endpoints": 4,
+      "providers": 4,
+      "min_blended": 1.9975,
+      "p25_blended": 1.9994,
+      "median_blended": 2.14,
+      "p75_blended": 2.31,
+      "max_blended": 2.4,
+      "max_min_ratio": 1.2,
+      "p75_p25_ratio": 1.16,
+      "quantization_mix": {
+        "int4": 2,
+        "unknown": 2
+      },
+      "cheapest": {
+        "provider": "AtlasCloud",
+        "quantization": "int4",
+        "blended": 1.9975
+      }
+    },
+    {
+      "model_id": "nvidia/nemotron-3-super-120b-a12b",
+      "endpoints": 4,
+      "providers": 2,
+      "min_blended": 0.255,
+      "p25_blended": 0.3028,
+      "median_blended": 0.3381,
+      "p75_blended": 0.3877,
+      "max_blended": 0.4781,
+      "max_min_ratio": 1.87,
+      "p75_p25_ratio": 1.28,
+      "quantization_mix": {
+        "bf16": 3,
+        "fp8": 1
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "bf16",
+        "blended": 0.255
+      }
+    },
+    {
+      "model_id": "qwen/qwen3-14b",
+      "endpoints": 4,
+      "providers": 2,
+      "min_blended": 0.168,
+      "p25_blended": 0.1845,
+      "median_blended": 0.2,
+      "p75_blended": 0.2363,
+      "max_blended": 0.315,
+      "max_min_ratio": 1.88,
+      "p75_p25_ratio": 1.28,
+      "quantization_mix": {
+        "fp8": 3,
+        "int4": 1
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.168
+      }
+    },
+    {
+      "model_id": "qwen/qwen3-next-80b-a3b-instruct",
+      "endpoints": 4,
+      "providers": 2,
+      "min_blended": 0.678,
+      "p25_blended": 0.8051,
+      "median_blended": 0.8488,
+      "p75_blended": 0.9553,
+      "max_blended": 1.2712,
+      "max_min_ratio": 1.87,
+      "p75_p25_ratio": 1.19,
+      "quantization_mix": {
+        "fp8": 4
+      },
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.678
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.5-122b-a10b",
+      "endpoints": 4,
+      "providers": 4,
+      "min_blended": 1.625,
+      "p25_blended": 1.625,
+      "median_blended": 1.75,
+      "p75_blended": 2.0312,
+      "max_blended": 2.5,
+      "max_min_ratio": 1.54,
+      "p75_p25_ratio": 1.25,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp8": 2,
+        "unknown": 1
+      },
+      "cheapest": {
+        "provider": "Alibaba",
+        "quantization": "unknown",
+        "blended": 1.625
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.8-2.4t-a95b",
+      "endpoints": 4,
+      "providers": 4,
+      "min_blended": 5.0,
+      "p25_blended": 5.0,
+      "median_blended": 5.0,
+      "p75_blended": 5.0,
+      "max_blended": 5.0,
+      "max_min_ratio": 1.0,
+      "p75_p25_ratio": 1.0,
+      "quantization_mix": {
+        "fp8": 1,
+        "unknown": 3
+      },
+      "cheapest": {
+        "provider": "Alibaba",
+        "quantization": "unknown",
+        "blended": 5.0
+      }
+    }
+  ]
+}

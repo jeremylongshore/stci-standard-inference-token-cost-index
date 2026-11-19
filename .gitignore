@@ -90,3 +90,8 @@ playwright-report/
 # Dolt database files (added by bd init)
 .dolt/
 *.db
+
+# Methodology 2.0.0 / ADR 014: raw observations stay private; only computed
+# indices and derived spread metrics are published. Files committed before
+# 2026-11-19 remain tracked.
+data/observations/*.jsonl
