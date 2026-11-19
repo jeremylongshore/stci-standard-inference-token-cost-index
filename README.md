@@ -1,4 +1,4 @@
-# STCI — Standard Token Cost Index
+# STCI — Standardized Token Cost Index
 
 [![Release](https://img.shields.io/github/v/release/jeremylongshore/stci-standard-inference-token-cost-index)](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/releases)
 [![Tests](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/actions/workflows/tests.yml/badge.svg)](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/actions/workflows/tests.yml)
@@ -6,19 +6,17 @@
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U5S225PTME)
 
+<!-- intent-select-partner:start -->
+<p><a href="https://intentsolutions.io/"><img src="https://raw.githubusercontent.com/intent-solutions-io/.github/b82af5d3e7951d85e39ea9e65cc24ee8278722a7/assets/brand/claude-select-partner.svg" alt="Intent Solutions: Claude Partner Network Select Services Partner" width="300" height="95" /></a></p>
+
+Intent Solutions is a Claude Partner Network Select Services Partner.
+<!-- intent-select-partner:end -->
+
 **The benchmark price for AI tokens.** Open, reproducible, run by nobody who sells them.
 
 Site: [inferencepriceindex.com](https://inferencepriceindex.com)
 
-> **Project status:** Revived 2026-11-19 under methodology 2.0.0
-> ([000-docs/020](000-docs/020-DR-STND-stci-methodology-2-0-0.md)). The published
-> series covers 2026-01-02 to 2026-03-06 (methodology 1.0.0), stops while the
-> pipeline was switched off, and resumes 2026-11-19. Values across that boundary
-> are not comparable: the baskets changed.
->
-> The site and its static JSON API (`/v1/`, also on `https://stci.intentsolutions.io/v1/`)
-> are built by `scripts/publish_static.py` and deployed to the Intent Solutions VPS on every
-> push to `main`.
+> **Status:** live. The index publishes daily from 2026-11-19.
 
 ---
 
@@ -54,7 +52,7 @@ STCI publishes this as the **neocloud spread**, alongside the index.
 |---|---|---|
 | 1 | Listed prices from one aggregator, reproducible, hash-verified | **live** |
 | 2 | Grade and spread across providers | **live** |
-| 3 | Reported-price panel (gateways, enterprises) | next; [say hello](mailto:jeremy@intentsolutions.io) if you run one |
+| 3 | Reported-price panel (gateways, enterprises) | next; [say hello](mailto:support@intentsolutions.io) if you run one |
 | 4 | Forwards and contracts that settle against the index | later |
 
 ### How it started
@@ -169,16 +167,16 @@ Aggregated reference rate for a given date:
       "model_count": 8
     }
   },
-  "methodology_version": "1.0.0",
+  "methodology_version": "2.0.0",
   "computed_at": "2026-01-01T23:59:00Z"
 }
 ```
 
 ---
 
-## Methodology (2.0.0)
+## Methodology
 
-Full rulebook: [000-docs/020](000-docs/020-DR-STND-stci-methodology-2-0-0.md).
+Full rulebook: [000-docs/020](000-docs/020-DR-STND-stci-methodology-2-0-0.md). Earlier drafts and data from January 2026 are kept in the repository as an archive and are not part of the published series.
 Config: `data/fixtures/methodology.yaml`.
 
 - **Eligibility is a rule.** Alias (`~lab/x-latest`), `:free`, `:batch`, router
