@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stci.io/schemas/stci_spread.schema.json",
+  "title": "STCI Neocloud Spread (methodology 2.1.0)",
+  "description": "Per open-weight model, price across provider endpoints, cut into facet cells. Facets, not verdicts: no grade is ever written here.",
+  "type": "object",
+  "required": ["date", "methodology_version", "blend", "source", "rule_id", "endpoint_snapshot_sha256", "summary", "models"],
+  "properties": {
+    "date": {"type": "string", "format": "date"},
+    "methodology_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "blend": {"type": "object", "required": ["output_ratio"], "properties": {"output_ratio": {"type": "number", "exclusiveMinimum": 0}}},
+    "source": {"type": "string"},
+    "rule_id": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "endpoint_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "SHA-256 of the private canonical endpoint snapshot data/endpoints/{date}.jsonl"},
+    "summary": {"type": "object", "required": ["models_measured", "fetch_errors"]},
+    "models": {"type": "array", "items": {"$ref": "#/definitions/model"}}
+  },
+  "definitions": {
+    "model": {
+      "type": "object",
+      "required": ["model_id", "snapshot", "endpoints", "providers", "quantization_mix", "precision_disclosure", "cells"],
+      "properties": {
+        "model_id": {"type": "string"},
+        "snapshot": {"enum": ["dated", "undated"]},
+        "endpoints": {"type": "integer", "minimum": 0},
+        "providers": {"type": "integer", "minimum": 0},
+        "quantization_mix": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}},
+        "precision_disclosure": {
+          "type": "object",
+          "required": ["disclosed", "undisclosed"],
+          "additionalProperties": false,
+          "properties": {"disclosed": {"type": "integer", "minimum": 0}, "undisclosed": {"type": "integer", "minimum": 0}}
+        },
+        "cells": {"type": "array", "items": {"$ref": "#/definitions/cell"}},
+        "observed": {"type": "object", "description": "Uptime, throughput and latency. Excluded from every hash and not published."}
+      }
+    },
+    "cell": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["precision", "context_bucket", "tools", "n", "min", "p25", "median", "p75", "max", "p75_p25_ratio"],
+      "properties": {
+        "precision": {"type": "string", "minLength": 1},
+        "context_bucket": {"enum": ["<=32k", "32-128k", "128k+", "1M+", "unknown"]},
+        "tools": {"type": "boolean"},
+        "n": {"type": "integer", "minimum": 1},
+        "min": {"type": ["number", "null"]},
+        "p25": {"type": ["number", "null"]},
+        "median": {"type": ["number", "null"]},
+        "p75": {"type": ["number", "null"]},
+        "max": {"type": ["number", "null"]},
+        "p75_p25_ratio": {"type": ["number", "null"]}
+      }
+    }
+  }
+}

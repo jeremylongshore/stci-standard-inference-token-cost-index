@@ -1,9 +1,9 @@
 # STCI Methodology Configuration
-# Version: 2.0.0 (2026-11-19). Version 1.0.0 is archived as methodology-1.0.0.yaml
-# and remains the rulebook for dates up to 2026-03-06.
+# Version: 2.1.0 (2026-11-20). 1.0.0 and 2.0.0 are archived as methodology-1.0.0.yaml
+# and methodology-2.0.0.yaml (2.0.0 governs 2026-11-19 to 2026-11-20; 1.0.0 governs up to 2026-03-06).
 # See: 000-docs/004-DR-STND-stci-methodology.md
 
-methodology_version: "2.0.0"
+methodology_version: "2.1.0"
 
 # Blended rate computation
 # Assumes output_ratio : 1 output:input token ratio

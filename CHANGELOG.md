@@ -17,6 +17,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the governed alert floor; successes are audit-only. Replaces the GitHub
   Actions cron disabled on 2026-03-06.
 
+
+## [0.7.0] - 2026-11-20
+
+### Added
+
+- **Methodology 2.1.0, facets not verdicts** (`000-docs/022`, Refs #32). The
+  spread keeps per-endpoint provider, tag, quantization, context, max
+  completion tokens, supported parameters and prices in a private canonical
+  snapshot (`data/endpoints/{date}.jsonl`, git-ignored); its sha256 is the
+  spread file's `endpoint_snapshot_sha256`. Per model, facet cells by reported
+  precision (missing is its own `undisclosed` bucket), context bucket and tool
+  support, with null statistics below n=3. Uptime, throughput and latency sit in
+  an `observed` block that no hash covers. Dated snapshot ids are never pooled
+  with undated ids.
+- `rules/grade-rules.yaml`: append-only rules, `rule_id` = sha256 of canonical
+  content. Only view: disclosed vs undisclosed precision. No grades.
+- `schemas/stci_spread.schema.json`; `rule_id` and `endpoint_snapshot_sha256`
+  added to `stci_daily.schema.json`.
+
+### Changed
+
+- Verification hash for 2.1.0 also covers the endpoint snapshot digest, the rule
+  id and the canonical spread output. 2.0.0 hashes are unchanged
+  (`data/fixtures/methodology-2.0.0.yaml` archives that rulebook).
+- `publish_static.py` publishes facet cells and refuses per-endpoint rows.
+- VERSION 0.7.0; methodology version 2.1.0.
+
 ### Changed
 
 - **Methodology 2.0.0** (`000-docs/020`): listing eligibility is now a rule

@@ -11,6 +11,28 @@ from typing import Any, Dict, List, Optional
 
 import yaml
 
+from services.indexer.rules import (
+    active_rule,
+    canonical_json,
+    resolve_methodology_path,
+    uses_facets,
+)
+
+
+def _strip_observed(value):
+    """Drop every ``observed`` block: uptime/throughput/latency never enter a hash."""
+    if isinstance(value, dict):
+        return {k: _strip_observed(v) for k, v in value.items() if k != "observed"}
+    if isinstance(value, list):
+        return [_strip_observed(v) for v in value]
+    return value
+
+
+def _canonical_spread(spread: Optional[dict]) -> Optional[str]:
+    if spread is None:
+        return None
+    return canonical_json(_strip_observed(spread))
+
 
 class Indexer:
     """
@@ -46,6 +68,7 @@ class Indexer:
         observations: List[dict],
         target_date: Optional[date] = None,
         spread: Optional[dict] = None,
+        endpoint_snapshot_sha256: Optional[str] = None,
     ) -> dict:
         """
         Compute STCI indices from observations.
@@ -55,6 +78,8 @@ class Indexer:
             target_date: Date for index (default: from observations)
             spread: That day's neocloud spread document, needed by baskets
                 whose filter sets min_endpoints (2.0.0 STCI-OPEN)
+            endpoint_snapshot_sha256: digest of the private endpoint snapshot
+                (2.1.0+); defaults to the one recorded in the spread file
 
         Returns:
             STCI daily output dictionary
@@ -78,10 +103,12 @@ class Indexer:
                 indices[index_name] = index_value
 
         # Generate verification hash
+        facets = self._facet_binding(spread, target_date, endpoint_snapshot_sha256)
         verification_hash = self._compute_hash(
             observations,
             target_date,
             self._endpoint_counts if self._spread_used else None,
+            facets,
         )
 
         result = {
@@ -92,8 +119,29 @@ class Indexer:
             "verification_hash": verification_hash,
             "observation_count": len(observations),
         }
+        if facets is not None:
+            result["rule_id"] = facets["rule_id"]
+            result["endpoint_snapshot_sha256"] = facets["endpoint_snapshot_sha256"]
 
         return result
+
+    def _uses_facets(self) -> bool:
+        """Methodology 2.1.0 and later bind facets; 2.0.0 hashes stay as published."""
+        return uses_facets(self.methodology.get("methodology_version"))
+
+    def _facet_binding(
+        self, spread: Optional[dict], target_date: date, snapshot_sha: Optional[str]
+    ) -> Optional[dict]:
+        """What 2.1.0 adds to the hash: snapshot digest, rule id, canonical spread."""
+        if not self._uses_facets():
+            return None
+        rule = active_rule(target_date)
+        return {
+            "rule_id": rule["rule_id"] if rule else None,
+            "endpoint_snapshot_sha256": snapshot_sha
+            or (spread or {}).get("endpoint_snapshot_sha256"),
+            "spread": _canonical_spread(spread),
+        }
 
     def _compute_single_index(
         self,
@@ -211,6 +259,7 @@ class Indexer:
         observations: List[dict],
         target_date: date,
         endpoint_counts: Optional[Dict[str, int]] = None,
+        facets: Optional[dict] = None,
     ) -> str:
         """
         Compute verification hash for determinism check.
@@ -229,6 +278,8 @@ class Indexer:
         }
         if endpoint_counts is not None:
             hash_input["endpoint_counts"] = dict(sorted(endpoint_counts.items()))
+        if facets is not None:
+            hash_input["facets"] = facets
 
         hash_str = json.dumps(hash_input, sort_keys=True, default=str)
         return hashlib.sha256(hash_str.encode()).hexdigest()[:16]
@@ -260,6 +311,10 @@ def compute_index(
     Returns:
         STCI daily output dictionary
     """
+    if methodology_path is None and target_date is not None:
+        methodology_path = resolve_methodology_path(
+            target_date, Path(__file__).parent.parent.parent / "data"
+        )
     indexer = Indexer(methodology_path)
     return indexer.compute(observations, target_date, spread)
 
