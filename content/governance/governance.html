@@ -1,0 +1,55 @@
+<h1>Governance</h1>
+<p>This page says who runs the Standardized Token Cost Index, what rules apply, and where the gaps are. The full text is in the repository as document 024.</p>
+
+<h2>Administrator</h2>
+<p>STCI is operated by intentsolutions.io LLC.</p>
+<p>Independence is a requirement the administrator holds itself to. It is not an established fact. No third party has reviewed it.</p>
+<p>intentsolutions.io LLC does applied AI engineering work. It may buy inference from providers whose prices STCI records. Its purchases do not enter any index. The indices use listed prices only.</p>
+
+<h2>Rule changes</h2>
+<p>Every change to the rulebook is recorded, with its date, in the <a href="https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/blob/main/000-docs/024-DR-STND-governance.md">governance record</a> and the repository change log. The current rules are on the <a href="/methodology">methodology</a> page.</p>
+
+<h2>Blend convention</h2>
+<p>STCI blends 3 parts output to 1 part input. This is an assumption, not a measurement.</p>
+<p>Other products use other conventions. <a href="https://artificialanalysis.ai/methodology">Artificial Analysis</a> uses a 7:2:1 mix of cache, input and output. <a href="https://benchlm.ai/token-price-index/methodology">BenchLM</a> is described as 3:1 input to output. Do not compare blended values across indices.</p>
+
+<h2>Data retention</h2>
+<p>Raw source responses, observations and the per-endpoint snapshot are private. Each daily value carries a SHA-256 verification hash. Observations are available on request so that you can recompute a value.</p>
+<p>No retention period has been set yet.</p>
+
+<h2>IOSCO Principles for Financial Benchmarks</h2>
+<p>This is a self-assessment. STCI is not a regulated benchmark. No independent review has taken place. Principle names should be checked against the IOSCO text.</p>
+<table>
+  <thead>
+    <tr><th scope="col">No.</th><th scope="col">Principle</th><th scope="col">Status</th><th scope="col">Evidence</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>Overall Responsibility of the Administrator</td><td>Partly</td><td>Administrator is named; no formal accountability framework.</td></tr>
+    <tr><td>2</td><td>Oversight of Third Parties</td><td>Not yet</td><td>Single source, OpenRouter; no agreement or oversight.</td></tr>
+    <tr><td>3</td><td>Conflicts of Interest for Administrators</td><td>Partly</td><td>Disclosed here; no register, recusal procedure or independent check.</td></tr>
+    <tr><td>4</td><td>Control Framework for Administrators</td><td>Partly</td><td>Deterministic code, tests and hash; no written control framework.</td></tr>
+    <tr><td>5</td><td>Internal Oversight</td><td>Not yet</td><td>One small team; no oversight committee.</td></tr>
+    <tr><td>6</td><td>Benchmark Design</td><td>Partly</td><td>Documented baskets and blend; blend is an assumption and the source is single.</td></tr>
+    <tr><td>7</td><td>Data Sufficiency</td><td>Partly</td><td>Coverage floor and endpoint screen; inputs are listed prices, not transactions.</td></tr>
+    <tr><td>8</td><td>Hierarchy of Data Inputs</td><td>Partly</td><td>Source tiers defined; only tier T1 in use.</td></tr>
+    <tr><td>9</td><td>Transparency of Benchmark Determination</td><td>Partly</td><td>Methodology and hash public; raw inputs on request only.</td></tr>
+    <tr><td>10</td><td>Periodic Review</td><td>Partly</td><td>Monthly review specified; no completed cycle under the current rules.</td></tr>
+    <tr><td>11</td><td>Content of the Methodology</td><td>Partly</td><td>Rules and limits documented; no expert-judgment or stress-condition policy.</td></tr>
+    <tr><td>12</td><td>Changes to the Methodology</td><td>Partly</td><td>Versioned with a change log; notice period untested; no consultation process.</td></tr>
+    <tr><td>13</td><td>Transition Policy</td><td>Not yet</td><td>The 2026 data gap is disclosed; no cessation policy.</td></tr>
+    <tr><td>14</td><td>Submitter Code of Conduct</td><td>Not yet</td><td>No submitters yet; the reported-price panel is planned.</td></tr>
+    <tr><td>15</td><td>Internal Controls over Data Collection</td><td>Partly</td><td>Exclusions logged and rules re-applied; no check on source errors.</td></tr>
+    <tr><td>16</td><td>Complaints Procedures</td><td>Partly</td><td>Contact below; no response time or escalation path.</td></tr>
+    <tr><td>17</td><td>Audits</td><td>Not yet</td><td>No internal or external audit.</td></tr>
+    <tr><td>18</td><td>Audit Trail</td><td>Partly</td><td>Observations and hashes kept on the host; no retention period; not held independently.</td></tr>
+    <tr><td>19</td><td>Cooperation with Regulatory Authorities</td><td>Not yet</td><td>No procedure; no regulator involved.</td></tr>
+  </tbody>
+</table>
+<p>Count: Met 0, Partly 13, Not yet 6.</p>
+
+<h2>Complaints and corrections</h2>
+<p>Write to <a href="mailto:support@intentsolutions.io">support@intentsolutions.io</a>. Give the date, the index or model, and why the value looks wrong. If a value was wrong, we publish a dated correction. No response time is promised yet.</p>
+
+<h2>What a grade is and is not</h2>
+<p>A grade is a view over published facets, such as serving precision. A content-hashed rule_id identifies the rule that produced it. The same rule over the same facets gives the same grade.</p>
+<p>A grade does not test output quality. Precision labels come from the source. No audited grade exists. A grade is not an offer, a quote or financial advice.</p>

@@ -95,3 +95,8 @@ playwright-report/
 # indices and derived spread metrics are published. Files committed before
 # 2026-11-19 remain tracked.
 data/observations/*.jsonl
+
+# Methodology 2.1.0: the per-endpoint snapshot is private (its sha256 is
+# published in the spread file; the rows are not).
+data/endpoints/*.jsonl
+data/endpoints/*.observed.json

@@ -3,7 +3,7 @@
 
 Reads committed data only:
   data/indices/<date>.json        daily index files
-  data/spread/<date>.json         neocloud spread files (methodology 2.0.0+)
+  data/spread/<date>.json         neocloud spread files (methodology 2.0.0+; 2.1.0 adds facet cells)
   data/fixtures/methodology.yaml  the current rulebook
   public/                         static assets (CSS, favicon)
 
@@ -52,15 +52,24 @@ INDEX_BLURB = {
 }
 
 # Allow-lists. Anything not named here is not published.
-INDEX_TOP_KEYS = ["date", "methodology_version", "computed_at", "verification_hash", "observation_count"]
+INDEX_TOP_KEYS = ["date", "methodology_version", "computed_at", "verification_hash", "observation_count",
+                  "rule_id", "endpoint_snapshot_sha256"]
 INDEX_KEYS = ["input_rate", "output_rate", "blended_rate", "model_count", "dispersion",
               "models_included", "constituents_missing"]
-SPREAD_TOP_KEYS = ["date", "methodology_version", "blend", "source"]
+SPREAD_TOP_KEYS = ["date", "methodology_version", "blend", "source", "rule_id",
+                   "endpoint_snapshot_sha256"]
 SPREAD_SUMMARY_KEYS = ["models_measured", "fetch_errors", "median_max_min_ratio",
                        "median_p75_p25_ratio", "widest", "most_endpoints"]
 SPREAD_MODEL_KEYS = ["model_id", "endpoints", "providers", "min_blended", "p25_blended",
                      "median_blended", "p75_blended", "max_blended", "max_min_ratio",
-                     "p75_p25_ratio", "quantization_mix", "cheapest"]
+                     "p75_p25_ratio", "quantization_mix", "cheapest", "snapshot",
+                     "precision_disclosure", "cells"]
+CELL_KEYS = ["precision", "context_bucket", "tools", "n", "min", "p25", "median", "p75", "max",
+             "p75_p25_ratio"]
+DISCLOSURE_KEYS = ["disclosed", "undisclosed"]
+# Keys that only ever appear on a per-endpoint row of the private snapshot.
+ENDPOINT_ROW_KEYS = {"tag", "price_in", "price_out", "cache_read", "supported_parameters",
+                     "max_completion_tokens", "context_length", "provider_name"}
 CHEAPEST_KEYS = ["provider", "quantization", "blended"]
 REF_KEYS = ["model_id", "max_min_ratio", "endpoints", "providers"]
 
@@ -123,9 +132,29 @@ def clean_spread(raw: dict) -> dict:
             c["cheapest"] = pick(c["cheapest"], CHEAPEST_KEYS)
         if isinstance(c.get("quantization_mix"), dict):
             c["quantization_mix"] = {str(k): int(v) for k, v in c["quantization_mix"].items()}
+        if isinstance(c.get("cells"), list):
+            c["cells"] = [pick(cell, CELL_KEYS) for cell in c["cells"]]
+        if isinstance(c.get("precision_disclosure"), dict):
+            c["precision_disclosure"] = pick(c["precision_disclosure"], DISCLOSURE_KEYS)
         models.append(c)
     out["models"] = models
+    assert_no_endpoint_rows(out)
     return out
+
+
+def assert_no_endpoint_rows(doc) -> None:
+    """Facets publish; per-endpoint rows never do. Walk the whole document."""
+    if isinstance(doc, dict):
+        leaked = ENDPOINT_ROW_KEYS & set(doc)
+        if leaked:
+            raise PublishError(f"per-endpoint fields in published spread: {sorted(leaked)}")
+        if isinstance(doc.get("endpoints"), (list, dict)):
+            raise PublishError("per-endpoint rows in published spread")
+        for v in doc.values():
+            assert_no_endpoint_rows(v)
+    elif isinstance(doc, list):
+        for v in doc:
+            assert_no_endpoint_rows(v)
 
 
 def write_json(path: Path, data) -> None:
@@ -166,7 +195,7 @@ def series_runs(dates: list[str]) -> list[tuple[str, str]]:
 
 # ---------------------------------------------------------------- page shell
 
-NAV = [("/", "Index"), ("/thesis", "Thesis"), ("/methodology", "Methodology and API")]
+NAV = [("/", "Index"), ("/thesis", "Thesis"), ("/methodology", "Methodology and API"), ("/governance", "Governance")]
 LEGAL = [("/privacy", "Privacy"), ("/terms", "Terms"), ("/acceptable-use", "Acceptable use"),
          ("/data-retention", "Data retention")]
 
@@ -590,11 +619,16 @@ listing. Each day lists any basket constituent that is missing.</li>
 <li><strong>Weighting.</strong> Equal. Volume weighting needs reported volumes, which needs the panel.</li>
 <li><strong>The neocloud spread.</strong> For each open-weight model with at least four priced endpoints: endpoint
 and provider counts, minimum, quartiles, median and maximum blended price, the max/min and p75/p25 ratios, the
-serving-precision mix, and the cheapest endpoint with its precision.</li>
+serving-precision mix, and the cheapest endpoint with its precision. From methodology 2.1.0 each model also
+carries facet cells (reported precision, context bucket, tool support) with the count and quartiles of each
+cell; a missing precision is its own &ldquo;undisclosed&rdquo; cell, and cells under three endpoints publish
+their count only. There are no grades, only facets and a disclosed-versus-undisclosed precision count.</li>
 <li><strong>Publication.</strong> Indices and derived spread metrics only. Raw source responses and individual
-listings are not published; they are available on request.</li>
+listings are not published; they are available on request. Each day publishes the SHA-256 of its private
+endpoint snapshot.</li>
 <li><strong>Verification.</strong> Each day carries a SHA-256 hash over the sorted eligible listings, the rulebook
-and the date, truncated to 16 hex characters. Today: <code>{e(latest.get('verification_hash', ''))}</code>.</li>
+and the date, truncated to 16 hex characters. From methodology 2.1.0 the hash also covers the endpoint
+snapshot digest, the grade-rule id and the spread output. Today: <code>{e(latest.get('verification_hash', ''))}</code>.</li>
 <li><strong>Rebalancing.</strong> Constituents are reviewed on the first day of each month, with changes announced
 seven days ahead.</li>
 </ul>
@@ -734,6 +768,12 @@ def build(root: Path, out: Path, data_dir: Path | None = None, spread_dir: Path 
         "methodology.html": page(path="/methodology", title=f"Methodology and API | STCI, the {NAME}",
                                  description="How STCI is computed, what is published, and the static JSON API.",
                                  body=methodology_page(methodology, latest)),
+        "governance.html": page(path="/governance", title=f"Rulebook and governance | STCI, the {NAME}",
+                                description="Who administers STCI, how the rulebook changes, and which IOSCO "
+                                            "benchmark principles it meets and does not yet meet.",
+                                body='<article class="wrap prose">'
+                                     + (root / "content" / "governance" / "governance.html").read_text()
+                                     + "</article>"),
         "404.html": page(path="/404", title=f"Not found | STCI, the {NAME}", description="Page not found.", body=NOT_FOUND),
     }
     for href, _ in LEGAL:
@@ -745,7 +785,7 @@ def build(root: Path, out: Path, data_dir: Path | None = None, spread_dir: Path 
         (out / name).write_text(text)
     (out / "docs.html").write_text(pages["methodology.html"])
 
-    urls = ["/", "/thesis", "/methodology"] + [h for h, _ in LEGAL]
+    urls = ["/", "/thesis", "/methodology", "/governance"] + [h for h, _ in LEGAL]
     (out / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "".join(f"  <url><loc>{SITE}{u}</loc><lastmod>{dates[-1]}</lastmod></url>\n" for u in urls)

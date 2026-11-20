@@ -1,0 +1,13 @@
+# STCI grade rules: append-only. Never edit or delete an entry; add a new one
+# with a later effective_from. rule_id = sha256 of the canonical JSON of the
+# entry's content (everything except rule_id), computed by
+# services/indexer/rules.py, never written here by hand.
+#
+# Facets, not verdicts: no A/B/C grades. The only shipped view is
+# "disclosed vs undisclosed precision".
+rules:
+  - effective_from: "2026-11-20"
+    view: disclosed_vs_undisclosed_precision
+    # Precision values that count as undisclosed. Everything else a provider
+    # reports (fp8, fp4, mxfp4, nvfp4, int4, bf16, fp16, ...) is disclosed.
+    undisclosed_values: [undisclosed]

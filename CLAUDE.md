@@ -30,7 +30,7 @@ python -m services.collector.pipeline --dry-run          # No file writes
 
 # Neocloud spread (per open-weight model, price across provider endpoints;
 # needed before indexing, STCI-OPEN is screened on it)
-python -m services.collector.spread --date 2026-11-19    # writes data/spread/{date}.json
+python -m services.collector.spread --date 2026-11-19    # writes data/spread/{date}.json + private data/endpoints/{date}.jsonl
 
 # Indexing pipeline (compute indices)
 python -m services.indexer.pipeline                      # Today's index
@@ -98,12 +98,13 @@ OpenRouter API → raw/{date}.json → observations/{date}.jsonl → indices/{da
 - `blended_rate`: Assumes 3:1 output:input ratio (configurable in methodology.yaml)
 - `verification_hash`: SHA256 for deterministic verification
 
-**Methodology** (`data/fixtures/methodology.yaml`, version 2.0.0 since 2026-11-19; spec `000-docs/020`):
+**Methodology** (`data/fixtures/methodology.yaml`, version 2.1.0; spec `000-docs/022`, building on `020`; 2.0.0 governed 2026-11-19 to 2026-11-20):
 - Listing eligibility rules (alias, `:free`, `:batch`, router listings excluded; the collector logs each reason and the indexer re-applies the rules)
 - FRONTIER/EFFICIENT constituents cited to provider descriptions; STCI-OPEN is rule-based (open weights + ≥10 priced endpoints from that day's spread file)
 - Equal weighting; usage weighting waits on a reported-price panel
 - Daily output carries `constituents_missing` per explicit basket; review constituents monthly
-- `methodology-1.0.0.yaml` is the archived rulebook for 2026-01-02 to 2026-03-06
+- 2.1.0 ships facets, not verdicts: private endpoint snapshot `data/endpoints/{date}.jsonl` (git-ignored, sha256 in the spread file), facet cells per model, append-only `rules/grade-rules.yaml`, no grades
+- `methodology-1.0.0.yaml` is the archived rulebook for 2026-01-02 to 2026-03-06; `methodology-2.0.0.yaml` for 2026-11-19 to 2026-11-20
 
 **Publication rule** (ADR 014): indices and `data/spread` are committed; new `data/observations/*.jsonl` are git-ignored and stay private.
 
