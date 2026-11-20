@@ -15,7 +15,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   commits only `data/indices/<date>.json` and `data/spread/<date>.json` to
   `main` (which deploys the site). Failures page Buzz `sys-automation` through
   the governed alert floor; successes are audit-only. Replaces the GitHub
-  Actions cron disabled on 2026-03-06.
+  Actions cron disabled on 2026-03-06. Since 2026-11-20 failures page the
+  private Discord channel `#sys-alerts` (Buzz is retired; intent-os #957);
+  failure path re-proven the same day (#40).
+- **Price by serving precision on the site** (#39): each spread row reads
+  "fp8 from $x / fp4 from $y / precision undisclosed from $z" from the 2.1
+  facet cells; under 700px the table becomes stacked cards (no horizontal
+  scroll at 390px); the OpenRouter accuracy counterpoint; methodology section
+  "What a grade is and is not".
+- **Rulebook and governance page** (`/governance`, `000-docs/024`, #38):
+  administrator and conflict-of-interest statement, blend convention, data
+  retention, IOSCO self-assessment (principle names pending a readable
+  FR07/13).
+- **Competitor and prior-art brief** (`000-docs/023`, #38) with a 2026-11-20
+  verification addendum.
+
+### Deferred
+
+- Grade audit (paired prompts through reference vs low-precision endpoints):
+  designed, not funded; no grade is published.
 
 
 ## [0.7.0] - 2026-11-20
