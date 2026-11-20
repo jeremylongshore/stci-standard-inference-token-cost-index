@@ -195,7 +195,7 @@ def series_runs(dates: list[str]) -> list[tuple[str, str]]:
 
 # ---------------------------------------------------------------- page shell
 
-NAV = [("/", "Index"), ("/thesis", "Thesis"), ("/methodology", "Methodology and API")]
+NAV = [("/", "Index"), ("/thesis", "Thesis"), ("/methodology", "Methodology and API"), ("/governance", "Governance")]
 LEGAL = [("/privacy", "Privacy"), ("/terms", "Terms"), ("/acceptable-use", "Acceptable use"),
          ("/data-retention", "Data retention")]
 
@@ -690,6 +690,12 @@ def build(root: Path, out: Path, data_dir: Path | None = None, spread_dir: Path 
         "methodology.html": page(path="/methodology", title=f"Methodology and API | STCI, the {NAME}",
                                  description="How STCI is computed, what is published, and the static JSON API.",
                                  body=methodology_page(methodology, latest)),
+        "governance.html": page(path="/governance", title=f"Rulebook and governance | STCI, the {NAME}",
+                                description="Who administers STCI, how the rulebook changes, and which IOSCO "
+                                            "benchmark principles it meets and does not yet meet.",
+                                body='<article class="wrap prose">'
+                                     + (root / "content" / "governance" / "governance.html").read_text()
+                                     + "</article>"),
         "404.html": page(path="/404", title=f"Not found | STCI, the {NAME}", description="Page not found.", body=NOT_FOUND),
     }
     for href, _ in LEGAL:
@@ -701,7 +707,7 @@ def build(root: Path, out: Path, data_dir: Path | None = None, spread_dir: Path 
         (out / name).write_text(text)
     (out / "docs.html").write_text(pages["methodology.html"])
 
-    urls = ["/", "/thesis", "/methodology"] + [h for h, _ in LEGAL]
+    urls = ["/", "/thesis", "/methodology", "/governance"] + [h for h, _ in LEGAL]
     (out / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "".join(f"  <url><loc>{SITE}{u}</loc><lastmod>{dates[-1]}</lastmod></url>\n" for u in urls)
