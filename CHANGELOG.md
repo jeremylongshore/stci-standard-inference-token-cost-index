@@ -7,40 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-
-- **Nightly refresh on the VPS** (`ops/vps/`, runbook `000-docs/021`): a systemd
-  timer on the `intentsolutions` host runs collector -> spread -> indexer at
-  06:30 UTC from a job-owned clone of `main`, verifies the four indices, and
-  commits only `data/indices/<date>.json` and `data/spread/<date>.json` to
-  `main` (which deploys the site). Failures page Buzz `sys-automation` through
-  the governed alert floor; successes are audit-only. Replaces the GitHub
-  Actions cron disabled on 2026-03-06. Since 2026-11-20 failures page the
-  private Discord channel `#sys-alerts` (Buzz is retired; intent-os #957);
-  failure path re-proven the same day (#40).
-- **Price by serving precision on the site** (#39): each spread row reads
-  "fp8 from $x / fp4 from $y / precision undisclosed from $z" from the 2.1
-  facet cells; under 700px the table becomes stacked cards (no horizontal
-  scroll at 390px); the OpenRouter accuracy counterpoint; methodology section
-  "What a grade is and is not".
-- **Rulebook and governance page** (`/governance`, `000-docs/024`, #38):
-  administrator and conflict-of-interest statement, blend convention, data
-  retention, IOSCO self-assessment (principle names pending a readable
-  FR07/13).
-- **Competitor and prior-art brief** (`000-docs/023`, #38) with a 2026-11-20
-  verification addendum.
-
-### Deferred
-
-- Grade audit (paired prompts through reference vs low-precision endpoints):
-  designed, not funded; no grade is published.
-
-
 ## [0.7.0] - 2026-11-20
 
+No v0.6.0 was tagged; this release covers everything since v0.5.0.
+
 ### Added
 
-- **Methodology 2.1.0, facets not verdicts** (`000-docs/022`, Refs #32). The
+- **Methodology 2.1.0, facets not verdicts** (`000-docs/022`, Refs #32, #37). The
   spread keeps per-endpoint provider, tag, quantization, context, max
   completion tokens, supported parameters and prices in a private canonical
   snapshot (`data/endpoints/{date}.jsonl`, git-ignored); its sha256 is the
@@ -53,18 +26,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   content. Only view: disclosed vs undisclosed precision. No grades.
 - `schemas/stci_spread.schema.json`; `rule_id` and `endpoint_snapshot_sha256`
   added to `stci_daily.schema.json`.
+- **Neocloud spread** (`services/collector/spread.py`, `data/spread/{date}.json`,
+  #25): per open-weight model, the blended price across every provider endpoint
+  selling it, with min/p25/median/p75/max, the max/min and p75/p25 ratios,
+  the serving-precision mix and the cheapest endpoint. The verification hash
+  binds the endpoint counts whenever a basket used them.
+- **Self-hosted STCI site** on the VPS with a static JSON API (#26).
+- **Price by serving precision on the site** (#39): each spread row reads
+  "fp8 from $x / fp4 from $y / precision undisclosed from $z" from the 2.1
+  facet cells; under 700px the table becomes stacked cards (no horizontal
+  scroll at 390px); the OpenRouter accuracy counterpoint; methodology section
+  "What a grade is and is not".
+- **Nightly refresh on the VPS** (`ops/vps/`, runbook `000-docs/021`, #31): a
+  systemd timer on the `intentsolutions` host runs collector, spread and
+  indexer at 06:30 UTC from a job-owned clone of `main`, verifies the four
+  indices, and commits only `data/indices/<date>.json` and
+  `data/spread/<date>.json` to `main` (which deploys the site). Replaces the
+  GitHub Actions cron disabled on 2026-03-06. Failures page the private
+  Discord channel `#sys-alerts`; the failure path was re-proven on 2026-11-20
+  (#40).
+- **Rulebook and governance page** (`/governance`, `000-docs/024`, #38):
+  administrator and conflict-of-interest statement, blend convention, data
+  retention, IOSCO self-assessment (principle names pending a readable
+  FR07/13).
+- **Competitor and prior-art brief** (`000-docs/023`, #38) with a 2026-11-20
+  verification addendum.
+- Rebuilt the public `stci-dataops` skill around evidence provenance,
+  legal-review boundaries, the actual collector contract, explicit approvals,
+  schema validation, and deterministic tests.
 
 ### Changed
 
-- Verification hash for 2.1.0 also covers the endpoint snapshot digest, the rule
-  id and the canonical spread output. 2.0.0 hashes are unchanged
-  (`data/fixtures/methodology-2.0.0.yaml` archives that rulebook).
-- `publish_static.py` publishes facet cells and refuses per-endpoint rows.
-- VERSION 0.7.0; methodology version 2.1.0.
-
-### Changed
-
-- **Methodology 2.0.0** (`000-docs/020`): listing eligibility is now a rule
+- **Methodology 2.0.0** (`000-docs/020`, #25): listing eligibility is now a rule
   (alias, `:free`, `:batch`, router and unpriced listings are excluded with a
   recorded reason; batch rates attach to the base model), FRONTIER and
   EFFICIENT constituents are rebuilt on the November 2026 market with each
@@ -73,26 +66,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   daily output reports `constituents_missing`. Methodology 1.0.0 is archived
   as `data/fixtures/methodology-1.0.0.yaml` and still governs 2026-01-02 to
   2026-03-06.
+- Verification hash for 2.1.0 also covers the endpoint snapshot digest, the rule
+  id and the canonical spread output. 2.0.0 hashes are unchanged
+  (`data/fixtures/methodology-2.0.0.yaml` archives that rulebook).
+- `publish_static.py` publishes facet cells and refuses per-endpoint rows.
 - Observations gain `cached_rate_input`, `open_weights` and
   `hugging_face_id`. New observation files are no longer committed (ADR 014,
   amended); indices and the spread are.
 - The collection resumed on 2026-11-19 after the gap from 2026-03-07.
-
-### Added
-
-- **Neocloud spread** (`services/collector/spread.py`, `data/spread/{date}.json`):
-  per open-weight model, the blended price across every provider endpoint
-  selling it, with min/p25/median/p75/max, the max/min and p75/p25 ratios,
-  the serving-precision mix and the cheapest endpoint. The verification hash
-  binds the endpoint counts whenever a basket used them.
-
-- Rebuilt the public `stci-dataops` skill around evidence provenance,
-  legal-review boundaries, the actual collector contract, explicit approvals,
-  schema validation, and deterministic tests.
+- The project is named Standardized Token Cost Index (#28).
 - Corrected public repository links and documented the intentionally paused
   daily pipeline.
 - Refreshed locked development dependencies to clear all reported npm audit
   findings without changing production dependencies.
+- VERSION 0.7.0; methodology version 2.1.0.
 
 ### Fixed
 
