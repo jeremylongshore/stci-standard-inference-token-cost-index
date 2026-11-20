@@ -313,31 +313,92 @@ def spread_lead(spread: dict | None) -> str:
 </figure>"""
 
 
+PRECISION_ORDER = ("bf16", "fp16", "fp8", "mxfp8", "fp6", "int8", "fp4", "mxfp4", "nvfp4", "int4", "undisclosed")
+
+
+def precision_floors(m: dict) -> list[tuple[str, float | None, int]]:
+    """Cheapest blended price per reported precision, from the 2.1 facet cells.
+
+    Returns (precision, min or None, endpoints). min is None when every cell for that precision is
+    below the n >= 3 publication floor. Older spread files carry no cells; they fall back to the
+    cheapest endpoint's precision alone.
+    """
+    cells = m.get("cells")
+    if not cells:
+        ch = m.get("cheapest") or {}
+        q = (ch.get("quantization") or "").strip().lower()
+        return [(q if q not in ("", "unknown", "none", "null") else "undisclosed", m.get("min_blended"), 1)]
+    agg: dict[str, list] = {}
+    for c in cells:
+        a = agg.setdefault(c["precision"], [None, 0])
+        a[1] += c.get("n", 0)
+        if c.get("min") is not None:
+            a[0] = c["min"] if a[0] is None else min(a[0], c["min"])
+    rank = {p: i for i, p in enumerate(PRECISION_ORDER)}
+    return sorted(((p, v[0], v[1]) for p, v in agg.items()), key=lambda t: rank.get(t[0], 50))
+
+
+def precision_label(p: str) -> str:
+    return "precision undisclosed" if p == "undisclosed" else p
+
+
+def precision_lines(m: dict) -> str:
+    parts = []
+    for p, lo, n in precision_floors(m):
+        price = f"from {usd(lo)}" if lo is not None else f"{n} endpoint{'s' if n != 1 else ''}, too few to price"
+        parts.append(f"<li><span class=\"prec\">{e(precision_label(p))}</span> {price}</li>")
+    return f'<ul class="prec-lines">{"".join(parts)}</ul>'
+
+
+def _widest(spread: dict, limit: int) -> list[dict]:
+    return sorted(spread["models"], key=lambda m: m.get("max_min_ratio", 0), reverse=True)[:limit]
+
+
+def _spread_caption(spread: dict, shown: int) -> str:
+    s = spread["summary"]
+    measured = s.get("models_measured", len(spread["models"]))
+    cap = (f"The {shown} widest spreads of {measured} open-weight models measured on {e(long_date(spread['date']))}. "
+           f"Blended $ per million tokens, {spread.get('blend', {}).get('output_ratio', 3):g} output tokens per input token.")
+    if "median_max_min_ratio" in s:
+        cap += f" Median spread across all {measured}: {ratio(s['median_max_min_ratio'])}."
+    return cap
+
+
+def spread_cards(spread: dict | None, limit: int = 12) -> str:
+    """Phone layout: one card per model instead of an eight-column table."""
+    if not spread:
+        return ""
+    rows = _widest(spread, limit)
+    cards = "".join(
+        f"""<li class="spread-card"><h4><code>{e(m['model_id'])}</code></h4>
+<p class="spread-meta">{m['endpoints']} endpoints &middot; {m['providers']} providers &middot;
+<span class="hi">{ratio(m['max_min_ratio'])}</span> max/min</p>
+{precision_lines(m)}
+<p class="spread-meta">Median {usd(m['median_blended'])} &middot; dearest {usd(m['max_blended'])}</p></li>"""
+        for m in rows
+    )
+    return f"""<div class="spread-cards"><p class="caption">{_spread_caption(spread, len(rows))}</p>
+<ol class="cards-list" aria-label="Neocloud spread, widest models">{cards}</ol></div>"""
+
+
 def spread_table(spread: dict | None, limit: int = 12) -> str:
     if not spread:
         return ""
-    rows = sorted(spread["models"], key=lambda m: m.get("max_min_ratio", 0), reverse=True)[:limit]
+    rows = _widest(spread, limit)
     trs = []
     for m in rows:
-        ch = m.get("cheapest") or {}
         trs.append(
             f"<tr><th scope=\"row\"><code>{e(m['model_id'])}</code></th>"
             f"<td>{m['endpoints']}</td><td>{m['providers']}</td>"
             f"<td>{usd(m['min_blended'])}</td><td>{usd(m['median_blended'])}</td><td>{usd(m['max_blended'])}</td>"
-            f"<td class=\"hi\">{ratio(m['max_min_ratio'])}</td><td>{e(ch.get('quantization', 'unknown'))}</td></tr>"
+            f"<td class=\"hi\">{ratio(m['max_min_ratio'])}</td><td class=\"prec-cell\">{precision_lines(m)}</td></tr>"
         )
-    s = spread["summary"]
-    measured = s.get("models_measured", len(spread["models"]))
-    cap = (f"The {len(rows)} widest spreads of {measured} open-weight models measured on {e(long_date(spread['date']))}. "
-           f"Blended $ per million tokens, {spread.get('blend', {}).get('output_ratio', 3):g} output tokens per input token.")
-    if "median_max_min_ratio" in s:
-        cap += f" Median spread across all {measured}: {ratio(s['median_max_min_ratio'])}."
-    return f"""<div class="table-scroll" role="region" aria-label="Neocloud spread, widest models" tabindex="0">
+    return f"""<div class="table-scroll spread-table" role="region" aria-label="Neocloud spread, widest models" tabindex="0">
 <table>
-<caption>{cap}</caption>
+<caption>{_spread_caption(spread, len(rows))}</caption>
 <thead><tr><th scope="col">Model</th><th scope="col">Endpoints</th><th scope="col">Providers</th>
 <th scope="col">Cheapest</th><th scope="col">Median</th><th scope="col">Dearest</th>
-<th scope="col">Max / min</th><th scope="col">Cheapest precision</th></tr></thead>
+<th scope="col">Max / min</th><th scope="col">Cheapest by precision</th></tr></thead>
 <tbody>{''.join(trs)}</tbody>
 </table></div>"""
 
@@ -430,6 +491,10 @@ def landing(latest: dict, spread: dict | None, methodology: dict) -> str:
     {index_cards(latest)}
     <h3 class="table-head">The neocloud spread</h3>
     {spread_table(spread)}
+    {spread_cards(spread)}
+    <p class="source">Precision is what each provider reports. It is a fact about the endpoint, not a verdict on the
+    tokens: OpenRouter&rsquo;s own test (November 11, 2026) found no clear accuracy gap between fp16, fp8 and fp4 on one
+    model, and could not rule out a point or two. The provider can matter as much as the precision.</p>
     <p class="source">Source: listed prices on OpenRouter, from its model catalog and each model&rsquo;s provider
     endpoints. Listed prices, not prices paid. As JSON: <a href="/v1/index/latest.json">/v1/index/latest.json</a>
     and <a href="/v1/spread/latest.json">/v1/spread/latest.json</a>.</p>
@@ -592,6 +657,19 @@ answer on <code>{SITE}</code> and <code>{API_ALT}</code>, with or without the <c
 <tr><th scope="row"><a href="/v1/methodology.json"><code>/v1/methodology.json</code></a></th><td>The rulebook as published</td></tr>
 </tbody></table></div>
 <pre><code>curl -s {SITE}/v1/index/latest.json</code></pre>
+
+<h2 id="grades">What a grade is and is not</h2>
+<p>STCI publishes facts about each endpoint, never a verdict on its tokens. For every open-weight model the spread
+groups endpoints by the precision the provider reports, the context they offer and whether they accept tools, and
+publishes the cheapest, quartiles and dearest price of each group with at least three endpoints. Individual
+endpoint prices are not published.</p>
+<p>A grade, if STCI ever publishes one, is a named rule over those groups. Each rule is stored as data and
+identified by the hash of its content, the <code>rule_id</code> printed in every daily file, so a rule cannot change
+without the identifier changing. The only rule in force sorts endpoints into precision disclosed and precision
+undisclosed.</p>
+<p>No grade has been audited. A grade will be published only after the same prompts have been run through
+reference-precision and lower-precision endpoints of the same model and the results show a difference worth
+naming. A missing precision is shown as undisclosed; it is not treated as low quality.</p>
 </article>"""
 
 

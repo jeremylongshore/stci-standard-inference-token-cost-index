@@ -114,3 +114,34 @@ def test_mismatched_date_is_refused(tmp_path):
         {"date": "2026-11-21", "indices": {"STCI-ALL": {"blended_rate": 1}}}))
     with pytest.raises(ps.PublishError):
         ps.build(ROOT, tmp_path / "out", data_dir=data)
+
+
+def test_precision_lines_use_cells_and_keep_undisclosed_separate():
+    m = {"model_id": "x/y", "min_blended": 0.12, "cheapest": {"quantization": "fp4"},
+         "cells": [
+             {"precision": "fp8", "context_bucket": "32-128k", "tools": True, "n": 4, "min": 0.30},
+             {"precision": "fp8", "context_bucket": "128k+", "tools": True, "n": 3, "min": 0.24},
+             {"precision": "fp4", "context_bucket": "32-128k", "tools": False, "n": 5, "min": 0.12},
+             {"precision": "undisclosed", "context_bucket": "32-128k", "tools": True, "n": 2, "min": None},
+         ]}
+    floors = ps.precision_floors(m)
+    assert floors == [("fp8", 0.24, 7), ("fp4", 0.12, 5), ("undisclosed", None, 2)]
+    html = ps.precision_lines(m)
+    assert "precision undisclosed" in html and "too few to price" in html
+
+
+def test_precision_lines_fall_back_without_cells():
+    m = {"model_id": "x/y", "min_blended": 0.12, "cheapest": {"quantization": "fp4"}}
+    assert ps.precision_floors(m) == [("fp4", 0.12, 1)]
+
+
+def test_spread_has_phone_cards_and_grade_section(built):
+    home = (built / "index.html").read_text()
+    assert 'class="spread-cards"' in home and 'class="spread-card"' in home
+    assert "no clear accuracy gap" in home
+    assert 'id="grades"' in (built / "methodology.html").read_text()
+
+
+def test_fallback_maps_unknown_to_undisclosed():
+    m = {"model_id": "x/y", "min_blended": 0.2, "cheapest": {"quantization": "unknown"}}
+    assert ps.precision_floors(m) == [("undisclosed", 0.2, 1)]
