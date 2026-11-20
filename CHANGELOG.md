@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Nightly refresh on the VPS** (`ops/vps/`, runbook `000-docs/021`): a systemd
+  timer on the `intentsolutions` host runs collector -> spread -> indexer at
+  06:30 UTC from a job-owned clone of `main`, verifies the four indices, and
+  commits only `data/indices/<date>.json` and `data/spread/<date>.json` to
+  `main` (which deploys the site). Failures page Buzz `sys-automation` through
+  the governed alert floor; successes are audit-only. Replaces the GitHub
+  Actions cron disabled on 2026-03-06.
+
+
 ## [0.7.0] - 2026-11-20
 
 ### Added

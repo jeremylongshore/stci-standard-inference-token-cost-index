@@ -1,0 +1,16 @@
+# DEPLOYED TO: /etc/systemd/system/stci-nightly.timer on the intentsolutions VPS
+# Install: sudo bash ops/vps/install.sh
+# 06:30 UTC daily: after the 02:00-04:30 UTC-offset backup window on the host
+# and early enough that the published index carries the day's date before
+# most readers wake. Persistent=true runs a missed night at the next boot.
+[Unit]
+Description=STCI nightly data refresh (06:30 UTC daily)
+
+[Timer]
+OnCalendar=*-*-* 06:30:00 UTC
+RandomizedDelaySec=300
+Persistent=true
+Unit=stci-nightly.service
+
+[Install]
+WantedBy=timers.target

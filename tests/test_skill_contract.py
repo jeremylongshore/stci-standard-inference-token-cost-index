@@ -70,5 +70,5 @@ def test_public_readme_uses_current_repository_and_status():
     readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
     assert "jeremylongshore/stci-standard-inference-token-cost-index" in readme
     assert "intent-solutions-io/stci-standard-llm-token-cost-index" not in readme
-    assert "The index publishes daily from 2026-11-19" in readme
+    assert "The index updates nightly at 06:30 UTC" in readme
     assert "npx skills add" in readme

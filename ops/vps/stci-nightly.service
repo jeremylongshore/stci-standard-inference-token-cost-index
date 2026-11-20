@@ -1,0 +1,25 @@
+# DEPLOYED TO: /etc/systemd/system/stci-nightly.service on the intentsolutions VPS
+# Install: sudo bash ops/vps/install.sh (from the job clone at origin/main).
+# The script owns its log, liveness markers, commit guard and governed failure
+# page; OnFailure is the belt-and-braces layer for a crash before its trap arms.
+[Unit]
+Description=STCI nightly data refresh (collect, spread, index, publish to main)
+Wants=network-online.target
+After=network-online.target
+OnFailure=notify-failure@%n.service
+
+[Service]
+Type=oneshot
+User=intentsolutions
+Group=intentsolutions
+# systemd starts with a minimal PATH; the script exports its own as well.
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+Environment=HOME=/home/intentsolutions
+WorkingDirectory=/var/lib/intentsolutions/stci-nightly
+ExecStart=/usr/local/sbin/stci-nightly.sh
+Nice=10
+IOSchedulingClass=idle
+# A full run is well under five minutes; a hung OpenRouter call dies loudly.
+TimeoutStartSec=1200
+NoNewPrivileges=true
+PrivateTmp=true

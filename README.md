@@ -16,7 +16,8 @@ Intent Solutions is a Claude Partner Network Select Services Partner.
 
 Site: [inferencepriceindex.com](https://inferencepriceindex.com)
 
-> **Status:** live. The index publishes daily from 2026-11-19.
+> **Status:** live. The index updates nightly at 06:30 UTC from the Intent Solutions VPS
+> (`ops/vps/`, runbook `000-docs/021`); daily values from 2026-11-19.
 
 ---
 
@@ -277,8 +278,8 @@ STCI is designed as a **reference rate product**. Trust is the moat:
 
 Live: collector, neocloud spread, deterministic indexer, read-only API, tests, and the
 site at [inferencepriceindex.com](https://inferencepriceindex.com) (self-hosted).
-Next: nightly runs on our own host with automatic publication, then the reported-price
-panel (methodology 3.x). Tracked in Beads and
+Nightly refresh and automatic publication run on our own host since 2026-11-19.
+Next: the reported-price panel (methodology 3.x). Tracked in Beads and
 [issue #8](https://github.com/jeremylongshore/stci-standard-inference-token-cost-index/issues/8).
 
 ---
