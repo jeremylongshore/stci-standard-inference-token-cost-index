@@ -11,7 +11,12 @@ from typing import Any, Dict, List, Optional
 
 import yaml
 
-from services.indexer.rules import active_rule, canonical_json
+from services.indexer.rules import (
+    active_rule,
+    canonical_json,
+    resolve_methodology_path,
+    uses_facets,
+)
 
 
 def _strip_observed(value):
@@ -122,8 +127,7 @@ class Indexer:
 
     def _uses_facets(self) -> bool:
         """Methodology 2.1.0 and later bind facets; 2.0.0 hashes stay as published."""
-        version = str(self.methodology.get("methodology_version") or "0.0.0")
-        return tuple(int(x) for x in version.split(".")) >= (2, 1, 0)
+        return uses_facets(self.methodology.get("methodology_version"))
 
     def _facet_binding(
         self, spread: Optional[dict], target_date: date, snapshot_sha: Optional[str]
@@ -307,6 +311,10 @@ def compute_index(
     Returns:
         STCI daily output dictionary
     """
+    if methodology_path is None and target_date is not None:
+        methodology_path = resolve_methodology_path(
+            target_date, Path(__file__).parent.parent.parent / "data"
+        )
     indexer = Indexer(methodology_path)
     return indexer.compute(observations, target_date, spread)
 

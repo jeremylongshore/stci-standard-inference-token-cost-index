@@ -45,3 +45,40 @@ def active_rule(target_date: date, path: Optional[Path] = None) -> Optional[dict
         if rule["effective_from"] <= target_date.isoformat():
             chosen = rule
     return chosen
+
+
+# Date ranges each archived rulebook governs. Anything later uses methodology.yaml.
+ARCHIVED_RULEBOOKS = [
+    ("1.0.0", "2026-03-06"),   # dates up to and including
+    ("2.0.0", "2026-11-20"),
+]
+FIRST_FACET_VERSION = (2, 1, 0)
+
+
+def resolve_methodology_path(target_date: date, data_dir: Path) -> Path:
+    """
+    The rulebook that governs target_date: an archived methodology-X.Y.Z.yaml
+    when one covers the date, else the current methodology.yaml. Reruns of
+    published dates therefore reproduce the published hash.
+    """
+    fixtures = Path(data_dir) / "fixtures"
+    iso = target_date.isoformat()
+    for version, last_day in ARCHIVED_RULEBOOKS:
+        archived = fixtures / f"methodology-{version}.yaml"
+        if iso <= last_day and archived.exists():
+            if version == "2.0.0" and iso < "2026-11-19":
+                continue  # the gap before 2.0.0 started is not 2.0.0's
+            return archived
+    return fixtures / "methodology.yaml"
+
+
+def version_tuple(version) -> tuple:
+    return tuple(int(x) for x in str(version or "0.0.0").split("."))
+
+
+def uses_facets(version) -> bool:
+    return version_tuple(version) >= FIRST_FACET_VERSION
+
+
+def read_methodology_version(path: Path) -> str:
+    return str((yaml.safe_load(Path(path).read_text()) or {}).get("methodology_version"))

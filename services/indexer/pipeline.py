@@ -27,6 +27,7 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from services.indexer.indexer import Indexer
+from services.indexer.rules import resolve_methodology_path
 
 
 class IndexingPipeline:
@@ -40,15 +41,14 @@ class IndexingPipeline:
         methodology_path: Optional[Path] = None,
     ):
         self.data_dir = data_dir or PROJECT_ROOT / "data"
-        self.methodology_path = methodology_path or (
-            self.data_dir / "fixtures" / "methodology.yaml"
-        )
+        # None means: resolve the rulebook per date in run().
+        self.methodology_path = methodology_path
 
         # Ensure output directory exists
         (self.data_dir / "indices").mkdir(parents=True, exist_ok=True)
 
         # Initialize indexer
-        self.indexer = Indexer(self.methodology_path)
+        self.indexer = Indexer(self.methodology_path) if self.methodology_path else None
 
     def run(
         self,
@@ -66,6 +66,9 @@ class IndexingPipeline:
             Tuple of (index_result, output_path)
         """
         target_date = target_date or date.today()
+        if self.methodology_path is None:
+            self.indexer = Indexer(resolve_methodology_path(target_date, self.data_dir))
+        self._refuse_rulebook_change(target_date)
 
         print(f"=== STCI Indexing Pipeline ===")
         print(f"Date: {target_date}")
@@ -113,6 +116,19 @@ class IndexingPipeline:
 
         return result, output_path
 
+    def _refuse_rulebook_change(self, target_date: date) -> None:
+        """Never overwrite a published index computed under a different methodology."""
+        existing = self.data_dir / "indices" / f"{target_date}.json"
+        if not existing.exists():
+            return
+        published = json.loads(existing.read_text()).get("methodology_version")
+        resolved = self.indexer.methodology.get("methodology_version")
+        if published and published != resolved:
+            raise ValueError(
+                f"{existing} was published under methodology {published}, but {resolved} "
+                f"resolves for {target_date}; refusing to overwrite it"
+            )
+
     def _load_spread(self, target_date: date) -> Optional[dict]:
         """Load that day's neocloud spread document, if one was collected."""
         path = self.data_dir / "spread" / f"{target_date.isoformat()}.json"
@@ -135,7 +151,9 @@ class IndexingPipeline:
         if recorded is not None and actual != recorded:
             raise ValueError(
                 f"endpoint snapshot {path} sha256 {actual[:12]} does not match "
-                f"the spread file's {recorded[:12]}"
+                f"the spread file's {recorded[:12]}; delete {path} to trust the recorded "
+                f"digest, or regenerate both with python -m services.collector.spread "
+                f"--date {target_date}"
             )
         return actual
 

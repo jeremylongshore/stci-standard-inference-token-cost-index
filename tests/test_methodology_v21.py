@@ -146,8 +146,7 @@ class TestSnapshot:
                                 "price_out", "cache_read"}
         raw = spread.canonical_snapshot(rows).decode().splitlines()
         parsed = [json.loads(line) for line in raw]
-        assert parsed == sorted(parsed, key=lambda r: (r["model_id"], r["provider"], str(r["tag"]),
-                                                       r["quantization"], str(r["price_in"]), str(r["price_out"])))
+        assert raw == sorted(raw)
         assert all(line == json.dumps(json.loads(line), sort_keys=True, separators=(",", ":")) for line in raw)
         assert all(r["supported_parameters"] == sorted(r["supported_parameters"]) for r in parsed)
         assert doc["endpoint_snapshot_sha256"] == spread.snapshot_sha256(rows)
@@ -319,3 +318,112 @@ class TestSpreadSchemaAndPublication:
             ps.assert_no_endpoint_rows({"models": [{"cells": [{"price_in": "0.1"}]}]})
         with pytest.raises(ps.PublishError):
             ps.assert_no_endpoint_rows({"models": [{"endpoints": [{"provider": "x"}]}]})
+
+
+class TestRulebookResolver:
+    """A rerun of a published date must use the rulebook that published it."""
+
+    DATA = ROOT / "data"
+
+    @pytest.mark.parametrize("day,name", [
+        ("2026-01-02", "methodology-1.0.0.yaml"),
+        ("2026-03-06", "methodology-1.0.0.yaml"),
+        ("2026-11-19", "methodology-2.0.0.yaml"),
+        ("2026-11-20", "methodology-2.0.0.yaml"),
+        ("2026-11-21", "methodology.yaml"),
+        ("2027-01-01", "methodology.yaml"),
+    ])
+    def test_resolver_picks_the_governing_rulebook(self, day, name):
+        assert rules.resolve_methodology_path(date.fromisoformat(day), self.DATA).name == name
+
+    def test_missing_archive_falls_back_to_current(self, tmp_path):
+        (tmp_path / "fixtures").mkdir()
+        assert rules.resolve_methodology_path(date(2026, 11, 19), tmp_path).name == "methodology.yaml"
+
+    def test_published_dates_resolve_to_their_published_version(self):
+        for f in sorted((self.DATA / "indices").glob("2026-11-*.json")):
+            published = json.loads(f.read_text())["methodology_version"]
+            path = rules.resolve_methodology_path(date.fromisoformat(f.stem), self.DATA)
+            if published != "2.1.0":
+                assert rules.read_methodology_version(path) == published, f.name
+
+    def _setup(self, tmp_path, day):
+        import shutil
+        shutil.copytree(self.DATA / "fixtures", tmp_path / "fixtures")
+        for sub in ("observations", "spread", "indices"):
+            (tmp_path / sub).mkdir()
+        (tmp_path / "observations" / f"{day}.jsonl").write_text(
+            "\n".join(json.dumps(dict(o, effective_date=str(day))) for o in OBSERVATIONS) + "\n")
+        return tmp_path
+
+    def test_2_0_0_date_reruns_through_the_pipeline_byte_for_byte(self, tmp_path):
+        day = date(2026, 11, 19)
+        data = self._setup(tmp_path, day)
+        (data / "spread" / f"{day}.json").write_text(json.dumps(SPREAD))
+        result = IndexingPipeline(data_dir=data).run(day, dry_run=True)[0]
+        assert result["methodology_version"] == "2.0.0"
+        assert "rule_id" not in result and "endpoint_snapshot_sha256" not in result
+        # Golden built from the 2.0.0 path before facets existed (see TestVerificationHash).
+        assert result["verification_hash"] == GOLDEN_V2_WITH_SPREAD
+        (data / "spread" / f"{day}.json").unlink()
+        assert IndexingPipeline(data_dir=data).run(day, dry_run=True)[0]["verification_hash"] == GOLDEN_V2_NO_SPREAD
+
+    def test_pipeline_refuses_to_overwrite_a_different_methodology(self, tmp_path):
+        day = date(2026, 11, 19)
+        data = self._setup(tmp_path, day)
+        (data / "indices" / f"{day}.json").write_text(json.dumps({"methodology_version": "2.0.0"}))
+        forced = IndexingPipeline(data_dir=data, methodology_path=data / "fixtures" / "methodology.yaml")
+        with pytest.raises(ValueError, match="refusing to overwrite"):
+            forced.run(day)
+        IndexingPipeline(data_dir=data).run(day, dry_run=True)  # resolved 2.0.0 is fine
+
+    def test_pre_2_1_spread_has_no_facets_snapshot_or_rule(self):
+        doc, rows = spread.fetch_spread_with_snapshot(
+            [{"model_id": "open/m", "open_weights": True}], date(2026, 11, 19),
+            get=lambda url, timeout: _Response(MIXED), pause_seconds=0, methodology_version="2.0.0")
+        assert doc["methodology_version"] == "2.0.0"
+        assert "rule_id" not in doc and "endpoint_snapshot_sha256" not in doc
+        assert not set(spread.FACET_MODEL_KEYS) & set(doc["models"][0])
+
+    def test_spread_cli_uses_the_resolved_rulebook_and_guards_overwrite(self, tmp_path, monkeypatch):
+        day = date(2026, 11, 19)
+        data = self._setup(tmp_path, day)
+        (data / "observations" / f"{day}.jsonl").write_text(
+            json.dumps({"model_id": "open/m", "open_weights": True}) + "\n")
+        monkeypatch.setattr(
+            spread, "fetch_spread_with_snapshot",
+            lambda *a, **k: (spread.compute_spread(day, [], methodology_version=k["methodology_version"]), []))
+        assert spread.main(["--date", str(day), "--data-dir", str(data)]) == 0
+        written = json.loads((data / "spread" / f"{day}.json").read_text())
+        assert written["methodology_version"] == "2.0.0" and "rule_id" not in written
+        assert not (data / "endpoints").exists()
+        (data / "spread" / f"{day}.json").write_text(json.dumps({"methodology_version": "9.9.9"}))
+        assert spread.main(["--date", str(day), "--data-dir", str(data)]) == 1
+
+
+class TestSnapshotHardening:
+    def test_sort_is_total_over_every_field(self):
+        base = {"model_id": "m", "provider": "p", "tag": "t", "quantization": "fp8",
+                "price_in": "1", "price_out": "1"}
+        a = dict(base, context_length=1000, max_completion_tokens=1, supported_parameters=["a"], cache_read="1")
+        b = dict(base, context_length=2000, max_completion_tokens=1, supported_parameters=["a"], cache_read="1")
+        c = dict(base, context_length=2000, max_completion_tokens=1, supported_parameters=["a"], cache_read="2")
+        assert spread.canonical_snapshot([a, b, c]) == spread.canonical_snapshot([c, a, b])
+        assert spread.canonical_snapshot([a, b, c]) == spread.canonical_snapshot([b, c, a])
+
+    def test_mismatch_error_names_the_file_to_regenerate(self, tmp_path):
+        doc, rows = build_day()
+        _write_day(tmp_path, doc, rows)
+        snap = tmp_path / "endpoints" / f"{DAY}.jsonl"
+        snap.write_text(snap.read_text().replace("0.000001", "0.000009"))
+        with pytest.raises(ValueError) as err:
+            _run_pipeline(tmp_path)
+        assert str(snap) in str(err.value) and "regenerate" in str(err.value)
+
+    def test_committed_spread_never_carries_observed(self, tmp_path):
+        live = [ep(f"P{i}", "0.000001", "0.000001", uptime_last_30m=99.0) for i in range(4)]
+        doc, _ = build_day(live)
+        assert doc["models"][0]["observed"]
+        public, observed = spread.split_observed(doc)
+        assert "observed" not in json.dumps(public) and observed == {"open/m": doc["models"][0]["observed"]}
+        assert public["endpoint_snapshot_sha256"] == doc["endpoint_snapshot_sha256"]

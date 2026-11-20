@@ -32,11 +32,18 @@ from pathlib import Path
 from typing import Callable, Dict, List, Optional
 from urllib.parse import quote
 
-from services.indexer.rules import active_rule
+from services.indexer.rules import (
+    active_rule,
+    read_methodology_version,
+    resolve_methodology_path,
+    uses_facets,
+)
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 ENDPOINTS_URL = "https://openrouter.ai/api/v1/models/{model_id}/endpoints"
-METHODOLOGY_VERSION = "2.1.0"
+METHODOLOGY_VERSION = "2.1.0"  # default for callers that do not resolve a rulebook
+# Keys that exist only from methodology 2.1.0.
+FACET_MODEL_KEYS = ("snapshot", "precision_disclosure", "cells", "observed")
 DEFAULT_OUTPUT_RATIO = 3.0
 DEFAULT_MIN_ENDPOINTS = 4
 DECIMALS = 4
@@ -260,10 +267,7 @@ def summarize_endpoints(
 
 def canonical_snapshot(rows: List[dict]) -> bytes:
     """Sorted, canonical-JSON JSONL bytes of the private endpoint snapshot."""
-    ordered = sorted(
-        rows, key=lambda r: (r["model_id"], r["provider"], str(r["tag"]), r["quantization"],
-                             str(r["price_in"]), str(r["price_out"])))
-    lines = [json.dumps(r, sort_keys=True, separators=(",", ":")) for r in ordered]
+    lines = sorted(json.dumps(r, sort_keys=True, separators=(",", ":")) for r in rows)
     return ("\n".join(lines) + "\n").encode() if lines else b""
 
 
@@ -278,9 +282,15 @@ def compute_spread(
     errors: Optional[List[str]] = None,
     snapshot_rows: Optional[List[dict]] = None,
     rule: Optional[dict] = None,
+    methodology_version: str = METHODOLOGY_VERSION,
 ) -> dict:
     """Assemble the daily spread document from per-model summaries."""
-    rule = rule if rule is not None else active_rule(target_date)
+    facets = uses_facets(methodology_version)
+    if facets:
+        rule = rule if rule is not None else active_rule(target_date)
+    else:
+        rule, snapshot_rows = None, []
+        summaries = [{k: v for k, v in m.items() if k not in FACET_MODEL_KEYS} for m in summaries]
     models = sorted(summaries, key=lambda m: (-m["endpoints"], m["model_id"]))
     ratios = sorted(m["max_min_ratio"] for m in models if m["max_min_ratio"] is not None)
     iqr = sorted(m["p75_p25_ratio"] for m in models if m["p75_p25_ratio"] is not None)
@@ -305,16 +315,27 @@ def compute_spread(
             "max_min_ratio": models[0]["max_min_ratio"],
         }
 
-    return {
+    doc = {
         "date": target_date.isoformat(),
-        "methodology_version": METHODOLOGY_VERSION,
+        "methodology_version": methodology_version,
         "blend": {"output_ratio": output_ratio},
-        "rule_id": rule["rule_id"] if rule else None,
-        "endpoint_snapshot_sha256": snapshot_sha256(snapshot_rows or []),
         "source": "OpenRouter /api/v1/models/{id}/endpoints",
         "summary": summary,
         "models": models,
     }
+    if facets:
+        keyed = list(doc.items())
+        keyed.insert(3, ("rule_id", rule["rule_id"] if rule else None))
+        keyed.insert(4, ("endpoint_snapshot_sha256", snapshot_sha256(snapshot_rows or [])))
+        doc = dict(keyed)
+    return doc
+
+
+def split_observed(doc: dict) -> tuple:
+    """(committed document without ``observed`` blocks, {model_id: observed})."""
+    observed = {m["model_id"]: m["observed"] for m in doc["models"] if m.get("observed")}
+    public = dict(doc, models=[{k: v for k, v in m.items() if k != "observed"} for m in doc["models"]])
+    return public, observed
 
 
 def fetch_spread(*args, **kwargs) -> dict:
@@ -329,6 +350,7 @@ def fetch_spread_with_snapshot(
     min_endpoints: int = DEFAULT_MIN_ENDPOINTS,
     get: Optional[Callable] = None,
     pause_seconds: float = 0.25,
+    methodology_version: str = METHODOLOGY_VERSION,
 ) -> tuple:
     """
     Fetch provider endpoints for every open-weight observation and summarize.
@@ -341,7 +363,7 @@ def fetch_spread_with_snapshot(
         get = requests.get
 
     candidates = sorted({o["model_id"] for o in observations if o.get("open_weights")})
-    rule = active_rule(target_date)
+    rule = active_rule(target_date) if uses_facets(methodology_version) else None
     summaries, errors, snapshot_rows = [], [], []
     for index, model_id in enumerate(candidates):
         if index and pause_seconds:
@@ -359,7 +381,9 @@ def fetch_spread_with_snapshot(
             summaries.append(collected[0])
             snapshot_rows.extend(collected[1])
 
-    doc = compute_spread(target_date, summaries, output_ratio, errors, snapshot_rows, rule)
+    doc = compute_spread(
+        target_date, summaries, output_ratio, errors, snapshot_rows, rule, methodology_version
+    )
     return doc, snapshot_rows
 
 
@@ -380,24 +404,35 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     import yaml
 
-    methodology = yaml.safe_load((args.data_dir / "fixtures" / "methodology.yaml").read_text())
+    methodology_path = resolve_methodology_path(target_date, args.data_dir)
+    methodology = yaml.safe_load(methodology_path.read_text())
+    version = read_methodology_version(methodology_path)
     output_ratio = float(methodology.get("output_ratio", DEFAULT_OUTPUT_RATIO))
 
-    result, snapshot_rows = fetch_spread_with_snapshot(observations, target_date, output_ratio, args.min_endpoints)
+    result, snapshot_rows = fetch_spread_with_snapshot(
+        observations, target_date, output_ratio, args.min_endpoints, methodology_version=version
+    )
     s = result["summary"]
     print(f"Spread {target_date}: {s['models_measured']} models, {s['fetch_errors']} fetch errors")
     if "widest" in s:
         print(f"  median max/min {s['median_max_min_ratio']}x; widest {s['widest']}")
 
     if not args.dry_run:
+        public, observed = split_observed(result)
         out = args.data_dir / "spread" / f"{target_date.isoformat()}.json"
+        if out.exists() and json.loads(out.read_text()).get("methodology_version") != version:
+            print(f"Refusing to overwrite {out}: published under another methodology", file=sys.stderr)
+            return 1
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(json.dumps(result, indent=2) + "\n")
+        out.write_text(json.dumps(public, indent=2) + "\n")
         print(f"  written: {out}")
-        snap = args.data_dir / "endpoints" / f"{target_date.isoformat()}.jsonl"
-        snap.parent.mkdir(parents=True, exist_ok=True)
-        snap.write_bytes(canonical_snapshot(snapshot_rows))
-        print(f"  private snapshot: {snap} sha256 {result['endpoint_snapshot_sha256'][:12]}")
+        if uses_facets(version):
+            snap = args.data_dir / "endpoints" / f"{target_date.isoformat()}.jsonl"
+            snap.parent.mkdir(parents=True, exist_ok=True)
+            snap.write_bytes(canonical_snapshot(snapshot_rows))
+            side = snap.with_suffix(".observed.json")
+            side.write_text(json.dumps(observed, indent=2, sort_keys=True) + "\n")
+            print(f"  private snapshot: {snap} sha256 {result['endpoint_snapshot_sha256'][:12]}")
     return 0
 
 
