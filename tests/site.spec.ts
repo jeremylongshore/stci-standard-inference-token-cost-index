@@ -23,6 +23,8 @@ test('phone width has no horizontal scroll', async ({ page }) => {
   await page.goto('/');
   const w = await page.evaluate(() => document.documentElement.scrollWidth);
   expect(w).toBeLessThanOrEqual(390);
+  await expect(page.locator('.spread-cards')).toBeVisible();
+  await expect(page.locator('.spread-table')).toBeHidden();
 });
 
 test('API latest JSON is published', async ({ request }) => {
