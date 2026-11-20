@@ -15,6 +15,7 @@ Usage:
 """
 
 import argparse
+import hashlib
 import json
 import sys
 from datetime import date, datetime, timezone
@@ -85,7 +86,9 @@ class IndexingPipeline:
         spread = self._load_spread(target_date)
         if spread is None:
             print("      No spread file for this date; liquidity-screened baskets are skipped")
-        result = self.indexer.compute(observations, target_date, spread)
+        result = self.indexer.compute(
+            observations, target_date, spread, self._snapshot_digest(spread, target_date)
+        )
 
         for idx_name, idx_data in result.get("indices", {}).items():
             model_count = idx_data.get("model_count", 0)
@@ -117,6 +120,24 @@ class IndexingPipeline:
             return None
         with open(path) as f:
             return json.load(f)
+
+    def _snapshot_digest(self, spread: Optional[dict], target_date: date) -> Optional[str]:
+        """
+        Digest of the private endpoint snapshot. When the file is present it is
+        re-hashed and must match what the spread file recorded; when it is not
+        (CI, a fresh clone) the recorded digest stands.
+        """
+        recorded = (spread or {}).get("endpoint_snapshot_sha256")
+        path = self.data_dir / "endpoints" / f"{target_date.isoformat()}.jsonl"
+        if not path.exists():
+            return recorded
+        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        if recorded is not None and actual != recorded:
+            raise ValueError(
+                f"endpoint snapshot {path} sha256 {actual[:12]} does not match "
+                f"the spread file's {recorded[:12]}"
+            )
+        return actual
 
     def _load_observations(self, target_date: date) -> List[dict]:
         """Load observations from JSONL file."""

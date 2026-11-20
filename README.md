@@ -167,7 +167,7 @@ Aggregated reference rate for a given date:
       "model_count": 8
     }
   },
-  "methodology_version": "2.0.0",
+  "methodology_version": "2.1.0",
   "computed_at": "2026-01-01T23:59:00Z"
 }
 ```
@@ -176,7 +176,7 @@ Aggregated reference rate for a given date:
 
 ## Methodology
 
-Full rulebook: [000-docs/020](000-docs/020-DR-STND-stci-methodology-2-0-0.md). Earlier drafts and data from January 2026 are kept in the repository as an archive and are not part of the published series.
+Full rulebook: [000-docs/020](000-docs/020-DR-STND-stci-methodology-2-0-0.md) plus the 2.1.0 facets standard [000-docs/022](000-docs/022-DR-STND-stci-methodology-2-1-facets.md). Earlier drafts and data from January 2026 are kept in the repository as an archive and are not part of the published series.
 Config: `data/fixtures/methodology.yaml`.
 
 - **Eligibility is a rule.** Alias (`~lab/x-latest`), `:free`, `:batch`, router
@@ -191,7 +191,12 @@ Config: `data/fixtures/methodology.yaml`.
 - **Staleness:** every daily output lists `constituents_missing`; constituents are
   reviewed on the first of each month.
 - **Hash:** SHA-256 over the sorted eligible observations, methodology version and
-  date, plus the per-model endpoint counts when the liquidity screen ran.
+  date, plus the per-model endpoint counts when the liquidity screen ran. From 2.1.0
+  it also covers the private endpoint snapshot digest, the grade-rule id and the
+  canonical spread output.
+- **Facets, not verdicts (2.1.0):** the spread carries per-model cells by reported
+  precision (`undisclosed` is its own bucket), context bucket and tool support. No
+  grades are written; the only view is disclosed vs undisclosed precision.
 - **Edge cases:** missing data carries forward at most 7 days; a basket below 50%
   coverage is not published.
 

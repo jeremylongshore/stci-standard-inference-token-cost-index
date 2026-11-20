@@ -134,7 +134,7 @@ class TestSpread:
         )
         doc = spread.compute_spread(DAY, [narrow, wide], errors=["open/lost: Timeout"])
 
-        assert doc["methodology_version"] == "2.0.0"
+        assert doc["methodology_version"] == "2.1.0"
         assert doc["models"][0]["model_id"] == "open/narrow"  # most endpoints first
         assert doc["summary"]["models_measured"] == 2
         assert doc["summary"]["fetch_errors"] == 1

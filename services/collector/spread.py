@@ -8,7 +8,13 @@ endpoint for one model is a direct read on how commoditized that model is,
 and the precision of the cheapest endpoint shows that a cheaper token is not
 always the same token.
 
-Methodology 2.0.0. Output: data/spread/{date}.json
+Methodology 2.1.0: facets, not verdicts. Each model's endpoints are cut into
+cells by reported precision, context bucket and tool support; no grade is ever
+written at collection time. Outputs:
+
+    data/spread/{date}.json       public spread with facet cells
+    data/endpoints/{date}.jsonl   PRIVATE canonical endpoint snapshot (git-ignored);
+                                  its sha256 is recorded in the spread file
 
 Usage:
     python -m services.collector.spread                    # today, from observations
@@ -16,7 +22,9 @@ Usage:
 """
 
 import argparse
+import hashlib
 import json
+import re
 import sys
 import time
 from datetime import date
@@ -24,12 +32,19 @@ from pathlib import Path
 from typing import Callable, Dict, List, Optional
 from urllib.parse import quote
 
+from services.indexer.rules import active_rule
+
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 ENDPOINTS_URL = "https://openrouter.ai/api/v1/models/{model_id}/endpoints"
-METHODOLOGY_VERSION = "2.0.0"
+METHODOLOGY_VERSION = "2.1.0"
 DEFAULT_OUTPUT_RATIO = 3.0
 DEFAULT_MIN_ENDPOINTS = 4
 DECIMALS = 4
+MIN_CELL_N = 3
+UNDISCLOSED = "undisclosed"
+CONTEXT_BUCKETS = ["<=32k", "32-128k", "128k+", "1M+", "unknown"]
+# A dated snapshot id ends in -MMDD, -YYMM, -YYYYMMDD or -YYYY-MM-DD.
+DATED_SNAPSHOT = re.compile(r"-(\d{4}|\d{8}|\d{4}-\d{2}-\d{2})$")
 
 
 def blended(input_rate: float, output_rate: float, output_ratio: float) -> float:
@@ -48,20 +63,111 @@ def percentile(sorted_values: List[float], fraction: float) -> float:
     return sorted_values[lower] * (1 - weight) + sorted_values[upper] * weight
 
 
-def summarize_endpoints(
+def precision_of(quantization) -> str:
+    """Precision as reported. Missing/unknown is its own bucket, never folded."""
+    value = str(quantization).strip().lower() if quantization is not None else ""
+    return UNDISCLOSED if value in ("", "unknown", "none", "null", "undisclosed") else value
+
+
+def context_bucket(context_length) -> str:
+    try:
+        n = int(context_length)
+    except (TypeError, ValueError):
+        return "unknown"
+    if n >= 1_000_000:
+        return "1M+"
+    if n > 131_072:
+        return "128k+"
+    if n > 32_768:
+        return "32-128k"
+    return "<=32k"
+
+
+def snapshot_kind(model_id: str) -> str:
+    """'dated' for ids carrying a snapshot suffix, else 'undated'. Never pooled."""
+    return "dated" if DATED_SNAPSHOT.search(model_id) else "undated"
+
+
+def _number(value) -> Optional[float]:
+    if isinstance(value, dict):
+        value = value.get("p50")
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _stats(rates: List[float]) -> dict:
+    """Cell statistics; null when n < MIN_CELL_N (n is still reported)."""
+    n = len(rates)
+    if n < MIN_CELL_N:
+        return {"n": n, "min": None, "p25": None, "median": None, "p75": None,
+                "max": None, "p75_p25_ratio": None}
+    rates = sorted(rates)
+    p25, p75 = percentile(rates, 0.25), percentile(rates, 0.75)
+    return {
+        "n": n,
+        "min": round(rates[0], DECIMALS),
+        "p25": round(p25, DECIMALS),
+        "median": round(percentile(rates, 0.5), DECIMALS),
+        "p75": round(p75, DECIMALS),
+        "max": round(rates[-1], DECIMALS),
+        "p75_p25_ratio": round(p75 / p25, 2) if p25 > 0 else None,
+    }
+
+
+def build_cells(priced: List[dict]) -> List[dict]:
+    """Facet cells: precision x context bucket x tools. Facets, not grades."""
+    groups: Dict[tuple, List[float]] = {}
+    for e in priced:
+        key = (e["precision"], e["context_bucket"], e["tools"])
+        groups.setdefault(key, []).append(e["blended"])
+    cells = []
+    for (precision, bucket, tools), rates in groups.items():
+        cells.append({"precision": precision, "context_bucket": bucket, "tools": tools,
+                      **_stats(rates)})
+    cells.sort(key=lambda c: (c["precision"], CONTEXT_BUCKETS.index(c["context_bucket"]),
+                              c["tools"]))
+    return cells
+
+
+def _snapshot_row(model_id: str, endpoint: dict, precision: str) -> dict:
+    pricing = endpoint.get("pricing") or {}
+    return {
+        "model_id": model_id,
+        "provider": endpoint.get("provider_name") or "unknown",
+        "tag": endpoint.get("tag"),
+        "quantization": precision,
+        "context_length": endpoint.get("context_length"),
+        "max_completion_tokens": endpoint.get("max_completion_tokens"),
+        "supported_parameters": sorted(endpoint.get("supported_parameters") or []),
+        "price_in": pricing.get("prompt"),
+        "price_out": pricing.get("completion"),
+        "cache_read": pricing.get("input_cache_read"),
+    }
+
+
+def collect_model(
     model_id: str,
     endpoints: List[dict],
     output_ratio: float = DEFAULT_OUTPUT_RATIO,
     min_endpoints: int = DEFAULT_MIN_ENDPOINTS,
-) -> Optional[dict]:
+    rule: Optional[dict] = None,
+) -> Optional[tuple]:
     """
-    Summarize one model's provider endpoints, or None if too few are priced.
+    Summarize one model's provider endpoints: (summary, private snapshot rows),
+    or None if too few are priced.
 
     Endpoints with a missing, non-numeric, negative or all-zero price are
-    ignored: they are free tiers or routers, not a price anyone pays.
+    ignored: they are free tiers or routers, not a price anyone pays. An
+    endpoint that names a different model id is ignored too, so dated
+    snapshots are never pooled with undated ids.
     """
-    priced = []
+    priced, rows = [], []
     for endpoint in endpoints:
+        named = endpoint.get("model_id")
+        if named and named != model_id:
+            continue
         pricing = endpoint.get("pricing") or {}
         try:
             input_rate = float(pricing["prompt"]) * 1_000_000
@@ -70,13 +176,24 @@ def summarize_endpoints(
             continue
         if input_rate < 0 or output_rate < 0 or (input_rate == 0 and output_rate == 0):
             continue
+        precision = precision_of(endpoint.get("quantization"))
+        params = endpoint.get("supported_parameters") or []
         priced.append(
             {
                 "provider": endpoint.get("provider_name") or "unknown",
-                "quantization": endpoint.get("quantization") or "unknown",
+                "quantization": precision,
+                "precision": precision,
+                "context_bucket": context_bucket(endpoint.get("context_length")),
+                "tools": "tools" in params,
                 "blended": blended(input_rate, output_rate, output_ratio),
+                "observed": {
+                    "uptime": _number(endpoint.get("uptime_last_30m")),
+                    "latency": _number(endpoint.get("latency_last_30m")),
+                    "throughput": _number(endpoint.get("throughput_last_30m")),
+                },
             }
         )
+        rows.append(_snapshot_row(model_id, endpoint, precision))
 
     if len(priced) < min_endpoints:
         return None
@@ -90,9 +207,19 @@ def summarize_endpoints(
     for e in priced:
         mix[e["quantization"]] = mix.get(e["quantization"], 0) + 1
 
+    undisclosed_values = set((rule or {}).get("undisclosed_values") or [UNDISCLOSED])
+    undisclosed = sum(n for k, n in mix.items() if k in undisclosed_values)
+
+    observed = {}
+    for key in ("uptime", "latency", "throughput"):
+        values = sorted(e["observed"][key] for e in priced if e["observed"][key] is not None)
+        if values:
+            observed[f"median_{key}"] = round(percentile(values, 0.5), 4)
+
     cheapest = priced[0]
-    return {
+    summary = {
         "model_id": model_id,
+        "snapshot": snapshot_kind(model_id),
         "endpoints": len(priced),
         "providers": len({e["provider"] for e in priced}),
         "min_blended": round(low, DECIMALS),
@@ -103,12 +230,45 @@ def summarize_endpoints(
         "max_min_ratio": round(high / low, 2) if low > 0 else None,
         "p75_p25_ratio": round(p75 / p25, 2) if p25 > 0 else None,
         "quantization_mix": dict(sorted(mix.items())),
+        "precision_disclosure": {
+            "disclosed": len(priced) - undisclosed,
+            "undisclosed": undisclosed,
+        },
+        "cells": build_cells(priced),
         "cheapest": {
             "provider": cheapest["provider"],
             "quantization": cheapest["quantization"],
             "blended": round(cheapest["blended"], DECIMALS),
         },
+        # Not part of any hash: it moves minute to minute.
+        "observed": observed,
     }
+    return summary, rows
+
+
+def summarize_endpoints(
+    model_id: str,
+    endpoints: List[dict],
+    output_ratio: float = DEFAULT_OUTPUT_RATIO,
+    min_endpoints: int = DEFAULT_MIN_ENDPOINTS,
+    rule: Optional[dict] = None,
+) -> Optional[dict]:
+    """Summary half of :func:`collect_model`."""
+    collected = collect_model(model_id, endpoints, output_ratio, min_endpoints, rule)
+    return collected[0] if collected else None
+
+
+def canonical_snapshot(rows: List[dict]) -> bytes:
+    """Sorted, canonical-JSON JSONL bytes of the private endpoint snapshot."""
+    ordered = sorted(
+        rows, key=lambda r: (r["model_id"], r["provider"], str(r["tag"]), r["quantization"],
+                             str(r["price_in"]), str(r["price_out"])))
+    lines = [json.dumps(r, sort_keys=True, separators=(",", ":")) for r in ordered]
+    return ("\n".join(lines) + "\n").encode() if lines else b""
+
+
+def snapshot_sha256(rows: List[dict]) -> str:
+    return hashlib.sha256(canonical_snapshot(rows)).hexdigest()
 
 
 def compute_spread(
@@ -116,8 +276,11 @@ def compute_spread(
     summaries: List[dict],
     output_ratio: float = DEFAULT_OUTPUT_RATIO,
     errors: Optional[List[str]] = None,
+    snapshot_rows: Optional[List[dict]] = None,
+    rule: Optional[dict] = None,
 ) -> dict:
     """Assemble the daily spread document from per-model summaries."""
+    rule = rule if rule is not None else active_rule(target_date)
     models = sorted(summaries, key=lambda m: (-m["endpoints"], m["model_id"]))
     ratios = sorted(m["max_min_ratio"] for m in models if m["max_min_ratio"] is not None)
     iqr = sorted(m["p75_p25_ratio"] for m in models if m["p75_p25_ratio"] is not None)
@@ -146,24 +309,31 @@ def compute_spread(
         "date": target_date.isoformat(),
         "methodology_version": METHODOLOGY_VERSION,
         "blend": {"output_ratio": output_ratio},
+        "rule_id": rule["rule_id"] if rule else None,
+        "endpoint_snapshot_sha256": snapshot_sha256(snapshot_rows or []),
         "source": "OpenRouter /api/v1/models/{id}/endpoints",
         "summary": summary,
         "models": models,
     }
 
 
-def fetch_spread(
+def fetch_spread(*args, **kwargs) -> dict:
+    """Spread document only; see :func:`fetch_spread_with_snapshot`."""
+    return fetch_spread_with_snapshot(*args, **kwargs)[0]
+
+
+def fetch_spread_with_snapshot(
     observations: List[dict],
     target_date: date,
     output_ratio: float = DEFAULT_OUTPUT_RATIO,
     min_endpoints: int = DEFAULT_MIN_ENDPOINTS,
     get: Optional[Callable] = None,
     pause_seconds: float = 0.25,
-) -> dict:
+) -> tuple:
     """
     Fetch provider endpoints for every open-weight observation and summarize.
 
-    ``get`` is injectable for tests; it defaults to ``requests.get``.
+    Returns (spread document, private snapshot rows). ``get`` is injectable for tests; it defaults to ``requests.get``.
     """
     if get is None:
         import requests
@@ -171,7 +341,8 @@ def fetch_spread(
         get = requests.get
 
     candidates = sorted({o["model_id"] for o in observations if o.get("open_weights")})
-    summaries, errors = [], []
+    rule = active_rule(target_date)
+    summaries, errors, snapshot_rows = [], [], []
     for index, model_id in enumerate(candidates):
         if index and pause_seconds:
             time.sleep(pause_seconds)
@@ -183,11 +354,13 @@ def fetch_spread(
         except Exception as error:  # one failed model must not sink the day
             errors.append(f"{model_id}: {type(error).__name__}")
             continue
-        summary = summarize_endpoints(model_id, endpoints, output_ratio, min_endpoints)
-        if summary:
-            summaries.append(summary)
+        collected = collect_model(model_id, endpoints, output_ratio, min_endpoints, rule)
+        if collected:
+            summaries.append(collected[0])
+            snapshot_rows.extend(collected[1])
 
-    return compute_spread(target_date, summaries, output_ratio, errors)
+    doc = compute_spread(target_date, summaries, output_ratio, errors, snapshot_rows, rule)
+    return doc, snapshot_rows
 
 
 def main(argv: Optional[List[str]] = None) -> int:
@@ -210,7 +383,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     methodology = yaml.safe_load((args.data_dir / "fixtures" / "methodology.yaml").read_text())
     output_ratio = float(methodology.get("output_ratio", DEFAULT_OUTPUT_RATIO))
 
-    result = fetch_spread(observations, target_date, output_ratio, args.min_endpoints)
+    result, snapshot_rows = fetch_spread_with_snapshot(observations, target_date, output_ratio, args.min_endpoints)
     s = result["summary"]
     print(f"Spread {target_date}: {s['models_measured']} models, {s['fetch_errors']} fetch errors")
     if "widest" in s:
@@ -221,6 +394,10 @@ def main(argv: Optional[List[str]] = None) -> int:
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(json.dumps(result, indent=2) + "\n")
         print(f"  written: {out}")
+        snap = args.data_dir / "endpoints" / f"{target_date.isoformat()}.jsonl"
+        snap.parent.mkdir(parents=True, exist_ok=True)
+        snap.write_bytes(canonical_snapshot(snapshot_rows))
+        print(f"  private snapshot: {snap} sha256 {result['endpoint_snapshot_sha256'][:12]}")
     return 0
 
 

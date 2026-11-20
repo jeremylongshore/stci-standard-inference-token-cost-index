@@ -59,6 +59,22 @@
         "type": "string"
       },
       "description": "Warnings encountered during computation"
+    },
+    "rule_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 of the grade rule in force (methodology 2.1.0+)"
+    },
+    "endpoint_snapshot_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 of the private endpoint snapshot (methodology 2.1.0+)"
     }
   },
   "definitions": {
