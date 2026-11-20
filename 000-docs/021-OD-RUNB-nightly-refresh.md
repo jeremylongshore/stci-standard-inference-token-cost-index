@@ -31,7 +31,7 @@ published paths; a recompute that produces no diff makes no commit; a date alrea
 `origin/main` is skipped (audit event only). Raw observations (`data/observations/*.jsonl`)
 are git-ignored and stay on the VPS (ADR 014).
 
-Alerts go through `/usr/local/bin/notify.sh` (topic `stci-nightly` -> Buzz `sys-automation`):
+Alerts go through `/usr/local/bin/notify.sh` (topic `stci-nightly` -> the private Discord channel `#sys-alerts`; Buzz is retired):
 a failure is a **high** event and delivers; a success or skip is **low** and is audit-logged
 only (`/var/log/intentsolutions/notify-shim.log`). A missing-constituent warning is high.
 
@@ -47,7 +47,7 @@ cat /var/lib/intentsolutions/liveness/stci-nightly.ok    # last verified success
 curl -s https://inferencepriceindex.com/v1/index/latest.json | python3 -c 'import json,sys;print(json.load(sys.stdin)["date"])'
 ```
 
-The dev-box liveness sweep also reads the public `latest.json` outside-in and pages Buzz
+The dev-box liveness sweep also reads the public `latest.json` outside-in and pages Discord
 `sys-automation` when its `date` is more than two days old (intent-os
 `ops/automation/devbox-liveness/automation-liveness-sweep.sh`, row `stci-index-freshness`).
 
@@ -76,8 +76,8 @@ STCI_NIGHTLY_FAULT_PROXY=http://127.0.0.1:9 STCI_NIGHTLY_FORCE=1 /usr/local/sbin
 
 The dead proxy applies only to the three pipeline steps (a bare `HTTPS_PROXY` would also
 blind the alert floor's own delivery). Expected: the collector cannot reach OpenRouter, the
-run exits 1, `.ok` is not written, nothing is committed, and one high event reaches Buzz
-`sys-automation` (`buzz messages get sys-automation`).
+run exits 1, `.ok` is not written, nothing is committed, and one high event reaches Discord
+`#sys-alerts` (proven 2026-11-20, message id `1573385893341954260`; intent-os `ops/alert-floor/README.md`).
 
 ## Updating the script or units
 
