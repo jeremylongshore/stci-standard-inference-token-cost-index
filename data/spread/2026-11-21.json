@@ -1,0 +1,3989 @@
+{
+  "date": "2026-11-21",
+  "methodology_version": "2.1.0",
+  "blend": {
+    "output_ratio": 3.0
+  },
+  "rule_id": "3f9c32e1160f0b78bd6ea54dc19edee687e95973e5d16aaa76af463794293b14",
+  "endpoint_snapshot_sha256": "c7ae4a54bb5132a9e274a626eb37848f469ee515095c6d22905e1ad8abbb0080",
+  "source": "OpenRouter /api/v1/models/{id}/endpoints",
+  "summary": {
+    "models_measured": 54,
+    "fetch_errors": 0,
+    "median_max_min_ratio": 2.58,
+    "median_p75_p25_ratio": 1.36,
+    "widest": {
+      "model_id": "deepseek/deepseek-v4.1-flash",
+      "max_min_ratio": 30.12,
+      "endpoints": 37
+    },
+    "most_endpoints": {
+      "model_id": "deepseek/deepseek-v4.1-flash-1017",
+      "endpoints": 51,
+      "providers": 41,
+      "max_min_ratio": 22.94
+    }
+  },
+  "models": [
+    {
+      "model_id": "deepseek/deepseek-v4.1-flash-1017",
+      "snapshot": "dated",
+      "endpoints": 51,
+      "providers": 41,
+      "min_blended": 0.085,
+      "p25_blended": 0.387,
+      "median_blended": 0.4875,
+      "p75_blended": 0.8925,
+      "max_blended": 1.95,
+      "max_min_ratio": 22.94,
+      "p75_p25_ratio": 2.31,
+      "quantization_mix": {
+        "fp4": 8,
+        "fp8": 21,
+        "mxfp4": 2,
+        "undisclosed": 20
+      },
+      "precision_disclosure": {
+        "disclosed": 31,
+        "undisclosed": 20
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 8,
+          "min": 0.085,
+          "p25": 0.1703,
+          "median": 0.44,
+          "p75": 0.5525,
+          "max": 0.585,
+          "p75_p25_ratio": 3.24
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 21,
+          "min": 0.196,
+          "p25": 0.3412,
+          "median": 0.4875,
+          "p75": 0.9725,
+          "max": 1.95,
+          "p75_p25_ratio": 2.85
+        },
+        {
+          "precision": "mxfp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 20,
+          "min": 0.2138,
+          "p25": 0.4844,
+          "median": 0.5621,
+          "p75": 0.975,
+          "max": 1.95,
+          "p75_p25_ratio": 2.01
+        }
+      ],
+      "cheapest": {
+        "provider": "Sail Research",
+        "quantization": "fp4",
+        "blended": 0.085
+      }
+    },
+    {
+      "model_id": "z-ai/glm-5.3",
+      "snapshot": "undated",
+      "endpoints": 47,
+      "providers": 35,
+      "min_blended": 1.0675,
+      "p25_blended": 2.405,
+      "median_blended": 3.4125,
+      "p75_blended": 3.65,
+      "max_blended": 5.475,
+      "max_min_ratio": 5.13,
+      "p75_p25_ratio": 1.52,
+      "quantization_mix": {
+        "fp4": 18,
+        "fp8": 10,
+        "nvfp4": 5,
+        "undisclosed": 14
+      },
+      "precision_disclosure": {
+        "disclosed": 33,
+        "undisclosed": 14
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 18,
+          "min": 1.0675,
+          "p25": 2.192,
+          "median": 3.3266,
+          "p75": 3.65,
+          "max": 5.475,
+          "p75_p25_ratio": 1.67
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 10,
+          "min": 1.6,
+          "p25": 2.1281,
+          "median": 3.5312,
+          "p75": 3.791,
+          "max": 5.475,
+          "p75_p25_ratio": 1.78
+        },
+        {
+          "precision": "nvfp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 5,
+          "min": 1.825,
+          "p25": 2.4375,
+          "median": 2.75,
+          "p75": 3.65,
+          "max": 4.015,
+          "p75_p25_ratio": 1.5
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 13,
+          "min": 1.825,
+          "p25": 3.1025,
+          "median": 3.65,
+          "p75": 3.65,
+          "max": 5.475,
+          "p75_p25_ratio": 1.18
+        }
+      ],
+      "cheapest": {
+        "provider": "Wafer",
+        "quantization": "fp4",
+        "blended": 1.0675
+      }
+    },
+    {
+      "model_id": "z-ai/glm-5.3-flash",
+      "snapshot": "undated",
+      "endpoints": 41,
+      "providers": 35,
+      "min_blended": 0.0688,
+      "p25_blended": 0.261,
+      "median_blended": 0.395,
+      "p75_blended": 0.4125,
+      "max_blended": 0.6188,
+      "max_min_ratio": 9.0,
+      "p75_p25_ratio": 1.58,
+      "quantization_mix": {
+        "fp4": 13,
+        "fp8": 11,
+        "nvfp4": 6,
+        "undisclosed": 11
+      },
+      "precision_disclosure": {
+        "disclosed": 30,
+        "undisclosed": 11
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 12,
+          "min": 0.0688,
+          "p25": 0.2862,
+          "median": 0.3812,
+          "p75": 0.4375,
+          "max": 0.5156,
+          "p75_p25_ratio": 1.53
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 10,
+          "min": 0.231,
+          "p25": 0.277,
+          "median": 0.4037,
+          "p75": 0.4125,
+          "max": 0.415,
+          "p75_p25_ratio": 1.49
+        },
+        {
+          "precision": "nvfp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 6,
+          "min": 0.1485,
+          "p25": 0.2122,
+          "median": 0.2706,
+          "p75": 0.3066,
+          "max": 0.52,
+          "p75_p25_ratio": 1.44
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 11,
+          "min": 0.255,
+          "p25": 0.365,
+          "median": 0.4125,
+          "p75": 0.4125,
+          "max": 0.6188,
+          "p75_p25_ratio": 1.13
+        }
+      ],
+      "cheapest": {
+        "provider": "Relace",
+        "quantization": "fp4",
+        "blended": 0.0688
+      }
+    },
+    {
+      "model_id": "deepseek/deepseek-v4.1-flash",
+      "snapshot": "undated",
+      "endpoints": 37,
+      "providers": 28,
+      "min_blended": 0.1618,
+      "p25_blended": 0.4875,
+      "median_blended": 0.585,
+      "p75_blended": 0.975,
+      "max_blended": 4.875,
+      "max_min_ratio": 30.12,
+      "p75_p25_ratio": 2.0,
+      "quantization_mix": {
+        "fp4": 2,
+        "fp8": 19,
+        "mxfp4": 2,
+        "undisclosed": 14
+      },
+      "precision_disclosure": {
+        "disclosed": 23,
+        "undisclosed": 14
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 19,
+          "min": 0.1618,
+          "p25": 0.4768,
+          "median": 0.5437,
+          "p75": 0.975,
+          "max": 4.875,
+          "p75_p25_ratio": 2.05
+        },
+        {
+          "precision": "mxfp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 14,
+          "min": 0.39,
+          "p25": 0.5775,
+          "median": 0.8375,
+          "p75": 0.975,
+          "max": 1.4625,
+          "p75_p25_ratio": 1.69
+        }
+      ],
+      "cheapest": {
+        "provider": "Baidu",
+        "quantization": "fp8",
+        "blended": 0.1618
+      }
+    },
+    {
+      "model_id": "z-ai/glm-5.2",
+      "snapshot": "undated",
+      "endpoints": 30,
+      "providers": 20,
+      "min_blended": 0.7884,
+      "p25_blended": 1.8381,
+      "median_blended": 3.65,
+      "p75_blended": 3.65,
+      "max_blended": 6.4725,
+      "max_min_ratio": 8.21,
+      "p75_p25_ratio": 1.99,
+      "quantization_mix": {
+        "fp4": 10,
+        "fp8": 15,
+        "undisclosed": 5
+      },
+      "precision_disclosure": {
+        "disclosed": 25,
+        "undisclosed": 5
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 9,
+          "min": 1.1925,
+          "p25": 1.8775,
+          "median": 2.2359,
+          "p75": 5.1018,
+          "max": 6.4725,
+          "p75_p25_ratio": 2.72
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 14,
+          "min": 0.7884,
+          "p25": 1.7748,
+          "median": 3.285,
+          "p75": 3.65,
+          "max": 6.0225,
+          "p75_p25_ratio": 2.06
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 5,
+          "min": 1.825,
+          "p25": 3.65,
+          "median": 3.65,
+          "p75": 3.65,
+          "max": 4.015,
+          "p75_p25_ratio": 1.0
+        }
+      ],
+      "cheapest": {
+        "provider": "StreamLake",
+        "quantization": "fp8",
+        "blended": 0.7884
+      }
+    },
+    {
+      "model_id": "moonshotai/kimi-k3",
+      "snapshot": "undated",
+      "endpoints": 29,
+      "providers": 20,
+      "min_blended": 7.269,
+      "p25_blended": 11.8737,
+      "median_blended": 12.0,
+      "p75_blended": 12.5213,
+      "max_blended": 18.0,
+      "max_min_ratio": 2.48,
+      "p75_p25_ratio": 1.05,
+      "quantization_mix": {
+        "fp4": 11,
+        "fp8": 1,
+        "mxfp4": 6,
+        "undisclosed": 11
+      },
+      "precision_disclosure": {
+        "disclosed": 18,
+        "undisclosed": 11
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 10,
+          "min": 8.2993,
+          "p25": 11.8737,
+          "median": 12.0,
+          "p75": 13.3397,
+          "max": 13.75,
+          "p75_p25_ratio": 1.12
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "mxfp4",
+          "context_bucket": "1M+",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "mxfp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 5,
+          "min": 7.269,
+          "p25": 11.4,
+          "median": 12.0,
+          "p75": 12.0382,
+          "max": 12.048,
+          "p75_p25_ratio": 1.06
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 10,
+          "min": 10.35,
+          "p25": 12.0,
+          "median": 12.0,
+          "p75": 12.9,
+          "max": 18.0,
+          "p75_p25_ratio": 1.07
+        }
+      ],
+      "cheapest": {
+        "provider": "Wafer",
+        "quantization": "mxfp4",
+        "blended": 7.269
+      }
+    },
+    {
+      "model_id": "moonshotai/kimi-k3.1-pro",
+      "snapshot": "undated",
+      "endpoints": 28,
+      "providers": 20,
+      "min_blended": 4.8,
+      "p25_blended": 7.2548,
+      "median_blended": 8.0,
+      "p75_blended": 8.0,
+      "max_blended": 17.6,
+      "max_min_ratio": 3.67,
+      "p75_p25_ratio": 1.1,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp4": 6,
+        "fp8": 1,
+        "mxfp4": 11,
+        "undisclosed": 9
+      },
+      "precision_disclosure": {
+        "disclosed": 19,
+        "undisclosed": 9
+      },
+      "cells": [
+        {
+          "precision": "bf16",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 6,
+          "min": 6.3618,
+          "p25": 7.2956,
+          "median": 7.6503,
+          "p75": 7.9844,
+          "max": 8.0,
+          "p75_p25_ratio": 1.09
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "mxfp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 11,
+          "min": 4.8,
+          "p25": 7.2,
+          "median": 8.0,
+          "p75": 9.4,
+          "max": 16.0,
+          "p75_p25_ratio": 1.31
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 9,
+          "min": 7.6,
+          "p25": 8.0,
+          "median": 8.0,
+          "p75": 16.0,
+          "max": 17.6,
+          "p75_p25_ratio": 2.0
+        }
+      ],
+      "cheapest": {
+        "provider": "Decart",
+        "quantization": "mxfp4",
+        "blended": 4.8
+      }
+    },
+    {
+      "model_id": "deepseek/deepseek-v4-flash-0731",
+      "snapshot": "dated",
+      "endpoints": 26,
+      "providers": 20,
+      "min_blended": 0.11,
+      "p25_blended": 0.2112,
+      "median_blended": 0.2355,
+      "p75_blended": 0.4103,
+      "max_blended": 1.1,
+      "max_min_ratio": 10.0,
+      "p75_p25_ratio": 1.94,
+      "quantization_mix": {
+        "fp32": 1,
+        "fp4": 5,
+        "fp8": 14,
+        "nvfp4": 2,
+        "undisclosed": 4
+      },
+      "precision_disclosure": {
+        "disclosed": 22,
+        "undisclosed": 4
+      },
+      "cells": [
+        {
+          "precision": "fp32",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 5,
+          "min": 0.1225,
+          "p25": 0.2625,
+          "median": 0.2625,
+          "p75": 0.4038,
+          "max": 1.1,
+          "p75_p25_ratio": 1.54
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 13,
+          "min": 0.11,
+          "p25": 0.1925,
+          "median": 0.2275,
+          "p75": 0.4125,
+          "max": 1.1,
+          "p75_p25_ratio": 2.14
+        },
+        {
+          "precision": "nvfp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 4,
+          "min": 0.2082,
+          "p25": 0.2227,
+          "median": 0.5537,
+          "p75": 0.8937,
+          "max": 0.935,
+          "p75_p25_ratio": 4.01
+        }
+      ],
+      "cheapest": {
+        "provider": "Baidu",
+        "quantization": "fp8",
+        "blended": 0.11
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.8-27b",
+      "snapshot": "undated",
+      "endpoints": 24,
+      "providers": 24,
+      "min_blended": 0.8312,
+      "p25_blended": 1.3331,
+      "median_blended": 1.7225,
+      "p75_blended": 2.1016,
+      "max_blended": 2.5125,
+      "max_min_ratio": 3.02,
+      "p75_p25_ratio": 1.58,
+      "quantization_mix": {
+        "fp16": 1,
+        "fp4": 3,
+        "fp8": 14,
+        "undisclosed": 6
+      },
+      "precision_disclosure": {
+        "disclosed": 18,
+        "undisclosed": 6
+      },
+      "cells": [
+        {
+          "precision": "fp16",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 14,
+          "min": 0.9473,
+          "p25": 1.2891,
+          "median": 1.5131,
+          "p75": 1.9922,
+          "max": 2.5125,
+          "p75_p25_ratio": 1.55
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 3,
+          "min": 1.735,
+          "p25": 1.81,
+          "median": 1.885,
+          "p75": 2.1987,
+          "max": 2.5125,
+          "p75_p25_ratio": 1.21
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 3,
+          "min": 0.8312,
+          "p25": 1.425,
+          "median": 2.0188,
+          "p75": 2.1869,
+          "max": 2.355,
+          "p75_p25_ratio": 1.53
+        }
+      ],
+      "cheapest": {
+        "provider": "StreamLake",
+        "quantization": "undisclosed",
+        "blended": 0.8312
+      }
+    },
+    {
+      "model_id": "openai/gpt-oss-120b",
+      "snapshot": "undated",
+      "endpoints": 23,
+      "providers": 20,
+      "min_blended": 0.12,
+      "p25_blended": 0.1739,
+      "median_blended": 0.4,
+      "p75_blended": 0.4875,
+      "max_blended": 0.7475,
+      "max_min_ratio": 6.23,
+      "p75_p25_ratio": 2.8,
+      "quantization_mix": {
+        "bf16": 3,
+        "fp16": 1,
+        "fp4": 9,
+        "fp8": 2,
+        "int4": 1,
+        "undisclosed": 7
+      },
+      "precision_disclosure": {
+        "disclosed": 16,
+        "undisclosed": 7
+      },
+      "cells": [
+        {
+          "precision": "bf16",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 3,
+          "min": 0.1368,
+          "p25": 0.1396,
+          "median": 0.1425,
+          "p75": 0.1713,
+          "max": 0.2,
+          "p75_p25_ratio": 1.23
+        },
+        {
+          "precision": "fp16",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 9,
+          "min": 0.12,
+          "p25": 0.1477,
+          "median": 0.4,
+          "p75": 0.5875,
+          "max": 0.65,
+          "p75_p25_ratio": 3.98
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "int4",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "32-128k",
+          "tools": false,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 5,
+          "min": 0.4875,
+          "p25": 0.4875,
+          "median": 0.4875,
+          "p75": 0.4875,
+          "max": 0.7475,
+          "p75_p25_ratio": 1.0
+        }
+      ],
+      "cheapest": {
+        "provider": "Near AI",
+        "quantization": "fp4",
+        "blended": 0.12
+      }
+    },
+    {
+      "model_id": "deepseek/deepseek-v4-pro-0813",
+      "snapshot": "dated",
+      "endpoints": 21,
+      "providers": 16,
+      "min_blended": 0.33,
+      "p25_blended": 2.805,
+      "median_blended": 3.3,
+      "p75_blended": 3.3,
+      "max_blended": 6.025,
+      "max_min_ratio": 18.26,
+      "p75_p25_ratio": 1.18,
+      "quantization_mix": {
+        "fp4": 2,
+        "fp8": 10,
+        "mxfp4": 2,
+        "undisclosed": 7
+      },
+      "precision_disclosure": {
+        "disclosed": 14,
+        "undisclosed": 7
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 10,
+          "min": 0.33,
+          "p25": 2.49,
+          "median": 3.2988,
+          "p75": 3.3,
+          "max": 4.95,
+          "p75_p25_ratio": 1.33
+        },
+        {
+          "precision": "mxfp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 7,
+          "min": 1.65,
+          "p25": 2.2275,
+          "median": 3.3,
+          "p75": 3.3,
+          "max": 4.125,
+          "p75_p25_ratio": 1.48
+        }
+      ],
+      "cheapest": {
+        "provider": "Baidu",
+        "quantization": "fp8",
+        "blended": 0.33
+      }
+    },
+    {
+      "model_id": "google/gemma-4-31b-it",
+      "snapshot": "undated",
+      "endpoints": 18,
+      "providers": 15,
+      "min_blended": 0.16,
+      "p25_blended": 0.2897,
+      "median_blended": 0.335,
+      "p75_blended": 0.3997,
+      "max_blended": 0.9575,
+      "max_min_ratio": 5.98,
+      "p75_p25_ratio": 1.38,
+      "quantization_mix": {
+        "bf16": 2,
+        "fp4": 6,
+        "fp8": 6,
+        "undisclosed": 4
+      },
+      "precision_disclosure": {
+        "disclosed": 14,
+        "undisclosed": 4
+      },
+      "cells": [
+        {
+          "precision": "bf16",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 5,
+          "min": 0.28,
+          "p25": 0.2863,
+          "median": 0.3,
+          "p75": 0.4163,
+          "max": 0.9375,
+          "p75_p25_ratio": 1.45
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": false,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 4,
+          "min": 0.3013,
+          "p25": 0.3284,
+          "median": 0.3438,
+          "p75": 0.4969,
+          "max": 0.9375,
+          "p75_p25_ratio": 1.51
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "Modal",
+        "quantization": "undisclosed",
+        "blended": 0.16
+      }
+    },
+    {
+      "model_id": "google/gemma-4-26b-a4b-it",
+      "snapshot": "undated",
+      "endpoints": 15,
+      "providers": 15,
+      "min_blended": 0.155,
+      "p25_blended": 0.215,
+      "median_blended": 0.25,
+      "p75_blended": 0.3325,
+      "max_blended": 0.4875,
+      "max_min_ratio": 3.15,
+      "p75_p25_ratio": 1.55,
+      "quantization_mix": {
+        "bf16": 8,
+        "fp4": 1,
+        "fp8": 2,
+        "undisclosed": 4
+      },
+      "precision_disclosure": {
+        "disclosed": 11,
+        "undisclosed": 4
+      },
+      "cells": [
+        {
+          "precision": "bf16",
+          "context_bucket": "128k+",
+          "tools": false,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "bf16",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 6,
+          "min": 0.1856,
+          "p25": 0.2078,
+          "median": 0.2562,
+          "p75": 0.315,
+          "max": 0.3325,
+          "p75_p25_ratio": 1.52
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 3,
+          "min": 0.2325,
+          "p25": 0.2412,
+          "median": 0.25,
+          "p75": 0.3687,
+          "max": 0.4875,
+          "p75_p25_ratio": 1.53
+        }
+      ],
+      "cheapest": {
+        "provider": "Darkbloom",
+        "quantization": "undisclosed",
+        "blended": 0.155
+      }
+    },
+    {
+      "model_id": "moonshotai/kimi-k2.6",
+      "snapshot": "undated",
+      "endpoints": 15,
+      "providers": 13,
+      "min_blended": 1.3274,
+      "p25_blended": 2.1359,
+      "median_blended": 2.7425,
+      "p75_blended": 2.8125,
+      "max_blended": 4.2188,
+      "max_min_ratio": 3.18,
+      "p75_p25_ratio": 1.32,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp4": 5,
+        "fp8": 2,
+        "int4": 4,
+        "undisclosed": 3
+      },
+      "precision_disclosure": {
+        "disclosed": 12,
+        "undisclosed": 3
+      },
+      "cells": [
+        {
+          "precision": "bf16",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "128k+",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 4,
+          "min": 1.3274,
+          "p25": 2.3718,
+          "median": 2.7663,
+          "p75": 3.1641,
+          "max": 4.2188,
+          "p75_p25_ratio": 1.33
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "int4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 4,
+          "min": 1.4475,
+          "p25": 2.036,
+          "median": 2.5223,
+          "p75": 2.8125,
+          "max": 2.8125,
+          "p75_p25_ratio": 1.38
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 3,
+          "min": 1.9425,
+          "p25": 2.3462,
+          "median": 2.75,
+          "p75": 2.9937,
+          "max": 3.2375,
+          "p75_p25_ratio": 1.28
+        }
+      ],
+      "cheapest": {
+        "provider": "Baidu",
+        "quantization": "fp4",
+        "blended": 1.3274
+      }
+    },
+    {
+      "model_id": "deepseek/deepseek-v4-flash",
+      "snapshot": "undated",
+      "endpoints": 13,
+      "providers": 11,
+      "min_blended": 0.0255,
+      "p25_blended": 0.126,
+      "median_blended": 0.2363,
+      "p75_blended": 0.245,
+      "max_blended": 0.4725,
+      "max_min_ratio": 18.54,
+      "p75_p25_ratio": 1.94,
+      "quantization_mix": {
+        "fp4": 1,
+        "fp8": 8,
+        "mxfp4": 1,
+        "undisclosed": 3
+      },
+      "precision_disclosure": {
+        "disclosed": 10,
+        "undisclosed": 3
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 8,
+          "min": 0.0255,
+          "p25": 0.1067,
+          "median": 0.1969,
+          "p75": 0.2431,
+          "max": 0.42,
+          "p75_p25_ratio": 2.28
+        },
+        {
+          "precision": "mxfp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 3,
+          "min": 0.1225,
+          "p25": 0.1816,
+          "median": 0.2408,
+          "p75": 0.3566,
+          "max": 0.4725,
+          "p75_p25_ratio": 1.96
+        }
+      ],
+      "cheapest": {
+        "provider": "Baidu",
+        "quantization": "fp8",
+        "blended": 0.0255
+      }
+    },
+    {
+      "model_id": "deepseek/deepseek-v4-pro",
+      "snapshot": "undated",
+      "endpoints": 13,
+      "providers": 10,
+      "min_blended": 1.1564,
+      "p25_blended": 1.5,
+      "median_blended": 2.24,
+      "p75_blended": 2.73,
+      "max_blended": 3.4125,
+      "max_min_ratio": 2.95,
+      "p75_p25_ratio": 1.82,
+      "quantization_mix": {
+        "fp4": 1,
+        "fp8": 9,
+        "undisclosed": 3
+      },
+      "precision_disclosure": {
+        "disclosed": 10,
+        "undisclosed": 3
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 9,
+          "min": 1.1564,
+          "p25": 1.5,
+          "median": 2.24,
+          "p75": 2.478,
+          "max": 3.4125,
+          "p75_p25_ratio": 1.65
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 3,
+          "min": 1.827,
+          "p25": 2.3576,
+          "median": 2.8882,
+          "p75": 3.1191,
+          "max": 3.35,
+          "p75_p25_ratio": 1.32
+        }
+      ],
+      "cheapest": {
+        "provider": "Baidu",
+        "quantization": "fp8",
+        "blended": 1.1564
+      }
+    },
+    {
+      "model_id": "minimax/minimax-m3.1-flash",
+      "snapshot": "undated",
+      "endpoints": 13,
+      "providers": 12,
+      "min_blended": 0.3425,
+      "p25_blended": 0.4875,
+      "median_blended": 0.4875,
+      "p75_blended": 0.4875,
+      "max_blended": 0.4875,
+      "max_min_ratio": 1.42,
+      "p75_p25_ratio": 1.0,
+      "quantization_mix": {
+        "fp4": 5,
+        "fp8": 2,
+        "nvfp4": 2,
+        "undisclosed": 4
+      },
+      "precision_disclosure": {
+        "disclosed": 9,
+        "undisclosed": 4
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 5,
+          "min": 0.3425,
+          "p25": 0.4875,
+          "median": 0.4875,
+          "p75": 0.4875,
+          "max": 0.4875,
+          "p75_p25_ratio": 1.0
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "nvfp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 4,
+          "min": 0.4875,
+          "p25": 0.4875,
+          "median": 0.4875,
+          "p75": 0.4875,
+          "max": 0.4875,
+          "p75_p25_ratio": 1.0
+        }
+      ],
+      "cheapest": {
+        "provider": "Makora",
+        "quantization": "fp4",
+        "blended": 0.3425
+      }
+    },
+    {
+      "model_id": "openai/gpt-oss-20b",
+      "snapshot": "undated",
+      "endpoints": 12,
+      "providers": 10,
+      "min_blended": 0.068,
+      "p25_blended": 0.1013,
+      "median_blended": 0.1163,
+      "p75_blended": 0.1338,
+      "max_blended": 0.275,
+      "max_min_ratio": 4.04,
+      "p75_p25_ratio": 1.32,
+      "quantization_mix": {
+        "bf16": 3,
+        "fp4": 4,
+        "fp8": 2,
+        "undisclosed": 3
+      },
+      "precision_disclosure": {
+        "disclosed": 9,
+        "undisclosed": 3
+      },
+      "cells": [
+        {
+          "precision": "bf16",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 3,
+          "min": 0.09,
+          "p25": 0.1011,
+          "median": 0.1123,
+          "p75": 0.1124,
+          "max": 0.1125,
+          "p75_p25_ratio": 1.11
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 4,
+          "min": 0.072,
+          "p25": 0.0968,
+          "median": 0.1125,
+          "p75": 0.1588,
+          "max": 0.275,
+          "p75_p25_ratio": 1.64
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 3,
+          "min": 0.13,
+          "p25": 0.13,
+          "median": 0.13,
+          "p75": 0.1869,
+          "max": 0.2437,
+          "p75_p25_ratio": 1.44
+        }
+      ],
+      "cheapest": {
+        "provider": "Darkbloom",
+        "quantization": "fp8",
+        "blended": 0.068
+      }
+    },
+    {
+      "model_id": "nvidia/nemotron-3.5-super-vl",
+      "snapshot": "undated",
+      "endpoints": 11,
+      "providers": 11,
+      "min_blended": 0.2475,
+      "p25_blended": 0.3575,
+      "median_blended": 0.4125,
+      "p75_blended": 0.4187,
+      "max_blended": 0.75,
+      "max_min_ratio": 3.03,
+      "p75_p25_ratio": 1.17,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp4": 4,
+        "nvfp4": 5,
+        "undisclosed": 1
+      },
+      "precision_disclosure": {
+        "disclosed": 10,
+        "undisclosed": 1
+      },
+      "cells": [
+        {
+          "precision": "bf16",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "nvfp4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "nvfp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 3,
+          "min": 0.39,
+          "p25": 0.4012,
+          "median": 0.4125,
+          "p75": 0.4125,
+          "max": 0.4125,
+          "p75_p25_ratio": 1.03
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "Io Net",
+        "quantization": "nvfp4",
+        "blended": 0.2475
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.6-35b-a3b",
+      "snapshot": "undated",
+      "endpoints": 10,
+      "providers": 8,
+      "min_blended": 0.5375,
+      "p25_blended": 0.6944,
+      "median_blended": 0.7188,
+      "p75_blended": 0.7825,
+      "max_blended": 1.41,
+      "max_min_ratio": 2.62,
+      "p75_p25_ratio": 1.13,
+      "quantization_mix": {
+        "fp4": 1,
+        "fp8": 9
+      },
+      "precision_disclosure": {
+        "disclosed": 10,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": false,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 7,
+          "min": 0.59,
+          "p25": 0.7,
+          "median": 0.7375,
+          "p75": 0.78,
+          "max": 1.1062,
+          "p75_p25_ratio": 1.11
+        }
+      ],
+      "cheapest": {
+        "provider": "Darkbloom",
+        "quantization": "fp4",
+        "blended": 0.5375
+      }
+    },
+    {
+      "model_id": "moonshotai/kimi-k2.7-code",
+      "snapshot": "undated",
+      "endpoints": 9,
+      "providers": 8,
+      "min_blended": 2.4,
+      "p25_blended": 2.8125,
+      "median_blended": 3.0648,
+      "p75_blended": 3.2375,
+      "max_blended": 6.475,
+      "max_min_ratio": 2.7,
+      "p75_p25_ratio": 1.15,
+      "quantization_mix": {
+        "fp8": 2,
+        "int4": 4,
+        "undisclosed": 3
+      },
+      "precision_disclosure": {
+        "disclosed": 6,
+        "undisclosed": 3
+      },
+      "cells": [
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "int4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 4,
+          "min": 2.4,
+          "p25": 2.7094,
+          "median": 2.8137,
+          "p75": 2.8882,
+          "max": 3.108,
+          "p75_p25_ratio": 1.07
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 3,
+          "min": 2.4281,
+          "p25": 2.8328,
+          "median": 3.2375,
+          "p75": 4.8562,
+          "max": 6.475,
+          "p75_p25_ratio": 1.71
+        }
+      ],
+      "cheapest": {
+        "provider": "CoreWeave",
+        "quantization": "int4",
+        "blended": 2.4
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.5-397b-a17b",
+      "snapshot": "undated",
+      "endpoints": 8,
+      "providers": 6,
+      "min_blended": 1.8525,
+      "p25_blended": 2.2444,
+      "median_blended": 2.8375,
+      "p75_blended": 3.0234,
+      "max_blended": 3.5625,
+      "max_min_ratio": 1.92,
+      "p75_p25_ratio": 1.35,
+      "quantization_mix": {
+        "fp8": 4,
+        "undisclosed": 4
+      },
+      "precision_disclosure": {
+        "disclosed": 4,
+        "undisclosed": 4
+      },
+      "cells": [
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 4,
+          "min": 1.89,
+          "p25": 2.2444,
+          "median": 2.5938,
+          "p75": 3.0047,
+          "max": 3.5438,
+          "p75_p25_ratio": 1.34
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "Alibaba",
+        "quantization": "undisclosed",
+        "blended": 1.8525
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.5-9b",
+      "snapshot": "undated",
+      "endpoints": 8,
+      "providers": 6,
+      "min_blended": 0.11,
+      "p25_blended": 0.1325,
+      "median_blended": 0.1396,
+      "p75_blended": 0.2078,
+      "max_blended": 0.23,
+      "max_min_ratio": 2.09,
+      "p75_p25_ratio": 1.57,
+      "quantization_mix": {
+        "bf16": 5,
+        "fp4": 1,
+        "fp8": 1,
+        "undisclosed": 1
+      },
+      "precision_disclosure": {
+        "disclosed": 7,
+        "undisclosed": 1
+      },
+      "cells": [
+        {
+          "precision": "bf16",
+          "context_bucket": "128k+",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "bf16",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 4,
+          "min": 0.11,
+          "p25": 0.1306,
+          "median": 0.1396,
+          "p75": 0.1579,
+          "max": 0.2062,
+          "p75_p25_ratio": 1.21
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "bf16",
+        "blended": 0.11
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.6-27b",
+      "snapshot": "undated",
+      "endpoints": 8,
+      "providers": 6,
+      "min_blended": 1.5625,
+      "p25_blended": 2.0991,
+      "median_blended": 2.4775,
+      "p75_blended": 2.8191,
+      "max_blended": 4.65,
+      "max_min_ratio": 2.98,
+      "p75_p25_ratio": 1.34,
+      "quantization_mix": {
+        "fp8": 6,
+        "undisclosed": 2
+      },
+      "precision_disclosure": {
+        "disclosed": 6,
+        "undisclosed": 2
+      },
+      "cells": [
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 6,
+          "min": 1.5625,
+          "p25": 2.1067,
+          "median": 2.4775,
+          "p75": 2.5091,
+          "max": 3.72,
+          "p75_p25_ratio": 1.19
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "Chutes",
+        "quantization": "fp8",
+        "blended": 1.5625
+      }
+    },
+    {
+      "model_id": "z-ai/glm-5",
+      "snapshot": "undated",
+      "endpoints": 8,
+      "providers": 7,
+      "min_blended": 1.59,
+      "p25_blended": 2.0762,
+      "median_blended": 2.5175,
+      "p75_blended": 2.65,
+      "max_blended": 3.3,
+      "max_min_ratio": 2.08,
+      "p75_p25_ratio": 1.28,
+      "quantization_mix": {
+        "fp8": 6,
+        "undisclosed": 2
+      },
+      "precision_disclosure": {
+        "disclosed": 6,
+        "undisclosed": 2
+      },
+      "cells": [
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 6,
+          "min": 1.59,
+          "p25": 1.9287,
+          "median": 2.2675,
+          "p75": 2.5837,
+          "max": 2.65,
+          "p75_p25_ratio": 1.34
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "StreamLake",
+        "quantization": "fp8",
+        "blended": 1.59
+      }
+    },
+    {
+      "model_id": "z-ai/glm-5.1",
+      "snapshot": "undated",
+      "endpoints": 8,
+      "providers": 8,
+      "min_blended": 2.3433,
+      "p25_blended": 2.4889,
+      "median_blended": 3.285,
+      "p75_blended": 3.6463,
+      "max_blended": 3.6537,
+      "max_min_ratio": 1.56,
+      "p75_p25_ratio": 1.47,
+      "quantization_mix": {
+        "fp8": 8
+      },
+      "precision_disclosure": {
+        "disclosed": 8,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 8,
+          "min": 2.3433,
+          "p25": 2.4889,
+          "median": 3.285,
+          "p75": 3.6463,
+          "max": 3.6537,
+          "p75_p25_ratio": 1.47
+        }
+      ],
+      "cheapest": {
+        "provider": "Baidu",
+        "quantization": "fp8",
+        "blended": 2.3433
+      }
+    },
+    {
+      "model_id": "meta-llama/llama-3.3-70b-instruct",
+      "snapshot": "undated",
+      "endpoints": 7,
+      "providers": 7,
+      "min_blended": 0.265,
+      "p25_blended": 0.435,
+      "median_blended": 0.71,
+      "p75_blended": 0.73,
+      "max_blended": 1.763,
+      "max_min_ratio": 6.65,
+      "p75_p25_ratio": 1.68,
+      "quantization_mix": {
+        "fp16": 1,
+        "fp8": 4,
+        "undisclosed": 2
+      },
+      "precision_disclosure": {
+        "disclosed": 5,
+        "undisclosed": 2
+      },
+      "cells": [
+        {
+          "precision": "fp16",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "<=32k",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.265
+      }
+    },
+    {
+      "model_id": "minimax/minimax-m3",
+      "snapshot": "undated",
+      "endpoints": 7,
+      "providers": 5,
+      "min_blended": 0.716,
+      "p25_blended": 0.8362,
+      "median_blended": 0.975,
+      "p75_blended": 1.2188,
+      "max_blended": 1.7875,
+      "max_min_ratio": 2.5,
+      "p75_p25_ratio": 1.46,
+      "quantization_mix": {
+        "fp4": 1,
+        "fp8": 6
+      },
+      "precision_disclosure": {
+        "disclosed": 7,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 3,
+          "min": 0.716,
+          "p25": 0.8055,
+          "median": 0.895,
+          "p75": 0.935,
+          "max": 0.975,
+          "p75_p25_ratio": 1.16
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.716
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.5-35b-a3b",
+      "snapshot": "undated",
+      "endpoints": 7,
+      "providers": 6,
+      "min_blended": 0.5787,
+      "p25_blended": 0.7065,
+      "median_blended": 0.7875,
+      "p75_blended": 0.9016,
+      "max_blended": 1.41,
+      "max_min_ratio": 2.44,
+      "p75_p25_ratio": 1.28,
+      "quantization_mix": {
+        "fp4": 1,
+        "fp8": 4,
+        "undisclosed": 2
+      },
+      "precision_disclosure": {
+        "disclosed": 5,
+        "undisclosed": 2
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": false,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "Darkbloom",
+        "quantization": "fp4",
+        "blended": 0.5787
+      }
+    },
+    {
+      "model_id": "xiaomi/mimo-v2.6-flash",
+      "snapshot": "undated",
+      "endpoints": 7,
+      "providers": 7,
+      "min_blended": 0.235,
+      "p25_blended": 0.245,
+      "median_blended": 0.245,
+      "p75_blended": 0.2975,
+      "max_blended": 0.35,
+      "max_min_ratio": 1.49,
+      "p75_p25_ratio": 1.21,
+      "quantization_mix": {
+        "fp4": 1,
+        "fp8": 6
+      },
+      "precision_disclosure": {
+        "disclosed": 7,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 6,
+          "min": 0.245,
+          "p25": 0.245,
+          "median": 0.2669,
+          "p75": 0.3019,
+          "max": 0.35,
+          "p75_p25_ratio": 1.23
+        }
+      ],
+      "cheapest": {
+        "provider": "Darkbloom",
+        "quantization": "fp4",
+        "blended": 0.235
+      }
+    },
+    {
+      "model_id": "google/gemma-3-27b-it",
+      "snapshot": "undated",
+      "endpoints": 6,
+      "providers": 4,
+      "min_blended": 0.112,
+      "p25_blended": 0.1575,
+      "median_blended": 0.23,
+      "p75_blended": 0.2744,
+      "max_blended": 0.3575,
+      "max_min_ratio": 3.19,
+      "p75_p25_ratio": 1.74,
+      "quantization_mix": {
+        "fp8": 6
+      },
+      "precision_disclosure": {
+        "disclosed": 6,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": false,
+          "n": 3,
+          "min": 0.25,
+          "p25": 0.2662,
+          "median": 0.2825,
+          "p75": 0.32,
+          "max": 0.3575,
+          "p75_p25_ratio": 1.2
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 3,
+          "min": 0.112,
+          "p25": 0.126,
+          "median": 0.14,
+          "p75": 0.175,
+          "max": 0.21,
+          "p75_p25_ratio": 1.39
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.112
+      }
+    },
+    {
+      "model_id": "mistralai/mistral-nemo",
+      "snapshot": "undated",
+      "endpoints": 6,
+      "providers": 5,
+      "min_blended": 0.0203,
+      "p25_blended": 0.0246,
+      "median_blended": 0.0284,
+      "p75_blended": 0.0299,
+      "max_blended": 0.15,
+      "max_min_ratio": 7.37,
+      "p75_p25_ratio": 1.22,
+      "quantization_mix": {
+        "fp16": 1,
+        "fp8": 4,
+        "undisclosed": 1
+      },
+      "precision_disclosure": {
+        "disclosed": 5,
+        "undisclosed": 1
+      },
+      "cells": [
+        {
+          "precision": "fp16",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": false,
+          "n": 3,
+          "min": 0.0238,
+          "p25": 0.0254,
+          "median": 0.027,
+          "p75": 0.0285,
+          "max": 0.03,
+          "p75_p25_ratio": 1.12
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "Io Net",
+        "quantization": "fp16",
+        "blended": 0.0203
+      }
+    },
+    {
+      "model_id": "nvidia/nemotron-3-ultra-550b-a55b",
+      "snapshot": "undated",
+      "endpoints": 6,
+      "providers": 4,
+      "min_blended": 1.42,
+      "p25_blended": 1.775,
+      "median_blended": 1.8625,
+      "p75_blended": 2.3625,
+      "max_blended": 2.6625,
+      "max_min_ratio": 1.87,
+      "p75_p25_ratio": 1.33,
+      "quantization_mix": {
+        "fp4": 4,
+        "fp8": 1,
+        "undisclosed": 1
+      },
+      "precision_disclosure": {
+        "disclosed": 5,
+        "undisclosed": 1
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 4,
+          "min": 1.42,
+          "p25": 1.6863,
+          "median": 1.8625,
+          "p75": 2.1281,
+          "max": 2.6625,
+          "p75_p25_ratio": 1.26
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp4",
+        "blended": 1.42
+      }
+    },
+    {
+      "model_id": "thinkingmachines/inkling-2-small",
+      "snapshot": "undated",
+      "endpoints": 6,
+      "providers": 6,
+      "min_blended": 0.4125,
+      "p25_blended": 0.7941,
+      "median_blended": 0.825,
+      "p75_blended": 0.825,
+      "max_blended": 0.825,
+      "max_min_ratio": 2.0,
+      "p75_p25_ratio": 1.04,
+      "quantization_mix": {
+        "fp4": 3,
+        "nvfp4": 1,
+        "undisclosed": 2
+      },
+      "precision_disclosure": {
+        "disclosed": 4,
+        "undisclosed": 2
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 3,
+          "min": 0.4125,
+          "p25": 0.5981,
+          "median": 0.7837,
+          "p75": 0.8044,
+          "max": 0.825,
+          "p75_p25_ratio": 1.34
+        },
+        {
+          "precision": "nvfp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "PrimeIntellect",
+        "quantization": "fp4",
+        "blended": 0.4125
+      }
+    },
+    {
+      "model_id": "z-ai/glm-4.7",
+      "snapshot": "undated",
+      "endpoints": 6,
+      "providers": 5,
+      "min_blended": 1.13,
+      "p25_blended": 1.4461,
+      "median_blended": 1.6735,
+      "p75_blended": 1.8,
+      "max_blended": 2.05,
+      "max_min_ratio": 1.81,
+      "p75_p25_ratio": 1.24,
+      "quantization_mix": {
+        "fp4": 5,
+        "fp8": 1
+      },
+      "precision_disclosure": {
+        "disclosed": 6,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "32-128k",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 4,
+          "min": 1.13,
+          "p25": 1.3419,
+          "median": 1.4798,
+          "p75": 1.6102,
+          "max": 1.8,
+          "p75_p25_ratio": 1.2
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp4",
+        "blended": 1.13
+      }
+    },
+    {
+      "model_id": "meta/muse-spark-open",
+      "snapshot": "undated",
+      "endpoints": 5,
+      "providers": 5,
+      "min_blended": 3.5,
+      "p25_blended": 3.5,
+      "median_blended": 3.5,
+      "p75_blended": 3.5,
+      "max_blended": 3.5,
+      "max_min_ratio": 1.0,
+      "p75_p25_ratio": 1.0,
+      "quantization_mix": {
+        "fp4": 2,
+        "undisclosed": 3
+      },
+      "precision_disclosure": {
+        "disclosed": 2,
+        "undisclosed": 3
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 3,
+          "min": 3.5,
+          "p25": 3.5,
+          "median": 3.5,
+          "p75": 3.5,
+          "max": 3.5,
+          "p75_p25_ratio": 1.0
+        }
+      ],
+      "cheapest": {
+        "provider": "BaseTen",
+        "quantization": "fp4",
+        "blended": 3.5
+      }
+    },
+    {
+      "model_id": "mistralai/mistral-small-3.2-24b-instruct",
+      "snapshot": "undated",
+      "endpoints": 5,
+      "providers": 3,
+      "min_blended": 0.135,
+      "p25_blended": 0.1687,
+      "median_blended": 0.2109,
+      "p75_blended": 0.2475,
+      "max_blended": 0.2531,
+      "max_min_ratio": 1.87,
+      "p75_p25_ratio": 1.47,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp8": 4
+      },
+      "precision_disclosure": {
+        "disclosed": 5,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "bf16",
+          "context_bucket": "32-128k",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 3,
+          "min": 0.135,
+          "p25": 0.1519,
+          "median": 0.1687,
+          "p75": 0.2109,
+          "max": 0.2531,
+          "p75_p25_ratio": 1.39
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.135
+      }
+    },
+    {
+      "model_id": "nvidia/nemotron-3.5-lightning",
+      "snapshot": "undated",
+      "endpoints": 5,
+      "providers": 5,
+      "min_blended": 0.077,
+      "p25_blended": 0.135,
+      "median_blended": 0.1625,
+      "p75_blended": 0.1675,
+      "max_blended": 0.1675,
+      "max_min_ratio": 2.18,
+      "p75_p25_ratio": 1.24,
+      "quantization_mix": {
+        "bf16": 2,
+        "fp4": 1,
+        "int4": 1,
+        "undisclosed": 1
+      },
+      "precision_disclosure": {
+        "disclosed": 4,
+        "undisclosed": 1
+      },
+      "cells": [
+        {
+          "precision": "bf16",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "int4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "Darkbloom",
+        "quantization": "int4",
+        "blended": 0.077
+      }
+    },
+    {
+      "model_id": "qwen/qwen3-235b-a22b-2507",
+      "snapshot": "dated",
+      "endpoints": 5,
+      "providers": 3,
+      "min_blended": 0.348,
+      "p25_blended": 0.435,
+      "median_blended": 0.6,
+      "p75_blended": 0.635,
+      "max_blended": 0.6525,
+      "max_min_ratio": 1.88,
+      "p75_p25_ratio": 1.46,
+      "quantization_mix": {
+        "fp8": 5
+      },
+      "precision_disclosure": {
+        "disclosed": 5,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 3,
+          "min": 0.348,
+          "p25": 0.3915,
+          "median": 0.435,
+          "p75": 0.5438,
+          "max": 0.6525,
+          "p75_p25_ratio": 1.39
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.348
+      }
+    },
+    {
+      "model_id": "qwen/qwen3-32b",
+      "snapshot": "undated",
+      "endpoints": 5,
+      "providers": 3,
+      "min_blended": 0.184,
+      "p25_blended": 0.23,
+      "median_blended": 0.335,
+      "p75_blended": 0.345,
+      "max_blended": 0.4625,
+      "max_min_ratio": 2.51,
+      "p75_p25_ratio": 1.5,
+      "quantization_mix": {
+        "fp8": 5
+      },
+      "precision_disclosure": {
+        "disclosed": 5,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "fp8",
+          "context_bucket": "<=32k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": false,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.184
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.5-27b",
+      "snapshot": "undated",
+      "endpoints": 5,
+      "providers": 5,
+      "min_blended": 1.2188,
+      "p25_blended": 1.3625,
+      "median_blended": 1.5625,
+      "p75_blended": 1.875,
+      "max_blended": 2.015,
+      "max_min_ratio": 1.65,
+      "p75_p25_ratio": 1.38,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp8": 3,
+        "undisclosed": 1
+      },
+      "precision_disclosure": {
+        "disclosed": 4,
+        "undisclosed": 1
+      },
+      "cells": [
+        {
+          "precision": "bf16",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 3,
+          "min": 1.3625,
+          "p25": 1.4625,
+          "median": 1.5625,
+          "p75": 1.7888,
+          "max": 2.015,
+          "p75_p25_ratio": 1.22
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "Alibaba",
+        "quantization": "undisclosed",
+        "blended": 1.2188
+      }
+    },
+    {
+      "model_id": "reflection/beam-1.0-501b-a23b",
+      "snapshot": "undated",
+      "endpoints": 5,
+      "providers": 5,
+      "min_blended": 0.8125,
+      "p25_blended": 0.825,
+      "median_blended": 1.0,
+      "p75_blended": 1.0,
+      "max_blended": 1.0,
+      "max_min_ratio": 1.23,
+      "p75_p25_ratio": 1.21,
+      "quantization_mix": {
+        "fp4": 2,
+        "nvfp4": 1,
+        "undisclosed": 2
+      },
+      "precision_disclosure": {
+        "disclosed": 3,
+        "undisclosed": 2
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "nvfp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "Nebius",
+        "quantization": "fp4",
+        "blended": 0.8125
+      }
+    },
+    {
+      "model_id": "tencent/hy4-preview",
+      "snapshot": "undated",
+      "endpoints": 5,
+      "providers": 5,
+      "min_blended": 2.0842,
+      "p25_blended": 2.0842,
+      "median_blended": 2.0842,
+      "p75_blended": 2.0842,
+      "max_blended": 2.6053,
+      "max_min_ratio": 1.25,
+      "p75_p25_ratio": 1.0,
+      "quantization_mix": {
+        "fp4": 2,
+        "fp8": 3
+      },
+      "precision_disclosure": {
+        "disclosed": 5,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 3,
+          "min": 2.0842,
+          "p25": 2.0842,
+          "median": 2.0842,
+          "p75": 2.0842,
+          "max": 2.0842,
+          "p75_p25_ratio": 1.0
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp4",
+        "blended": 2.0842
+      }
+    },
+    {
+      "model_id": "z-ai/glm-4.6",
+      "snapshot": "undated",
+      "endpoints": 5,
+      "providers": 4,
+      "min_blended": 1.3,
+      "p25_blended": 1.42,
+      "median_blended": 1.6088,
+      "p75_blended": 1.625,
+      "max_blended": 1.8,
+      "max_min_ratio": 1.38,
+      "p75_p25_ratio": 1.14,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp4": 4
+      },
+      "precision_disclosure": {
+        "disclosed": 5,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "bf16",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 4,
+          "min": 1.3,
+          "p25": 1.39,
+          "median": 1.5225,
+          "p75": 1.6687,
+          "max": 1.8,
+          "p75_p25_ratio": 1.2
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp4",
+        "blended": 1.3
+      }
+    },
+    {
+      "model_id": "deepseek/deepseek-v3.2",
+      "snapshot": "undated",
+      "endpoints": 4,
+      "providers": 4,
+      "min_blended": 0.35,
+      "p25_blended": 0.3763,
+      "median_blended": 0.5249,
+      "p75_blended": 0.6973,
+      "max_blended": 0.795,
+      "max_min_ratio": 2.27,
+      "p75_p25_ratio": 1.85,
+      "quantization_mix": {
+        "fp4": 1,
+        "fp8": 2,
+        "undisclosed": 1
+      },
+      "precision_disclosure": {
+        "disclosed": 3,
+        "undisclosed": 1
+      },
+      "cells": [
+        {
+          "precision": "fp4",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp4",
+        "blended": 0.35
+      }
+    },
+    {
+      "model_id": "deepseek/deepseek-v4-flash-vision-exp",
+      "snapshot": "undated",
+      "endpoints": 4,
+      "providers": 2,
+      "min_blended": 0.4312,
+      "p25_blended": 0.5121,
+      "median_blended": 0.6738,
+      "p75_blended": 0.8814,
+      "max_blended": 1.1,
+      "max_min_ratio": 2.55,
+      "p75_p25_ratio": 1.72,
+      "quantization_mix": {
+        "fp8": 4
+      },
+      "precision_disclosure": {
+        "disclosed": 4,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 4,
+          "min": 0.4312,
+          "p25": 0.5121,
+          "median": 0.6738,
+          "p75": 0.8814,
+          "max": 1.1,
+          "p75_p25_ratio": 1.72
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.4312
+      }
+    },
+    {
+      "model_id": "google/gemma-3-12b-it",
+      "snapshot": "undated",
+      "endpoints": 4,
+      "providers": 2,
+      "min_blended": 0.1,
+      "p25_blended": 0.1187,
+      "median_blended": 0.1562,
+      "p75_blended": 0.2469,
+      "max_blended": 0.425,
+      "max_min_ratio": 4.25,
+      "p75_p25_ratio": 2.08,
+      "quantization_mix": {
+        "bf16": 3,
+        "int4": 1
+      },
+      "precision_disclosure": {
+        "disclosed": 4,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "bf16",
+          "context_bucket": "32-128k",
+          "tools": false,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "bf16",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "int4",
+          "context_bucket": "32-128k",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "bf16",
+        "blended": 0.1
+      }
+    },
+    {
+      "model_id": "google/gemma-3-4b-it",
+      "snapshot": "undated",
+      "endpoints": 4,
+      "providers": 2,
+      "min_blended": 0.0475,
+      "p25_blended": 0.0644,
+      "median_blended": 0.0787,
+      "p75_blended": 0.0984,
+      "max_blended": 0.1312,
+      "max_min_ratio": 2.76,
+      "p75_p25_ratio": 1.53,
+      "quantization_mix": {
+        "bf16": 4
+      },
+      "precision_disclosure": {
+        "disclosed": 4,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "bf16",
+          "context_bucket": "32-128k",
+          "tools": false,
+          "n": 4,
+          "min": 0.0475,
+          "p25": 0.0644,
+          "median": 0.0787,
+          "p75": 0.0984,
+          "max": 0.1312,
+          "p75_p25_ratio": 1.53
+        }
+      ],
+      "cheapest": {
+        "provider": "Parasail",
+        "quantization": "bf16",
+        "blended": 0.0475
+      }
+    },
+    {
+      "model_id": "meta-llama/llama-3.1-8b-instruct",
+      "snapshot": "undated",
+      "endpoints": 4,
+      "providers": 4,
+      "min_blended": 0.035,
+      "p25_blended": 0.0631,
+      "median_blended": 0.1462,
+      "p75_blended": 0.22,
+      "max_blended": 0.22,
+      "max_min_ratio": 6.29,
+      "p75_p25_ratio": 3.49,
+      "quantization_mix": {
+        "bf16": 1,
+        "fp8": 1,
+        "undisclosed": 2
+      },
+      "precision_disclosure": {
+        "disclosed": 2,
+        "undisclosed": 2
+      },
+      "cells": [
+        {
+          "precision": "bf16",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.035
+      }
+    },
+    {
+      "model_id": "nvidia/nemotron-3-super-120b-a12b",
+      "snapshot": "undated",
+      "endpoints": 4,
+      "providers": 2,
+      "min_blended": 0.255,
+      "p25_blended": 0.3028,
+      "median_blended": 0.3381,
+      "p75_blended": 0.3877,
+      "max_blended": 0.4781,
+      "max_min_ratio": 1.87,
+      "p75_p25_ratio": 1.28,
+      "quantization_mix": {
+        "bf16": 3,
+        "fp8": 1
+      },
+      "precision_disclosure": {
+        "disclosed": 4,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "bf16",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 3,
+          "min": 0.255,
+          "p25": 0.2869,
+          "median": 0.3187,
+          "p75": 0.3984,
+          "max": 0.4781,
+          "p75_p25_ratio": 1.39
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "bf16",
+        "blended": 0.255
+      }
+    },
+    {
+      "model_id": "qwen/qwen3-14b",
+      "snapshot": "undated",
+      "endpoints": 4,
+      "providers": 2,
+      "min_blended": 0.168,
+      "p25_blended": 0.1845,
+      "median_blended": 0.2,
+      "p75_blended": 0.2363,
+      "max_blended": 0.315,
+      "max_min_ratio": 1.88,
+      "p75_p25_ratio": 1.28,
+      "quantization_mix": {
+        "fp8": 3,
+        "int4": 1
+      },
+      "precision_disclosure": {
+        "disclosed": 4,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": false,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "fp8",
+          "context_bucket": "32-128k",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "int4",
+          "context_bucket": "32-128k",
+          "tools": false,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.168
+      }
+    },
+    {
+      "model_id": "qwen/qwen3-next-80b-a3b-instruct",
+      "snapshot": "undated",
+      "endpoints": 4,
+      "providers": 2,
+      "min_blended": 0.678,
+      "p25_blended": 0.8051,
+      "median_blended": 0.8488,
+      "p75_blended": 0.9553,
+      "max_blended": 1.2712,
+      "max_min_ratio": 1.87,
+      "p75_p25_ratio": 1.19,
+      "quantization_mix": {
+        "fp8": 4
+      },
+      "precision_disclosure": {
+        "disclosed": 4,
+        "undisclosed": 0
+      },
+      "cells": [
+        {
+          "precision": "fp8",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 4,
+          "min": 0.678,
+          "p25": 0.8051,
+          "median": 0.8488,
+          "p75": 0.9553,
+          "max": 1.2712,
+          "p75_p25_ratio": 1.19
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.678
+      }
+    },
+    {
+      "model_id": "qwen/qwen3.8-2.4t-a95b",
+      "snapshot": "undated",
+      "endpoints": 4,
+      "providers": 4,
+      "min_blended": 5.0,
+      "p25_blended": 5.0,
+      "median_blended": 5.0,
+      "p75_blended": 5.0,
+      "max_blended": 5.0,
+      "max_min_ratio": 1.0,
+      "p75_p25_ratio": 1.0,
+      "quantization_mix": {
+        "fp8": 1,
+        "undisclosed": 3
+      },
+      "precision_disclosure": {
+        "disclosed": 1,
+        "undisclosed": 3
+      },
+      "cells": [
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "128k+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 2,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "Alibaba",
+        "quantization": "undisclosed",
+        "blended": 5.0
+      }
+    },
+    {
+      "model_id": "xiaomi/mimo-v2.6-pro",
+      "snapshot": "undated",
+      "endpoints": 4,
+      "providers": 4,
+      "min_blended": 0.684,
+      "p25_blended": 0.7419,
+      "median_blended": 0.7612,
+      "p75_blended": 1.7259,
+      "max_blended": 4.62,
+      "max_min_ratio": 6.75,
+      "p75_p25_ratio": 2.33,
+      "quantization_mix": {
+        "fp8": 3,
+        "undisclosed": 1
+      },
+      "precision_disclosure": {
+        "disclosed": 3,
+        "undisclosed": 1
+      },
+      "cells": [
+        {
+          "precision": "fp8",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 3,
+          "min": 0.684,
+          "p25": 0.7226,
+          "median": 0.7612,
+          "p75": 2.6906,
+          "max": 4.62,
+          "p75_p25_ratio": 3.72
+        },
+        {
+          "precision": "undisclosed",
+          "context_bucket": "1M+",
+          "tools": true,
+          "n": 1,
+          "min": null,
+          "p25": null,
+          "median": null,
+          "p75": null,
+          "max": null,
+          "p75_p25_ratio": null
+        }
+      ],
+      "cheapest": {
+        "provider": "DeepInfra",
+        "quantization": "fp8",
+        "blended": 0.684
+      }
+    }
+  ]
+}
